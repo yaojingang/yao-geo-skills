@@ -1,0 +1,81 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: GEO Base Brief
+type: object
+required:
+  - skill_id
+  - brand_name
+  - brand_site
+  - category
+  - region
+  - language
+  - primary_goal
+properties:
+  skill_id:
+    type: string
+  brand_name:
+    type: string
+    minLength: 1
+  brand_site:
+    type: string
+    minLength: 1
+  brand_summary:
+    type: string
+  category:
+    type: string
+    minLength: 1
+  region:
+    type: string
+    minLength: 1
+  language:
+    type: string
+    minLength: 1
+  target_audience:
+    type: string
+  primary_goal:
+    type: string
+    minLength: 1
+  freshness_window_days:
+    type: integer
+    minimum: 1
+    default: 30
+  source_policy:
+    type: object
+    properties:
+      require_official_sources:
+        type: boolean
+        default: true
+      require_current_web_verification:
+        type: boolean
+        default: true
+      allow_forums:
+        type: boolean
+        default: false
+    additionalProperties: false
+  competitor_seeds:
+    type: array
+    items:
+      type: string
+  must_cover_queries:
+    type: array
+    items:
+      type: string
+  must_avoid_queries:
+    type: array
+    items:
+      type: string
+  deliverable_config:
+    type: object
+    properties:
+      output_dir:
+        type: string
+      article_count:
+        type: integer
+        minimum: 0
+        default: 0
+      include_html_index:
+        type: boolean
+        default: true
+    additionalProperties: false
+  notes:
+    type: string
+additionalProperties: false

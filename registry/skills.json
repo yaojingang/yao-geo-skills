@@ -1,0 +1,16 @@
+{
+  "repository": {
+    "name": "yao-geo-skills",
+    "summary": "Open-source GEO workflows for reusable agent skills.",
+    "owner": "yaojingang",
+    "default_branch": "main"
+  },
+  "skills": [],
+  "planned_families": [
+    "geo-keyword-discovery",
+    "geo-competitor-scan",
+    "geo-answer-optimizer",
+    "geo-brand-fact-sheet",
+    "geo-content-audit"
+  ]
+}

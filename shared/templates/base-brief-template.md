@@ -1,0 +1,22 @@
+# GEO Base Brief
+
+- `skill_id`:
+- `brand_name`:
+- `brand_site`:
+- `brand_summary`:
+- `category`:
+- `region`:
+- `language`:
+- `target_audience`:
+- `primary_goal`:
+- `freshness_window_days`: `30`
+- `source_policy.require_official_sources`: `true`
+- `source_policy.require_current_web_verification`: `true`
+- `source_policy.allow_forums`: `false`
+- `competitor_seeds`:
+- `must_cover_queries`:
+- `must_avoid_queries`:
+- `deliverable_config.output_dir`:
+- `deliverable_config.article_count`: `0`
+- `deliverable_config.include_html_index`: `true`
+- `notes`:
