@@ -1,0 +1,24 @@
+interface:
+  display_name: "GEOFlow CLI Ops"
+  short_description: "Operate an existing GEOFlow instance from the local geoflow CLI"
+  default_prompt: "Use $geoflow-cli-ops to operate an existing GEOFlow system through the local geoflow CLI: inspect catalog data, create or manage tasks, enqueue jobs, upload drafts, review articles, and publish content."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"

@@ -1,0 +1,23 @@
+{
+  "name": "geoflow-cli-ops",
+  "version": "0.1.0",
+  "owner": "yaojingang",
+  "updated_at": "2026-04-13",
+  "status": "active",
+  "maturity_tier": "production",
+  "lifecycle_stage": "active",
+  "context_budget_tier": "production",
+  "review_cadence": "monthly",
+  "skill_archetype": "production",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "reports"
+  ]
+}

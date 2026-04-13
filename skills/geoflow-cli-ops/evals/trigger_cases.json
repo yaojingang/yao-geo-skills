@@ -1,0 +1,76 @@
+{
+  "recommended_threshold": 0.34,
+  "negative_patterns": [
+    "implement the api",
+    "refactor backend",
+    "change the database",
+    "just explain",
+    "only summarize"
+  ],
+  "should_trigger": [
+    {
+      "text": "用本地 CLI 去创建 GEOFlow 任务并立即入队。",
+      "family": "task_ops"
+    },
+    {
+      "text": "帮我通过 geoflow CLI 上传一篇文章草稿，然后审核并发布。",
+      "family": "article_ops"
+    },
+    {
+      "text": "不要进后台，直接用命令行看看这个 GEOFlow 系统有哪些分类和作者。",
+      "family": "catalog_lookup"
+    },
+    {
+      "text": "我想批量用本地命令去管理 GEOFlow 的任务和文章。",
+      "family": "bulk_cli_ops"
+    },
+    {
+      "text": "用 geoflow 命令检查这个任务的 job 状态，看看是不是 worker 执行失败。",
+      "family": "job_inspection"
+    },
+    {
+      "text": "geoflow 的 token 过期了，直接帮我刷新登录然后继续查 catalog。",
+      "family": "expired_token_refresh"
+    },
+    {
+      "text": "不要进后台，用 geoflow CLI 发一篇测试文章，并把最终的 /article/8位短slug 链接给我。",
+      "family": "publish_short_slug_url"
+    },
+    {
+      "text": "这个任务提示没有可用的标题，先停掉任务，再直接发一篇测试文章验证发布链路。",
+      "family": "missing_titles_fallback_cleanup"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "帮我设计 GEOFlow 的新 API。",
+      "family": "backend_design"
+    },
+    {
+      "text": "修改 GEOFlow 的数据库字段。",
+      "family": "schema_change"
+    },
+    {
+      "text": "解释一下 GEOFlow 任务架构。",
+      "family": "explanation_only"
+    },
+    {
+      "text": "只帮我读一下这篇文章，不要操作系统。",
+      "family": "read_only_unrelated"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "帮我实现 geoflow CLI 本身。",
+      "family": "cli_development_vs_cli_operations"
+    },
+    {
+      "text": "不要执行命令，只列出 geoflow 可以做什么。",
+      "family": "explain_vs_operate"
+    },
+    {
+      "text": "直接改数据库，把文章状态改成 published。",
+      "family": "db_shortcut_vs_supported_ops"
+    }
+  ]
+}

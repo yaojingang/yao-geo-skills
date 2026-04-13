@@ -5,7 +5,15 @@
     "owner": "yaojingang",
     "default_branch": "main"
   },
-  "skills": [],
+  "skills": [
+    {
+      "name": "geoflow-cli-ops",
+      "path": "skills/geoflow-cli-ops",
+      "summary": "Operate an existing GEOFlow system through the local geoflow CLI for catalog lookup, task execution, article upload, review, and publish flows.",
+      "source_repository": "https://github.com/yaojingang/GEOFlow",
+      "status": "active"
+    }
+  ],
   "planned_families": [
     "geo-keyword-discovery",
     "geo-competitor-scan",

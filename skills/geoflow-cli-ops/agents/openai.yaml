@@ -1,0 +1,4 @@
+interface:
+  display_name: "GEOFlow CLI Ops"
+  short_description: "Operate an existing GEOFlow instance from the local geoflow CLI"
+  default_prompt: "Inspect GEOFlow resources and perform task or article operations through the local geoflow CLI."

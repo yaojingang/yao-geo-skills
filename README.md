@@ -37,6 +37,10 @@ This repository is for skill packages that help teams research, generate, audit,
 - `geo-brand-fact-sheet`
 - `geo-content-audit`
 
+## Published Skills
+
+- `geoflow-cli-ops`: operate an existing [GEOFlow](https://github.com/yaojingang/GEOFlow) system through the local `geoflow` CLI for task management, article upload, review, and publish flows.
+
 ## Repository Layout
 
 ```text
