@@ -1,0 +1,29 @@
+{
+  "skill_id": "geo-tracking-plan",
+  "required_files": [
+    "SKILL.md",
+    "agents/interface.yaml",
+    "evals/trigger_cases.json",
+    "evals/expected_artifacts.json",
+    "templates/brief-template.md",
+    "scripts/render_geo_tracking_plan.py"
+  ],
+  "public_examples": [
+    "examples/hubspot-demo/report_input.json",
+    "examples/hubspot-demo/hubspot-geo-tracking-plan.html",
+    "examples/hubspot-demo/hubspot-geo-tracking-plan.docx",
+    "assets/screenshots/hubspot-geo-tracking-plan.png"
+  ],
+  "primary_outputs": [
+    "tracking-plan-summary",
+    "html-report",
+    "docx-report"
+  ],
+  "quality_expectations": [
+    "must verify or explicitly qualify the official website",
+    "must separate direct and indirect tracking methods",
+    "must distinguish China, overseas, or hybrid GEO scenarios",
+    "must include evidence traceability and freshness handling",
+    "must not depend on private systems or unsanitized data"
+  ]
+}

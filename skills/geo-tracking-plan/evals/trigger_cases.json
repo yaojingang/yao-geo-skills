@@ -1,0 +1,21 @@
+{
+  "should_trigger": [
+    "帮我给 HubSpot 设计一套 GEO 后端效果归因框架，并输出 HTML。",
+    "我想做一家公司的 GEO tracking framework，按直接和间接效果来设计。",
+    "请基于官网和公开资料，生成一份 GEO attribution plan 和数据表方案。",
+    "帮我输出一个 GEO 后端效果跟踪体系，适合 B2B SaaS 公司。",
+    "输入公司名和一些业务信息，先以官网为核心做权威检索，再给我 GEO 追踪方案。",
+    "分别考虑 DeepSeek、豆包和 ChatGPT 场景，给这家公司做 GEO 归因设计。"
+  ],
+  "should_not_trigger": [
+    "解释一下 GEO 是什么意思。",
+    "帮我写这家公司的 GEO 内容选题。",
+    "只做品牌调研，不需要归因框架。",
+    "帮我直接实现 CRM 埋点代码。"
+  ],
+  "near_neighbor": [
+    "分析这家公司 SEO 和 SEM 表现。",
+    "做一套网站 GA4 埋点方案，但不需要 GEO 视角。",
+    "给我一篇介绍这家公司的文章。"
+  ]
+}

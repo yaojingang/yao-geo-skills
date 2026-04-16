@@ -1,0 +1,24 @@
+interface:
+  display_name: "GEO Tracking Plan"
+  short_description: "Generate a company-specific GEO tracking plan with optional HTML and Word deliverables."
+  default_prompt: "Use $geo-tracking-plan to start from a company name and supporting context, perform authoritative retrieval anchored on the official website, identify business and market characteristics, then produce a personalized GEO backend tracking plan, direct-vs-indirect tracking design, domestic-vs-overseas monitoring emphasis, data model, roadmap, and optional HTML and Word deliverables."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"

@@ -1,0 +1,22 @@
+{
+  "skill_id": "geoflow-cli-ops",
+  "required_files": [
+    "SKILL.md",
+    "agents/interface.yaml",
+    "evals/trigger_cases.json",
+    "evals/expected_artifacts.json",
+    "templates/brief-template.md",
+    "scripts/geoflow_preflight.sh"
+  ],
+  "primary_outputs": [
+    "catalog-lookup-result",
+    "task-operation-result",
+    "article-publish-result"
+  ],
+  "quality_expectations": [
+    "must operate through the local geoflow CLI",
+    "must not bypass the system with direct database writes",
+    "must verify preflight before mutating operations",
+    "must report exact CLI and system state changes"
+  ]
+}

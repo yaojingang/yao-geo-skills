@@ -1,0 +1,584 @@
+#!/usr/bin/env python3
+"""Render GEO tracking plan reports to HTML and DOCX."""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import html
+import json
+import re
+import zipfile
+from pathlib import Path
+from typing import Any
+from xml.sax.saxutils import escape as xml_escape
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Render GEO tracking plan report.")
+    parser.add_argument("--input", required=True, help="Path to normalized report input JSON.")
+    parser.add_argument(
+        "--output-dir",
+        required=True,
+        help="Directory where the HTML and DOCX outputs should be written.",
+    )
+    return parser.parse_args()
+
+
+def load_input(path: Path) -> dict[str, Any]:
+    with path.open("r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    required = ["title", "company_name", "analysis_date", "summary_cards", "sections"]
+    missing = [key for key in required if key not in data]
+    if missing:
+        raise ValueError(f"Missing required input keys: {', '.join(missing)}")
+    return data
+
+
+def slugify(value: str) -> str:
+    lowered = value.lower().strip()
+    lowered = re.sub(r"[^a-z0-9]+", "-", lowered)
+    lowered = re.sub(r"-{2,}", "-", lowered)
+    return lowered.strip("-") or "geo-tracking-plan"
+
+
+def render_html(data: dict[str, Any]) -> str:
+    title = html.escape(data["title"])
+    subtitle = html.escape(data.get("subtitle", ""))
+    company = html.escape(data["company_name"])
+    analysis_date = html.escape(data["analysis_date"])
+    prepared_by = html.escape(data.get("prepared_by", "geo-tracking-plan"))
+
+    cards_html = []
+    for card in data["summary_cards"]:
+        cards_html.append(
+            f"""
+            <article class="summary-card">
+              <p class="summary-label">{html.escape(card['label'])}</p>
+              <p class="summary-value">{html.escape(card['value'])}</p>
+              <p class="summary-note">{html.escape(card.get('note', ''))}</p>
+            </article>
+            """.strip()
+        )
+
+    sections_html = []
+    for index, section in enumerate(data["sections"], start=1):
+        section_id = html.escape(section.get("id", f"section-{index}"))
+        parts = [
+            f"<section class=\"report-section\" id=\"{section_id}\">"
+            f"<h2>{html.escape(section['title'])}</h2>"
+        ]
+        for paragraph in section.get("paragraphs", []):
+            parts.append(f"<p>{html.escape(paragraph)}</p>")
+        if section.get("callout"):
+            parts.append(f"<aside class=\"callout\">{html.escape(section['callout'])}</aside>")
+        if section.get("bullets"):
+            bullets = "\n".join(f"<li>{html.escape(item)}</li>" for item in section["bullets"])
+            parts.append(f"<ul>{bullets}</ul>")
+        if section.get("table"):
+            headers = "".join(
+                f"<th>{html.escape(header)}</th>" for header in section["table"]["headers"]
+            )
+            rows = []
+            for row in section["table"]["rows"]:
+                row_html = "".join(f"<td>{format_html_cell(cell)}</td>" for cell in row)
+                rows.append(f"<tr>{row_html}</tr>")
+            parts.append(
+                "<div class=\"table-wrap\"><table>"
+                f"<thead><tr>{headers}</tr></thead>"
+                f"<tbody>{''.join(rows)}</tbody>"
+                "</table></div>"
+            )
+        parts.append("</section>")
+        sections_html.append("\n".join(parts))
+
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <style>
+    :root {{
+      --ink: #1c2431;
+      --muted: #5d6a7a;
+      --line: #d7dfe8;
+      --bg: #f5f1e8;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: #fffdfa;
+      --accent: #9c3d26;
+      --accent-soft: #f4d9cf;
+      --accent-alt: #1f5a73;
+      --shadow: 0 18px 42px rgba(28, 36, 49, 0.12);
+    }}
+
+    * {{
+      box-sizing: border-box;
+    }}
+
+    body {{
+      margin: 0;
+      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(156, 61, 38, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(31, 90, 115, 0.12), transparent 26%),
+        linear-gradient(180deg, #f9f6ef 0%, var(--bg) 100%);
+      line-height: 1.7;
+    }}
+
+    .page {{
+      width: min(1160px, calc(100vw - 40px));
+      margin: 28px auto 64px;
+    }}
+
+    .hero {{
+      background: linear-gradient(135deg, rgba(255, 253, 250, 0.96), rgba(250, 242, 235, 0.94));
+      border: 1px solid rgba(156, 61, 38, 0.16);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 40px 42px 34px;
+      position: relative;
+      overflow: hidden;
+    }}
+
+    .hero::after {{
+      content: "";
+      position: absolute;
+      inset: auto -60px -80px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(156, 61, 38, 0.18), transparent 68%);
+    }}
+
+    .eyebrow {{
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--accent-alt);
+      margin: 0 0 12px;
+    }}
+
+    h1 {{
+      font-family: Georgia, "Songti SC", "STSong", serif;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.08;
+      margin: 0 0 14px;
+      max-width: 880px;
+    }}
+
+    .subtitle {{
+      font-size: 17px;
+      color: var(--muted);
+      margin: 0 0 20px;
+      max-width: 840px;
+    }}
+
+    .meta {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }}
+
+    .meta span {{
+      padding: 7px 12px;
+      border: 1px solid rgba(31, 90, 115, 0.15);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+    }}
+
+    .summary-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }}
+
+    .summary-card {{
+      background: var(--panel);
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      border-radius: 22px;
+      padding: 20px 20px 18px;
+      min-height: 170px;
+      backdrop-filter: blur(12px);
+    }}
+
+    .summary-label {{
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }}
+
+    .summary-value {{
+      margin: 0 0 10px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 30px;
+      line-height: 1.15;
+    }}
+
+    .summary-note {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }}
+
+    .report-section {{
+      margin-top: 26px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      border-radius: 24px;
+      padding: 28px 30px;
+      box-shadow: 0 10px 24px rgba(28, 36, 49, 0.06);
+    }}
+
+    .report-section h2 {{
+      margin: 0 0 16px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 28px;
+      line-height: 1.2;
+    }}
+
+    .report-section p,
+    .report-section li {{
+      font-size: 15px;
+    }}
+
+    .report-section ul {{
+      margin: 12px 0 0 1.2em;
+      padding: 0;
+    }}
+
+    .callout {{
+      margin: 16px 0;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-weight: 600;
+    }}
+
+    .table-wrap {{
+      overflow-x: auto;
+      margin-top: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+    }}
+
+    table {{
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: white;
+    }}
+
+    thead {{
+      background: linear-gradient(135deg, #203345, #365671);
+      color: white;
+    }}
+
+    th,
+    td {{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }}
+
+    tbody tr:nth-child(even) {{
+      background: #faf7f2;
+    }}
+
+    a {{
+      color: var(--accent-alt);
+      text-decoration: none;
+      word-break: break-all;
+    }}
+
+    a:hover {{
+      text-decoration: underline;
+    }}
+
+    .footer {{
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }}
+
+    @media (max-width: 760px) {{
+      .page {{
+        width: min(100vw - 24px, 1160px);
+        margin-top: 12px;
+      }}
+
+      .hero,
+      .report-section {{
+        padding: 22px 18px;
+        border-radius: 20px;
+      }}
+    }}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">GEO Attribution Framework</p>
+      <h1>{title}</h1>
+      <p class="subtitle">{subtitle}</p>
+      <div class="meta">
+        <span>公司：{company}</span>
+        <span>分析日期：{analysis_date}</span>
+        <span>生成方式：{prepared_by}</span>
+      </div>
+      <section class="summary-grid">
+        {''.join(cards_html)}
+      </section>
+    </header>
+    {''.join(sections_html)}
+    <p class="footer">Generated on {html.escape(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}</p>
+  </main>
+</body>
+</html>
+"""
+
+
+def format_html_cell(cell: Any) -> str:
+    text = str(cell)
+    if text.startswith("http://") or text.startswith("https://"):
+        safe = html.escape(text)
+        return f"<a href=\"{safe}\">{safe}</a>"
+    return html.escape(text)
+
+
+def render_docx(data: dict[str, Any], output_path: Path) -> None:
+    body = []
+    body.append(paragraph_xml(data["title"], size=34, bold=True, align="center", after=180))
+    if data.get("subtitle"):
+        body.append(paragraph_xml(data["subtitle"], size=22, color="666666", align="center"))
+    meta = (
+        f"公司：{data['company_name']}    分析日期：{data['analysis_date']}    "
+        f"生成方式：{data.get('prepared_by', 'geo-tracking-plan')}"
+    )
+    body.append(paragraph_xml(meta, size=18, color="666666", align="center", after=220))
+
+    summary_headers = ["摘要卡片", "核心值", "补充说明"]
+    summary_rows = [
+        [card["label"], card["value"], card.get("note", "")]
+        for card in data["summary_cards"]
+    ]
+    body.append(paragraph_xml("摘要卡片", size=26, bold=True, after=120))
+    body.append(table_xml(summary_headers, summary_rows))
+
+    for section in data["sections"]:
+        body.append(paragraph_xml(section["title"], size=28, bold=True, after=120, before=180))
+        for paragraph in section.get("paragraphs", []):
+            body.append(paragraph_xml(paragraph, size=21))
+        if section.get("callout"):
+            body.append(paragraph_xml(f"提示：{section['callout']}", size=21, bold=True))
+        for bullet in section.get("bullets", []):
+            body.append(paragraph_xml(f"• {bullet}", size=21))
+        if section.get("table"):
+            body.append(table_xml(section["table"]["headers"], section["table"]["rows"]))
+
+    body.append(
+        "<w:sectPr><w:pgSz w:w=\"11906\" w:h=\"16838\"/>"
+        "<w:pgMar w:top=\"1134\" w:right=\"1134\" w:bottom=\"1134\" "
+        "w:left=\"1134\" w:header=\"708\" w:footer=\"708\" w:gutter=\"0\"/>"
+        "</w:sectPr>"
+    )
+
+    document_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+ xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+ xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing"
+ xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+ xmlns:w10="urn:schemas-microsoft-com:office:word"
+ xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+ xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml"
+ xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
+ xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk"
+ xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
+ xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+ mc:Ignorable="w14 wp14">
+  <w:body>
+    {''.join(body)}
+  </w:body>
+</w:document>
+"""
+
+    content_types = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+  <Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
+  <Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+</Types>
+"""
+
+    package_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>
+  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>
+</Relationships>
+"""
+
+    document_rels = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>
+"""
+
+    styles_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
+    <w:name w:val="Normal"/>
+    <w:qFormat/>
+  </w:style>
+</w:styles>
+"""
+
+    now = (
+        dt.datetime.now(dt.timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+    core_xml = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:dcmitype="http://purl.org/dc/dcmitype/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <dc:title>{xml_escape(data["title"])}</dc:title>
+  <dc:creator>{xml_escape(data.get("prepared_by", "geo-tracking-plan"))}</dc:creator>
+  <cp:lastModifiedBy>{xml_escape(data.get("prepared_by", "geo-tracking-plan"))}</cp:lastModifiedBy>
+  <dcterms:created xsi:type="dcterms:W3CDTF">{now}</dcterms:created>
+  <dcterms:modified xsi:type="dcterms:W3CDTF">{now}</dcterms:modified>
+</cp:coreProperties>
+"""
+
+    app_xml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"
+ xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+  <Application>Codex</Application>
+</Properties>
+"""
+
+    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as docx:
+        docx.writestr("[Content_Types].xml", content_types)
+        docx.writestr("_rels/.rels", package_rels)
+        docx.writestr("word/document.xml", document_xml)
+        docx.writestr("word/_rels/document.xml.rels", document_rels)
+        docx.writestr("word/styles.xml", styles_xml)
+        docx.writestr("docProps/core.xml", core_xml)
+        docx.writestr("docProps/app.xml", app_xml)
+
+
+def paragraph_xml(
+    text: str,
+    *,
+    size: int = 22,
+    bold: bool = False,
+    color: str | None = None,
+    align: str | None = None,
+    before: int = 0,
+    after: int = 120,
+) -> str:
+    properties = [f'<w:spacing w:before="{before}" w:after="{after}"/>']
+    if align:
+        properties.append(f'<w:jc w:val="{align}"/>')
+    run_props = [f'<w:sz w:val="{size * 2}"/>', f'<w:szCs w:val="{size * 2}"/>']
+    if bold:
+        run_props.append("<w:b/>")
+    if color:
+        run_props.append(f'<w:color w:val="{color}"/>')
+    escaped = xml_escape(text)
+    return (
+        "<w:p>"
+        f"<w:pPr>{''.join(properties)}</w:pPr>"
+        f"<w:r><w:rPr>{''.join(run_props)}</w:rPr><w:t xml:space=\"preserve\">{escaped}</w:t></w:r>"
+        "</w:p>"
+    )
+
+
+def table_xml(headers: list[str], rows: list[list[Any]]) -> str:
+    if any(len(row) != len(headers) for row in rows):
+        raise ValueError("Every table row must have the same number of columns as headers.")
+
+    width = int(9000 / max(len(headers), 1))
+    table_parts = [
+        "<w:tbl>",
+        "<w:tblPr>"
+        "<w:tblW w:w=\"0\" w:type=\"auto\"/>"
+        "<w:tblBorders>"
+        "<w:top w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "<w:left w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "<w:bottom w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "<w:right w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "<w:insideH w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "<w:insideV w:val=\"single\" w:sz=\"8\" w:space=\"0\" w:color=\"D7DFE8\"/>"
+        "</w:tblBorders>"
+        "</w:tblPr>",
+    ]
+    table_parts.append("<w:tr>")
+    for header in headers:
+        table_parts.append(table_cell_xml(header, width, bold=True))
+    table_parts.append("</w:tr>")
+    for row in rows:
+        table_parts.append("<w:tr>")
+        for cell in row:
+            table_parts.append(table_cell_xml(str(cell), width))
+        table_parts.append("</w:tr>")
+    table_parts.append("</w:tbl>")
+    return "".join(table_parts)
+
+
+def table_cell_xml(text: str, width: int, bold: bool = False) -> str:
+    run_props = ['<w:sz w:val="20"/><w:szCs w:val="20"/>']
+    if bold:
+        run_props.append("<w:b/>")
+    escaped = xml_escape(text)
+    return (
+        "<w:tc>"
+        f"<w:tcPr><w:tcW w:w=\"{width}\" w:type=\"dxa\"/></w:tcPr>"
+        "<w:p><w:pPr><w:spacing w:before=\"60\" w:after=\"60\"/></w:pPr>"
+        f"<w:r><w:rPr>{''.join(run_props)}</w:rPr><w:t xml:space=\"preserve\">{escaped}</w:t></w:r>"
+        "</w:p></w:tc>"
+    )
+
+
+def main() -> None:
+    args = parse_args()
+    input_path = Path(args.input)
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data = load_input(input_path)
+    slug = data.get("slug") or slugify(data["company_name"])
+
+    html_path = output_dir / f"{slug}.html"
+    docx_path = output_dir / f"{slug}.docx"
+
+    html_path.write_text(render_html(data), encoding="utf-8")
+    render_docx(data, docx_path)
+
+    print(f"Rendered HTML: {html_path}")
+    print(f"Rendered DOCX: {docx_path}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,20 +1,95 @@
 {
   "repository": {
     "name": "yao-geo-skills",
-    "summary": "Open-source GEO workflows for reusable agent skills.",
+    "summary": "面向 GEO 内容与工作流的 Skill 开源合集，持续更新中。",
     "owner": "yaojingang",
     "default_branch": "main"
   },
+  "inventory_contract": {
+    "required_skill_fields": [
+      "id",
+      "family",
+      "maturity",
+      "tags",
+      "requires_web",
+      "primary_outputs",
+      "status",
+      "owner",
+      "stage",
+      "path",
+      "summary",
+      "public_repo_path",
+      "last_updated"
+    ],
+    "allowed_statuses": [
+      "planned",
+      "active",
+      "paused",
+      "deprecated"
+    ],
+    "allowed_maturity": [
+      "scaffold",
+      "draft",
+      "beta",
+      "stable"
+    ]
+  },
   "skills": [
     {
-      "name": "geoflow-cli-ops",
+      "id": "geoflow-cli-ops",
+      "family": "geo-operations",
+      "maturity": "stable",
+      "tags": [
+        "geoflow",
+        "cli",
+        "operations",
+        "task-management",
+        "article-publish"
+      ],
+      "requires_web": false,
+      "primary_outputs": [
+        "catalog-lookup-result",
+        "task-operation-result",
+        "article-publish-result"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
       "path": "skills/geoflow-cli-ops",
       "summary": "Operate an existing GEOFlow system through the local geoflow CLI for catalog lookup, task execution, article upload, review, and publish flows.",
-      "source_repository": "https://github.com/yaojingang/GEOFlow",
-      "status": "active"
+      "public_repo_path": "skills/geoflow-cli-ops",
+      "last_updated": "2026-04-13"
+    },
+    {
+      "id": "geo-tracking-plan",
+      "family": "geo-measurement",
+      "maturity": "beta",
+      "tags": [
+        "geo",
+        "tracking",
+        "attribution",
+        "measurement",
+        "html-report",
+        "docx-report"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "tracking-plan-summary",
+        "html-report",
+        "docx-report"
+      ],
+      "status": "active",
+      "owner": "Yao Team",
+      "stage": "published",
+      "path": "skills/geo-tracking-plan",
+      "summary": "Generate a company-specific GEO backend tracking plan using official-site-first retrieval, business recognition, and China-vs-overseas monitoring logic.",
+      "public_repo_path": "skills/geo-tracking-plan",
+      "last_updated": "2026-04-16"
     }
   ],
   "planned_families": [
+    "geo-operations",
+    "geo-measurement",
     "geo-keyword-discovery",
     "geo-competitor-scan",
     "geo-answer-optimizer",

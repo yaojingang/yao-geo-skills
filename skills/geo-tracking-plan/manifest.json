@@ -1,0 +1,19 @@
+{
+  "name": "geo-tracking-plan",
+  "version": "0.2.0",
+  "owner": "Yao Team",
+  "updated_at": "2026-04-16",
+  "status": "active",
+  "maturity_tier": "incubating",
+  "lifecycle_stage": "incubating",
+  "context_budget_tier": "production",
+  "review_cadence": "quarterly",
+  "category": "geo",
+  "complexity_tier": "medium",
+  "factory_components": [
+    "references",
+    "evals",
+    "scripts",
+    "examples"
+  ]
+}

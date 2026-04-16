@@ -15,9 +15,12 @@ Before pushing, confirm:
 
 - the change is in scope
 - generated outputs are not accidentally committed
+- public examples are sanitized and intentionally committed
 - secrets, account traces, and private client data are absent
 - repository docs still match the actual structure
 - skill-level eval files exist for any new skill
+- `registry/skills.json` is updated for any new or renamed public skill
+- a human-facing guide exists under `docs/skills/` for any new public skill
 
 ## Commit Rules
 
@@ -41,6 +44,7 @@ Create a PR when the change:
 - changes repository policy
 - changes shared schemas or rubrics
 - changes evaluation thresholds
+- changes repository validation scripts or GitHub Actions
 
 PR descriptions should cover:
 
@@ -49,13 +53,20 @@ PR descriptions should cover:
 - impact on future skill packages
 - validation performed
 
+For public-facing GEO skills, also include:
+
+- whether examples are sanitized
+- whether screenshots are intentionally committed
+- whether the guide and README navigation were updated
+
 ## GitHub Push Flow
 
 1. Review `git status` and confirm the scope.
 2. Stage only intended files.
-3. Commit with a terse message.
-4. Push to the correct branch.
-5. Open a PR if the change is not a bootstrap or tiny maintenance edit.
+3. Run repository validation before pushing.
+4. Commit with a terse message.
+5. Push to the correct branch.
+6. Open a PR if the change is not a bootstrap or tiny maintenance edit.
 
 ## Public Repository Safety
 
@@ -64,9 +75,20 @@ Never push:
 - API keys
 - local caches
 - `outputs/` artifacts from real client work
+- unsanitized example materials
 - internal benchmark documents without permission
 - private URLs that should not be public
 
 ## Registry Update Rule
 
 Any new public skill should update `registry/skills.json` in the same change set so the repository inventory remains accurate.
+
+## CI Enforcement
+
+The repository should keep a GitHub Actions workflow that checks:
+
+- required top-level policy files exist
+- `registry/skills.json` is valid JSON and follows the repository contract
+- public skill packages contain required files
+- committed `outputs/` directories are rejected
+- public skills are synchronized with the registry
