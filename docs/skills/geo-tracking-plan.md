@@ -98,7 +98,9 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 - China GEO usually needs extra recovery mechanisms such as promo codes, dedicated campaign pages, WeChat or phone entry points, surveys, and manual source backfill.
 - Hybrid GEO should not force one measurement model across all markets. Split the main attribution paths first, then reconcile them into a shared dictionary.
 
-## 示例输入 / Example Input
+## 双公开示例 / Two Public Demos
+
+### 海外路径 / Overseas Path
 
 ```markdown
 - company_name: HubSpot
@@ -111,18 +113,54 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 - deliverable_format.docx: true
 ```
 
-## 示例产物 / Example Artifacts
+Artifacts:
 
 - Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/hubspot-demo/report_input.json)
 - HTML report: [hubspot-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html)
 - DOCX report: [hubspot-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx)
-- Skill package: [skills/geo-tracking-plan](../../skills/geo-tracking-plan)
 
-## 案例截图 / Case Screenshot
+### 国内路径 / China Path
+
+```markdown
+- company_name: 星帆企服
+- official_site: https://www.starsail-crm.example/
+- market_scope: china
+- category: B2B SaaS + consultant-led conversion
+- typical_conversion_actions: 咨询预约, 企业微信加粉, 电话回呼, 产品试用
+- priority_ai_platforms: DeepSeek, 豆包, 元宝, Kimi
+- deliverable_format.html: true
+- deliverable_format.docx: true
+```
+
+Artifacts:
+
+- Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/xingfan-demo/report_input.json)
+- HTML report: [xingfan-cn-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html)
+- DOCX report: [xingfan-cn-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx)
+
+### 对比重点 / What The Two Demos Show
+
+| 维度 | Overseas demo | China synthetic demo |
+|---|---|---|
+| 主承接资产 | 官网页矩阵、产品页、定价页、表单 | 官网 + 活动页 + 企微 + 电话 + 顾问入口 |
+| 直接效果重点 | 注册、演示预约、升级 | 口令、活码、热线、预约页、人工补录 |
+| 间接效果重点 | UV、注册率、激活率、升级率 | 问卷来源、企微加粉、电话接通、有效商机率 |
+| 数据模型特点 | 表单字段与产品分析优先 | 来源补丁字段与 CRM 补录优先 |
+| 演示性质 | 公开公司 + 合成方法样本 | 完全公开的合成公司样本 |
+
+## 案例截图 / Case Screenshots
 
 HubSpot HTML demo preview:
 
 ![HubSpot GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png)
+
+China synthetic HTML demo preview:
+
+![China GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/xingfan-cn-geo-tracking-plan.png)
+
+## Package Links
+
+- Skill package: [skills/geo-tracking-plan](../../skills/geo-tracking-plan)
 
 ## 适用边界 / Scope Boundaries
 

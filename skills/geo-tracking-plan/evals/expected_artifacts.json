@@ -12,7 +12,11 @@
     "examples/hubspot-demo/report_input.json",
     "examples/hubspot-demo/hubspot-geo-tracking-plan.html",
     "examples/hubspot-demo/hubspot-geo-tracking-plan.docx",
-    "assets/screenshots/hubspot-geo-tracking-plan.png"
+    "examples/xingfan-demo/report_input.json",
+    "examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html",
+    "examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx",
+    "assets/screenshots/hubspot-geo-tracking-plan.png",
+    "assets/screenshots/xingfan-cn-geo-tracking-plan.png"
   ],
   "primary_outputs": [
     "tracking-plan-summary",

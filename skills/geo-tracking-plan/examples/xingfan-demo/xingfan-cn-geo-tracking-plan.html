@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>星帆企服 GEO 后端效果跟踪体系示例</title>
+  <style>
+    :root {
+      --ink: #1c2431;
+      --muted: #5d6a7a;
+      --line: #d7dfe8;
+      --bg: #f5f1e8;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: #fffdfa;
+      --accent: #9c3d26;
+      --accent-soft: #f4d9cf;
+      --accent-alt: #1f5a73;
+      --shadow: 0 18px 42px rgba(28, 36, 49, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(156, 61, 38, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(31, 90, 115, 0.12), transparent 26%),
+        linear-gradient(180deg, #f9f6ef 0%, var(--bg) 100%);
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(1160px, calc(100vw - 40px));
+      margin: 28px auto 64px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255, 253, 250, 0.96), rgba(250, 242, 235, 0.94));
+      border: 1px solid rgba(156, 61, 38, 0.16);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 40px 42px 34px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -80px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(156, 61, 38, 0.18), transparent 68%);
+    }
+
+    .eyebrow {
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: var(--accent-alt);
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-family: Georgia, "Songti SC", "STSong", serif;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1.08;
+      margin: 0 0 14px;
+      max-width: 880px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--muted);
+      margin: 0 0 20px;
+      max-width: 840px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .meta span {
+      padding: 7px 12px;
+      border: 1px solid rgba(31, 90, 115, 0.15);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .summary-card {
+      background: var(--panel);
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      border-radius: 22px;
+      padding: 20px 20px 18px;
+      min-height: 170px;
+      backdrop-filter: blur(12px);
+    }
+
+    .summary-label {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .summary-value {
+      margin: 0 0 10px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .summary-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .report-section {
+      margin-top: 26px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      border-radius: 24px;
+      padding: 28px 30px;
+      box-shadow: 0 10px 24px rgba(28, 36, 49, 0.06);
+    }
+
+    .report-section h2 {
+      margin: 0 0 16px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .report-section p,
+    .report-section li {
+      font-size: 15px;
+    }
+
+    .report-section ul {
+      margin: 12px 0 0 1.2em;
+      padding: 0;
+    }
+
+    .callout {
+      margin: 16px 0;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 16px 18px;
+      border-radius: 14px;
+      font-weight: 600;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 640px;
+      background: white;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #203345, #365671);
+      color: white;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #faf7f2;
+    }
+
+    a {
+      color: var(--accent-alt);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100vw - 24px, 1160px);
+        margin-top: 12px;
+      }
+
+      .hero,
+      .report-section {
+        padding: 22px 18px;
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">GEO Attribution Framework</p>
+      <h1>星帆企服 GEO 后端效果跟踪体系示例</h1>
+      <p class="subtitle">国内 GEO 公开合成示例。企业、域名、指标和流程均为方法演示用虚拟样本，用于展示 DeepSeek、豆包、元宝等场景下为什么不能只靠官网做归因。</p>
+      <div class="meta">
+        <span>公司：星帆企服</span>
+        <span>分析日期：2026-04-16</span>
+        <span>生成方式：geo-tracking-plan demo</span>
+      </div>
+      <section class="summary-grid">
+        <article class="summary-card">
+              <p class="summary-label">业务形态</p>
+              <p class="summary-value">B2B SaaS + 顾问转化</p>
+              <p class="summary-note">官网承接只是入口，真实转化常常发生在咨询顾问、企业微信和电话回访环节。</p>
+            </article><article class="summary-card">
+              <p class="summary-label">主转化动作</p>
+              <p class="summary-value">预约 / 企微 / 电话 / 试用</p>
+              <p class="summary-note">国内 GEO 的直接效果不能只看表单提交，还要覆盖活码、热线和顾问录入。</p>
+            </article><article class="summary-card">
+              <p class="summary-label">市场分层</p>
+              <p class="summary-value">国内 GEO</p>
+              <p class="summary-note">示例默认面向 DeepSeek、豆包、元宝、Kimi 等国内 AI 问答环境，因此强调来源补丁与 CRM 补录。</p>
+            </article><article class="summary-card">
+              <p class="summary-label">当前成熟度</p>
+              <p class="summary-value">起步到中等</p>
+              <p class="summary-note">具备官网承接能力，但需要为 AI 带来的非标准线索增加更细的识别字段和回收动作。</p>
+            </article>
+      </section>
+    </header>
+    <section class="report-section" id="company-summary"><h2>企业理解摘要</h2>
+<p>星帆企服是一个用于方法展示的合成公司，用来模拟中国市场里常见的 B2B SaaS 与咨询转化混合业务。它的典型承接动作包括预约演示、企业微信加粉、电话回呼和产品试用。</p>
+<p>这类业务在国内 GEO 场景下很容易出现一个问题：用户先在 AI 产品里获取方案，再绕到企业微信、电话或销售顾问完成沟通，导致官网分析工具无法完整看到来源。</p>
+<ul><li>业务结构：标准 SaaS 产品 + 顾问协同成交。</li>
+<li>主目标：不仅识别流量，更要识别有效咨询和后续商机。</li>
+<li>核心风险：如果只盯官网表单，AI 带来的高意向线索会被严重低估。</li></ul>
+</section><section class="report-section" id="market-split"><h2>市场分层判断</h2>
+<p>该示例归入国内 GEO 场景。用户可能在 DeepSeek、豆包、元宝、Kimi 等平台完成前置信息获取，再通过品牌词搜索、活动页、企业微信或电话与公司建立联系。</p>
+<p>因此方案必须以官网和官方资产为骨架，但不能把官网表单当成唯一归因锚点；还需要加入活码、口令、热线、问卷和 CRM 补录等来源补丁。</p>
+<ul><li>国内 GEO：来源更分散，标准 referer 和官网表单往往不足以解释转化。</li>
+<li>海外 GEO：更适合围绕官网页矩阵、表单字段、注册和升级路径搭主链路。</li>
+<li>混合 GEO：建议拆出 China / Overseas 两套主链路，再统一到共享字段字典。</li></ul>
+</section><section class="report-section" id="public-evidence"><h2>公开证据表</h2>
+<div class="table-wrap"><table><thead><tr><th>来源系统</th><th>标题 / 定位</th><th>绝对时间</th><th>关键事实</th><th>用途</th></tr></thead><tbody><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/">https://www.starsail-crm.example/</a></td><td>2026-04-16</td><td>合成官网首页展示 CRM、线索分配、顾问协同和 AI 销售助手等产品入口。</td><td>确认主站结构与核心产品叙事。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/solutions">https://www.starsail-crm.example/solutions</a></td><td>2026-04-16</td><td>解决方案页按行业和团队角色拆分入口，并带有预约演示 CTA。</td><td>判断是否适合按行业或场景设计 GEO 活动页。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/pricing">https://www.starsail-crm.example/pricing</a></td><td>2026-04-16</td><td>定价页同时提供在线咨询、电话沟通和试用申请。</td><td>识别转化动作是否只发生在表单内。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/contact">https://www.starsail-crm.example/contact</a></td><td>2026-04-16</td><td>联系页包含热线号码、企业微信二维码和销售顾问预约说明。</td><td>确认国内 GEO 需要官网外的来源补丁。</td></tr></tbody></table></div>
+</section><section class="report-section" id="official-validation"><h2>官网核验</h2>
+<p>这是一个公开合成样本，因此所谓官网是使用 .example 保留域名构造的虚拟站点，用来展示 skill 在国内 GEO 场景中的交付结构，而不是对真实企业做审计。</p>
+<p>尽管示例是合成的，方法仍然遵循同一条原则：先统一官方承接资产，再判断哪些转化动作会离开官网，最后补上来源恢复机制。</p>
+</section><section class="report-section" id="current-diagnosis"><h2>现状诊断</h2>
+<aside class="callout">国内 GEO 的关键不是再加更多官网页面，而是给官网外的承接动作补上可回收、可统一、可进入 CRM 的来源标识。</aside>
+<ul><li>官网可以承接品牌介绍、方案页和预约表单，但并不能天然覆盖企业微信、电话和顾问沟通链路。</li>
+<li>国内 AI 场景里，用户可能先看 AI 回答，再通过品牌搜索找到热线或微信入口，造成官网来源缺失。</li>
+<li>如果销售顾问后续录入 CRM 时没有标准化来源字段，GEO 带来的商机会被归入自然流量或未知来源。</li></ul>
+</section><section class="report-section" id="direct-tracking"><h2>直接效果追踪方案</h2>
+<div class="table-wrap"><table><thead><tr><th>监测动作</th><th>实现方式</th><th>适配理由</th><th>优先级</th></tr></thead><tbody><tr><td>GEO 专属活动页</td><td>围绕销售自动化、线索管理、顾问协同三类高意向主题建设独立活动页，并绑定专属咨询 CTA。</td><td>把 AI 触发的高意向访问和普通官网访问拆开。</td><td>P0</td></tr><tr><td>咨询口令 / 诊断码</td><td>为 DeepSeek、豆包、元宝等场景分别设计可记忆的咨询口令或诊断码，并要求顾问录入 CRM。</td><td>适合在 referer 不稳定时恢复来源。</td><td>P0</td></tr><tr><td>企业微信活码分流</td><td>按平台或关键词主题配置不同企微活码，并将活码 ID 回写到线索记录。</td><td>国内高意向线索常直接转向企业微信沟通。</td><td>P0</td></tr><tr><td>热线分机 / IVR 标识</td><td>为 GEO 活动页配置专属热线分机或电话菜单选项，并在通话系统中记录分机来源。</td><td>电话仍是部分中国 B2B 场景里的关键承接动作。</td><td>P1</td></tr><tr><td>顾问首问标准问卷</td><td>顾问在首次沟通中必须追问&#x27;最初从哪里知道我们&#x27;，并规范记录到 self_report_source 字段。</td><td>补足用户绕过官网直接联系顾问时的来源信息。</td><td>P1</td></tr><tr><td>CRM 手工补录状态</td><td>为人工修正来源设置 consultant_backfill_status 和 backfill_reason 字段。</td><td>避免人工补录动作不可审计。</td><td>P1</td></tr></tbody></table></div>
+</section><section class="report-section" id="indirect-tracking"><h2>间接效果追踪方案</h2>
+<div class="table-wrap"><table><thead><tr><th>指标</th><th>定义</th><th>取数来源</th><th>更新频率</th><th>解释方式</th></tr></thead><tbody><tr><td>品牌词与问题词问询量</td><td>品牌词和高意向问题词的搜索趋势与客服咨询量变化。</td><td>搜索趋势工具 / 客服系统。</td><td>周 / 月</td><td>用于观察心智变化，不能单独视为成交贡献。</td></tr><tr><td>GEO 活动页 UV</td><td>国内 GEO 专属活动页访问与 CTA 点击量。</td><td>站点分析平台。</td><td>日 / 周</td><td>衡量官网承接是否足够清晰。</td></tr><tr><td>企微加粉量</td><td>不同活码带来的新增企业微信咨询量。</td><td>企业微信后台 / CRM。</td><td>日 / 周</td><td>国内线索常在这里首次沉淀。</td></tr><tr><td>热线接通量</td><td>专属分机或电话菜单的接通与有效通话数量。</td><td>电话系统。</td><td>周</td><td>补足跳过表单的咨询路径。</td></tr><tr><td>有效商机率</td><td>GEO 来源线索进入有效商机阶段的比例。</td><td>CRM。</td><td>周 / 月</td><td>比单纯咨询量更接近真实业务价值。</td></tr><tr><td>自报 AI 来源占比</td><td>问卷或顾问首问中明确提到 AI 平台的线索占比。</td><td>问卷系统 / CRM。</td><td>周 / 月</td><td>帮助解释无 referer 的线索恢复效果。</td></tr></tbody></table></div>
+</section><section class="report-section" id="data-model"><h2>归因口径与数据表设计</h2>
+<div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th><th>来源</th></tr></thead><tbody><tr><td>lead_id</td><td>统一线索主键。</td><td>CRM / 表单系统</td></tr><tr><td>channel_group</td><td>记录 GEO / organic / paid / partner 等来源组。</td><td>表单字段 / CRM</td></tr><tr><td>ai_platform</td><td>记录 DeepSeek、豆包、元宝、Kimi 等平台信息。</td><td>来源补丁 / 自报问卷</td></tr><tr><td>entry_patch_type</td><td>记录口令、活码、热线、问卷、顾问补录等补丁类型。</td><td>承接动作配置</td></tr><tr><td>campaign_code</td><td>口令、诊断码或活动页编码。</td><td>活动页 / CRM</td></tr><tr><td>wechat_qr_id</td><td>企业微信活码 ID。</td><td>企微配置</td></tr><tr><td>hotline_ext</td><td>热线分机或电话菜单标识。</td><td>电话系统</td></tr><tr><td>self_report_source</td><td>用户自报的最初来源。</td><td>问卷 / 顾问首问</td></tr><tr><td>consultant_backfill_status</td><td>人工补录是否完成与是否被审核。</td><td>CRM</td></tr></tbody></table></div>
+</section><section class="report-section" id="roadmap"><h2>优先级路线图</h2>
+<ul><li>30 天：上线 1 到 2 个国内 GEO 活动页、配置企微活码、增加顾问首问问卷和 CRM 来源字段。</li>
+<li>60 天：打通活动页、活码、热线和 CRM 的统一字段字典，形成第一版国内 GEO 周报。</li>
+<li>90 天：扩展不同 AI 平台的来源编码规则，并比较不同平台带来的有效商机率差异。</li></ul>
+</section><section class="report-section" id="gaps"><h2>置信度与缺口</h2>
+<ul><li>本示例是公开合成样本，不对应任何真实企业、真实域名或真实经营数据。</li>
+<li>所有指标、成熟度和流程都用于演示方法，不应被解读为真实市场结论。</li>
+<li>如果用于真实项目，仍需用户补充实际官网结构、企微配置、CRM 字段、电话系统和销售流程。</li></ul>
+</section>
+    <p class="footer">Generated on 2026-04-16 15:58:14</p>
+  </main>
+</body>
+</html>

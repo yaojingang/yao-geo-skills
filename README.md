@@ -39,36 +39,69 @@ The goal is not to collect loose prompts. The goal is to publish reliable GEO as
 - Shared schemas and templates: [`shared/`](shared)
 - Repository validation script: [`scripts/validate_repository.py`](scripts/validate_repository.py)
 
-## Skills Navigation
+## Skill Catalog
 
-| Skill | 中文说明 | English Summary | Status | Docs | Package |
-|---|---|---|---|---|---|
-| `geoflow-cli-ops` | 通过本地 `geoflow` CLI 操作已有 GEOFlow 系统，用于 catalog 查询、任务管理、文章上传、审核和发布。 | Operates an existing GEOFlow system through the local CLI for catalog lookup, task operations, and article publish flows. | `active / stable` | [Guide](docs/skills/geoflow-cli-ops.md) | [skills/geoflow-cli-ops](skills/geoflow-cli-ops) |
-| `geo-tracking-plan` | 从公司名和辅助信息出发，基于官网权威检索生成 GEO 后端效果追踪方案，区分国内 / 海外 / 混合 GEO。 | Generates a company-specific GEO backend tracking plan using official-site-first retrieval and China-vs-overseas measurement logic. | `active / beta` | [Guide](docs/skills/geo-tracking-plan.md) | [skills/geo-tracking-plan](skills/geo-tracking-plan) |
+The catalog is grouped by job family so visitors can tell whether a skill is meant for execution, measurement, or research before they open the package.
 
-## Featured Skills
+### `operations`
 
-### `geoflow-cli-ops`
+<table>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>geoflow-cli-ops</code></strong><br>
+      中文：通过本地 <code>geoflow</code> CLI 操作已有 GEOFlow 系统，用于 catalog 查询、任务管理、文章上传、审核和发布。<br>
+      English: Operates an existing GEOFlow system through the local CLI for catalog lookup, task operations, and article publish flows.<br><br>
+      <strong>Best for</strong><br>
+      Existing GEOFlow deployments, operator workflows, catalog lookup, task lifecycle actions, article review and publish.<br><br>
+      <strong>Links</strong><br>
+      <a href="docs/skills/geoflow-cli-ops.md">Guide</a> ·
+      <a href="skills/geoflow-cli-ops">Package</a> ·
+      <a href="https://github.com/yaojingang/GEOFlow">Public project</a>
+    </td>
+  </tr>
+</table>
 
-如果你的系统里已经有 GEOFlow，而你希望通过 CLI 做 catalog 查询、任务编排、文章上传、审核和发布，这个 skill 就是面向“系统操作”而不是“策略生成”的。它和 `geo-tracking-plan` 的关系很清楚：前者偏执行，后者偏方案。
+### `measurement`
 
-Use it when the system already exists and the job is operational. It is a local-control skill, not a planning or research skill.
+<table>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>geo-tracking-plan</code></strong><br>
+      中文：输入公司名称和辅助信息，基于官网与官方资产生成 GEO 后端效果追踪方案，并明确区分国内 / 海外 / 混合 GEO 的不同监测逻辑。<br>
+      English: Generates a company-specific GEO backend tracking plan from a company name plus supporting context, with explicit China-vs-overseas measurement logic.<br><br>
+      <strong>Best for</strong><br>
+      Official-site-first retrieval, business recognition, direct and indirect tracking design, HTML and DOCX deliverables.<br><br>
+      <strong>Public demos</strong><br>
+      Overseas demo: <a href="skills/geo-tracking-plan/examples/hubspot-demo/report_input.json">HubSpot input</a> ·
+      <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html">HTML</a> ·
+      <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx">DOCX</a><br>
+      China synthetic demo: <a href="skills/geo-tracking-plan/examples/xingfan-demo/report_input.json">星帆企服 input</a> ·
+      <a href="skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html">HTML</a> ·
+      <a href="skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx">DOCX</a><br><br>
+      <strong>Links</strong><br>
+      <a href="docs/skills/geo-tracking-plan.md">Guide</a> ·
+      <a href="skills/geo-tracking-plan">Package</a> ·
+      <a href="skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png">Overseas screenshot</a> ·
+      <a href="skills/geo-tracking-plan/assets/screenshots/xingfan-cn-geo-tracking-plan.png">China screenshot</a>
+    </td>
+  </tr>
+</table>
 
-- Skill guide: [docs/skills/geoflow-cli-ops.md](docs/skills/geoflow-cli-ops.md)
-- Package: [skills/geoflow-cli-ops](skills/geoflow-cli-ops)
-- Public project: [GEOFlow](https://github.com/yaojingang/GEOFlow)
+### `research`
 
-### `geo-tracking-plan`
-
-用于输入公司名称和少量辅助信息后，自动完成官网优先的权威检索、业务特征识别、市场分层判断，并输出直接效果与间接效果并行的 GEO 追踪方案。它适合开源使用，因为不依赖飞书、私有 CLI、内网地址或未授权资料。
-
-Use it when you need an official-site-centered GEO tracking plan rather than generic GEO theory. The skill is especially useful when you need to explain why China GEO often needs promo codes, surveys, consultant entry points, or manual source recovery, while overseas GEO can rely more on official web properties, form fields, and upgrade funnels.
-
-- Skill guide: [docs/skills/geo-tracking-plan.md](docs/skills/geo-tracking-plan.md)
-- Demo input: [skills/geo-tracking-plan/examples/hubspot-demo/report_input.json](skills/geo-tracking-plan/examples/hubspot-demo/report_input.json)
-- Demo HTML: [skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html](skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html)
-- Demo DOCX: [skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx](skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx)
-- Case screenshot: [hubspot-geo-tracking-plan.png](skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png)
+<table>
+  <tr>
+    <td valign="top" width="100%">
+      <strong>Coming soon</strong><br>
+      中文：当前仓库还没有正式发布的 research family skill；这一组会优先承载关键词发现、竞品证据扫描、品牌事实表、内容审计等 GEO 研究型工作。<br>
+      English: There is no published research-family skill yet. This section is reserved for GEO keyword discovery, competitor evidence scans, brand fact sheets, and content audit packages.<br><br>
+      <strong>Planned directions</strong><br>
+      <code>geo-keyword-discovery</code> · <code>geo-competitor-scan</code> · <code>geo-brand-fact-sheet</code> · <code>geo-content-audit</code><br><br>
+      <strong>Contribute</strong><br>
+      If you are packaging a GEO research workflow, use the repository contract in <a href="docs/publishing-rules.md">Publishing Rules</a> and register the skill in <a href="registry/skills.json">registry/skills.json</a>.
+    </td>
+  </tr>
+</table>
 
 ## 下载方式 / Download Options
 
