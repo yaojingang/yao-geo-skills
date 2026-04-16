@@ -1,10 +1,10 @@
 {
-  "title": "星帆企服 GEO 后端效果跟踪体系示例",
+  "title": "岭序商机云 GEO 后端效果跟踪体系示例",
   "subtitle": "国内 GEO 公开合成示例。企业、域名、指标和流程均为方法演示用虚拟样本，用于展示 DeepSeek、豆包、元宝等场景下为什么不能只靠官网做归因。",
-  "company_name": "星帆企服",
+  "company_name": "岭序商机云",
   "analysis_date": "2026-04-16",
   "prepared_by": "geo-tracking-plan demo",
-  "slug": "xingfan-cn-geo-tracking-plan",
+  "slug": "lingxu-cn-geo-tracking-plan",
   "summary_cards": [
     {
       "label": "业务形态",
@@ -32,7 +32,7 @@
       "id": "company-summary",
       "title": "企业理解摘要",
       "paragraphs": [
-        "星帆企服是一个用于方法展示的合成公司，用来模拟中国市场里常见的 B2B SaaS 与咨询转化混合业务。它的典型承接动作包括预约演示、企业微信加粉、电话回呼和产品试用。",
+        "岭序商机云是一个用于方法展示的合成公司，用来模拟中国市场里常见的 B2B SaaS 与咨询转化混合业务。它的典型承接动作包括预约演示、企业微信加粉、电话回呼和产品试用。",
         "这类业务在国内 GEO 场景下很容易出现一个问题：用户先在 AI 产品里获取方案，再绕到企业微信、电话或销售顾问完成沟通，导致官网分析工具无法完整看到来源。"
       ],
       "bullets": [
@@ -68,28 +68,28 @@
         "rows": [
           [
             "Synthetic Official Website",
-            "https://www.starsail-crm.example/",
+            "https://www.lingxu-growth.example/",
             "2026-04-16",
             "合成官网首页展示 CRM、线索分配、顾问协同和 AI 销售助手等产品入口。",
             "确认主站结构与核心产品叙事。"
           ],
           [
             "Synthetic Official Website",
-            "https://www.starsail-crm.example/solutions",
+            "https://www.lingxu-growth.example/solutions",
             "2026-04-16",
             "解决方案页按行业和团队角色拆分入口，并带有预约演示 CTA。",
             "判断是否适合按行业或场景设计 GEO 活动页。"
           ],
           [
             "Synthetic Official Website",
-            "https://www.starsail-crm.example/pricing",
+            "https://www.lingxu-growth.example/pricing",
             "2026-04-16",
             "定价页同时提供在线咨询、电话沟通和试用申请。",
             "识别转化动作是否只发生在表单内。"
           ],
           [
             "Synthetic Official Website",
-            "https://www.starsail-crm.example/contact",
+            "https://www.lingxu-growth.example/contact",
             "2026-04-16",
             "联系页包含热线号码、企业微信二维码和销售顾问预约说明。",
             "确认国内 GEO 需要官网外的来源补丁。"
@@ -329,7 +329,7 @@
       "id": "observability-estimation",
       "title": "可观测性估算框架",
       "paragraphs": [
-        "基于星帆企服这类国内顾问转化型业务的多触点特征，当前更适合把可观测性拆成三层：Observed 用来承接活动页、口令、活码、热线等强信号；Recoverable 用来容纳首问问卷、顾问补录和销售备注；Unobservable 则留给 AI 背书带来的品牌与信任效应。",
+        "基于岭序商机云这类国内顾问转化型业务的多触点特征，当前更适合把可观测性拆成三层：Observed 用来承接活动页、口令、活码、热线等强信号；Recoverable 用来容纳首问问卷、顾问补录和销售备注；Unobservable 则留给 AI 背书带来的品牌与信任效应。",
         "这组规划值不是固定定律，而是当前阶段的执行假设。只要顾问执行一致性和 CRM 字段质量继续提升，Observed 占比仍有提升空间，但不应承诺很快覆盖全部 GEO 价值。"
       ],
       "allocation": {

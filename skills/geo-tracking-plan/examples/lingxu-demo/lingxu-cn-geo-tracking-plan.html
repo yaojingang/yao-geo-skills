@@ -3,19 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>星帆企服 GEO 后端效果跟踪体系示例</title>
+  <title>岭序商机云 GEO 后端效果跟踪体系示例</title>
   <style>
     :root {
-      --ink: #1c2431;
-      --muted: #5d6a7a;
-      --line: #d7dfe8;
-      --bg: #f5f1e8;
-      --panel: rgba(255, 255, 255, 0.88);
-      --panel-strong: #fffdfa;
-      --accent: #9c3d26;
-      --accent-soft: #f4d9cf;
+      --font-sans: "IBM Plex Sans", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-serif: "IBM Plex Serif", "Songti SC", Georgia, serif;
+      --ink: #16202a;
+      --muted: #5a6b7c;
+      --line: #d7e0e8;
+      --line-strong: #b9c6d2;
+      --bg: #edf2f5;
+      --panel: rgba(255, 255, 255, 0.86);
+      --panel-strong: #ffffff;
+      --panel-muted: #f7fafc;
+      --accent: #ae5630;
+      --accent-soft: #f8e1d5;
       --accent-alt: #1f5a73;
-      --shadow: 0 18px 42px rgba(28, 36, 49, 0.12);
+      --success: #557a46;
+      --navy-soft: #eef4f7;
+      --shadow: 0 18px 42px rgba(22, 32, 42, 0.08);
+      --shadow-soft: 0 10px 24px rgba(22, 32, 42, 0.05);
     }
 
     * {
@@ -24,26 +31,29 @@
 
     body {
       margin: 0;
-      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-sans);
       color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(156, 61, 38, 0.14), transparent 28%),
-        radial-gradient(circle at top right, rgba(31, 90, 115, 0.12), transparent 26%),
-        linear-gradient(180deg, #f9f6ef 0%, var(--bg) 100%);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0)) 0 0 / 100% 140px no-repeat,
+        radial-gradient(circle at top left, rgba(174, 86, 48, 0.12), transparent 26%),
+        radial-gradient(circle at top right, rgba(31, 90, 115, 0.1), transparent 24%),
+        linear-gradient(180deg, #f6f8fa 0%, var(--bg) 100%);
       line-height: 1.7;
     }
 
     .page {
-      width: min(1160px, calc(100vw - 40px));
-      margin: 28px auto 64px;
+      width: min(1240px, calc(100vw - 36px));
+      margin: 22px auto 72px;
     }
 
     .hero {
-      background: linear-gradient(135deg, rgba(255, 253, 250, 0.96), rgba(250, 242, 235, 0.94));
-      border: 1px solid rgba(156, 61, 38, 0.16);
-      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 253, 0.96)),
+        linear-gradient(120deg, rgba(174, 86, 48, 0.04), rgba(31, 90, 115, 0.04));
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      border-radius: 32px;
       box-shadow: var(--shadow);
-      padding: 40px 42px 34px;
+      padding: 40px 42px 30px;
       position: relative;
       overflow: hidden;
     }
@@ -51,15 +61,14 @@
     .hero::after {
       content: "";
       position: absolute;
-      inset: auto -60px -80px auto;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(156, 61, 38, 0.18), transparent 68%);
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-alt), var(--accent), var(--success));
     }
 
     .eyebrow {
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       font-size: 12px;
       color: var(--accent-alt);
@@ -67,7 +76,7 @@
     }
 
     h1 {
-      font-family: Georgia, "Songti SC", "STSong", serif;
+      font-family: var(--font-serif);
       font-size: clamp(34px, 4vw, 52px);
       line-height: 1.08;
       margin: 0 0 14px;
@@ -91,9 +100,9 @@
 
     .meta span {
       padding: 7px 12px;
-      border: 1px solid rgba(31, 90, 115, 0.15);
+      border: 1px solid rgba(31, 90, 115, 0.16);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(247, 250, 252, 0.92);
     }
 
     .summary-grid {
@@ -104,12 +113,22 @@
     }
 
     .summary-card {
+      position: relative;
       background: var(--panel);
-      border: 1px solid rgba(28, 36, 49, 0.08);
+      border: 1px solid rgba(22, 32, 42, 0.08);
       border-radius: 22px;
       padding: 20px 20px 18px;
       min-height: 170px;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
+    }
+
+    .summary-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(31, 90, 115, 0.8), rgba(174, 86, 48, 0.7));
     }
 
     .summary-label {
@@ -123,7 +142,7 @@
 
     .summary-value {
       margin: 0 0 10px;
-      font-family: Georgia, "Songti SC", serif;
+      font-family: var(--font-serif);
       font-size: 30px;
       line-height: 1.15;
     }
@@ -134,18 +153,135 @@
       font-size: 14px;
     }
 
+    .report-nav {
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      border-radius: 24px;
+      padding: 18px 20px 20px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
+
+    .report-nav-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .report-nav-title {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .report-nav-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .report-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .nav-chip {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 13px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      background: var(--panel-muted);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .nav-chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(31, 90, 115, 0.26);
+      box-shadow: 0 10px 20px rgba(22, 32, 42, 0.06);
+      text-decoration: none;
+    }
+
+    .nav-chip-index {
+      flex: 0 0 auto;
+      min-width: 34px;
+      padding: 5px 0;
+      border-radius: 999px;
+      background: rgba(31, 90, 115, 0.1);
+      color: var(--accent-alt);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .nav-chip-label {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+
     .report-section {
       margin-top: 26px;
       background: var(--panel-strong);
-      border: 1px solid rgba(28, 36, 49, 0.08);
+      border: 1px solid rgba(22, 32, 42, 0.08);
       border-radius: 24px;
       padding: 28px 30px;
-      box-shadow: 0 10px 24px rgba(28, 36, 49, 0.06);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-head {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading {
+      min-width: 0;
+    }
+
+    .section-kicker {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .section-anchor {
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      background: var(--navy-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .section-anchor:hover {
+      color: var(--accent-alt);
+      text-decoration: none;
     }
 
     .report-section h2 {
-      margin: 0 0 16px;
-      font-family: Georgia, "Songti SC", serif;
+      margin: 0;
+      font-family: var(--font-serif);
       font-size: 28px;
       line-height: 1.2;
     }
@@ -162,9 +298,9 @@
 
     .callout {
       margin: 16px 0;
-      border-left: 4px solid var(--accent);
-      background: var(--accent-soft);
-      padding: 16px 18px;
+      border-left: 4px solid var(--accent-alt);
+      background: linear-gradient(180deg, rgba(239, 246, 249, 0.96), rgba(248, 250, 251, 0.98));
+      padding: 16px 18px 16px 20px;
       border-radius: 14px;
       font-weight: 600;
     }
@@ -174,6 +310,8 @@
       margin-top: 16px;
       border-radius: 18px;
       border: 1px solid var(--line);
+      background: white;
+      box-shadow: inset 0 0 0 1px rgba(22, 32, 42, 0.02);
     }
 
     .flow-block {
@@ -332,7 +470,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 640px;
+      min-width: 680px;
       background: white;
     }
 
@@ -351,7 +489,7 @@
     }
 
     tbody tr:nth-child(even) {
-      background: #faf7f2;
+      background: #f8fbfd;
     }
 
     a {
@@ -365,7 +503,7 @@
     }
 
     .footer {
-      margin-top: 22px;
+      margin-top: 26px;
       text-align: center;
       color: var(--muted);
       font-size: 13px;
@@ -378,9 +516,14 @@
       }
 
       .hero,
-      .report-section {
+      .report-section,
+      .report-nav {
         padding: 22px 18px;
         border-radius: 20px;
+      }
+
+      .section-head {
+        flex-direction: column;
       }
 
       .flow-step::after {
@@ -392,11 +535,11 @@
 <body>
   <main class="page">
     <header class="hero">
-      <p class="eyebrow">GEO Attribution Framework</p>
-      <h1>星帆企服 GEO 后端效果跟踪体系示例</h1>
+      <p class="eyebrow">GEO Tracking Plan</p>
+      <h1>岭序商机云 GEO 后端效果跟踪体系示例</h1>
       <p class="subtitle">国内 GEO 公开合成示例。企业、域名、指标和流程均为方法演示用虚拟样本，用于展示 DeepSeek、豆包、元宝等场景下为什么不能只靠官网做归因。</p>
       <div class="meta">
-        <span>公司：星帆企服</span>
+        <span>公司：岭序商机云</span>
         <span>分析日期：2026-04-16</span>
         <span>生成方式：geo-tracking-plan demo</span>
       </div>
@@ -420,29 +563,77 @@
             </article>
       </section>
     </header>
-    <section class="report-section" id="company-summary"><h2>企业理解摘要</h2>
-<p>星帆企服是一个用于方法展示的合成公司，用来模拟中国市场里常见的 B2B SaaS 与咨询转化混合业务。它的典型承接动作包括预约演示、企业微信加粉、电话回呼和产品试用。</p>
+    <section class="report-nav" aria-label="Report modules">
+      <div class="report-nav-head">
+        <p class="report-nav-title">Report Modules</p>
+        <p class="report-nav-note">Design-system style navigation for quick scanning, review, and handoff.</p>
+      </div>
+      <div class="report-nav-grid">
+        <a class="nav-chip" href="#company-summary">
+              <span class="nav-chip-index">01</span>
+              <span class="nav-chip-label">企业理解摘要</span>
+            </a><a class="nav-chip" href="#market-split">
+              <span class="nav-chip-index">02</span>
+              <span class="nav-chip-label">市场分层判断</span>
+            </a><a class="nav-chip" href="#public-evidence">
+              <span class="nav-chip-index">03</span>
+              <span class="nav-chip-label">公开证据表</span>
+            </a><a class="nav-chip" href="#official-validation">
+              <span class="nav-chip-index">04</span>
+              <span class="nav-chip-label">官网核验</span>
+            </a><a class="nav-chip" href="#current-diagnosis">
+              <span class="nav-chip-index">05</span>
+              <span class="nav-chip-label">现状诊断</span>
+            </a><a class="nav-chip" href="#measurement-principles">
+              <span class="nav-chip-index">06</span>
+              <span class="nav-chip-label">效果追踪方法与原理说明</span>
+            </a><a class="nav-chip" href="#direct-tracking">
+              <span class="nav-chip-index">07</span>
+              <span class="nav-chip-label">直接效果追踪方案</span>
+            </a><a class="nav-chip" href="#indirect-tracking">
+              <span class="nav-chip-index">08</span>
+              <span class="nav-chip-label">间接效果追踪方案</span>
+            </a><a class="nav-chip" href="#measurement-boundaries">
+              <span class="nav-chip-index">09</span>
+              <span class="nav-chip-label">监测效果边界说明</span>
+            </a><a class="nav-chip" href="#observability-estimation">
+              <span class="nav-chip-index">10</span>
+              <span class="nav-chip-label">可观测性估算框架</span>
+            </a><a class="nav-chip" href="#data-model">
+              <span class="nav-chip-index">11</span>
+              <span class="nav-chip-label">归因口径与数据表设计</span>
+            </a><a class="nav-chip" href="#roadmap">
+              <span class="nav-chip-index">12</span>
+              <span class="nav-chip-label">优先级路线图</span>
+            </a><a class="nav-chip" href="#gaps">
+              <span class="nav-chip-index">13</span>
+              <span class="nav-chip-label">置信度与缺口</span>
+            </a>
+      </div>
+    </section>
+    <section class="report-section" id="company-summary"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 01</p><h2>企业理解摘要</h2></div><a class="section-anchor" href="#company-summary">#01</a></div>
+<p>岭序商机云是一个用于方法展示的合成公司，用来模拟中国市场里常见的 B2B SaaS 与咨询转化混合业务。它的典型承接动作包括预约演示、企业微信加粉、电话回呼和产品试用。</p>
 <p>这类业务在国内 GEO 场景下很容易出现一个问题：用户先在 AI 产品里获取方案，再绕到企业微信、电话或销售顾问完成沟通，导致官网分析工具无法完整看到来源。</p>
 <ul><li>业务结构：标准 SaaS 产品 + 顾问协同成交。</li>
 <li>主目标：不仅识别流量，更要识别有效咨询和后续商机。</li>
 <li>核心风险：如果只盯官网表单，AI 带来的高意向线索会被严重低估。</li></ul>
-</section><section class="report-section" id="market-split"><h2>市场分层判断</h2>
+</section><section class="report-section" id="market-split"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 02</p><h2>市场分层判断</h2></div><a class="section-anchor" href="#market-split">#02</a></div>
 <p>该示例归入国内 GEO 场景。用户可能在 DeepSeek、豆包、元宝、Kimi 等平台完成前置信息获取，再通过品牌词搜索、活动页、企业微信或电话与公司建立联系。</p>
 <p>因此方案必须以官网和官方资产为骨架，但不能把官网表单当成唯一归因锚点；还需要加入活码、口令、热线、问卷和 CRM 补录等来源补丁。</p>
 <ul><li>国内 GEO：来源更分散，标准 referer 和官网表单往往不足以解释转化。</li>
 <li>海外 GEO：更适合围绕官网页矩阵、表单字段、注册和升级路径搭主链路。</li>
 <li>混合 GEO：建议拆出 China / Overseas 两套主链路，再统一到共享字段字典。</li></ul>
-</section><section class="report-section" id="public-evidence"><h2>公开证据表</h2>
-<div class="table-wrap"><table><thead><tr><th>来源系统</th><th>标题 / 定位</th><th>绝对时间</th><th>关键事实</th><th>用途</th></tr></thead><tbody><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/">https://www.starsail-crm.example/</a></td><td>2026-04-16</td><td>合成官网首页展示 CRM、线索分配、顾问协同和 AI 销售助手等产品入口。</td><td>确认主站结构与核心产品叙事。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/solutions">https://www.starsail-crm.example/solutions</a></td><td>2026-04-16</td><td>解决方案页按行业和团队角色拆分入口，并带有预约演示 CTA。</td><td>判断是否适合按行业或场景设计 GEO 活动页。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/pricing">https://www.starsail-crm.example/pricing</a></td><td>2026-04-16</td><td>定价页同时提供在线咨询、电话沟通和试用申请。</td><td>识别转化动作是否只发生在表单内。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.starsail-crm.example/contact">https://www.starsail-crm.example/contact</a></td><td>2026-04-16</td><td>联系页包含热线号码、企业微信二维码和销售顾问预约说明。</td><td>确认国内 GEO 需要官网外的来源补丁。</td></tr></tbody></table></div>
-</section><section class="report-section" id="official-validation"><h2>官网核验</h2>
+</section><section class="report-section" id="public-evidence"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 03</p><h2>公开证据表</h2></div><a class="section-anchor" href="#public-evidence">#03</a></div>
+<div class="table-wrap"><table><thead><tr><th>来源系统</th><th>标题 / 定位</th><th>绝对时间</th><th>关键事实</th><th>用途</th></tr></thead><tbody><tr><td>Synthetic Official Website</td><td><a href="https://www.lingxu-growth.example/">https://www.lingxu-growth.example/</a></td><td>2026-04-16</td><td>合成官网首页展示 CRM、线索分配、顾问协同和 AI 销售助手等产品入口。</td><td>确认主站结构与核心产品叙事。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.lingxu-growth.example/solutions">https://www.lingxu-growth.example/solutions</a></td><td>2026-04-16</td><td>解决方案页按行业和团队角色拆分入口，并带有预约演示 CTA。</td><td>判断是否适合按行业或场景设计 GEO 活动页。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.lingxu-growth.example/pricing">https://www.lingxu-growth.example/pricing</a></td><td>2026-04-16</td><td>定价页同时提供在线咨询、电话沟通和试用申请。</td><td>识别转化动作是否只发生在表单内。</td></tr><tr><td>Synthetic Official Website</td><td><a href="https://www.lingxu-growth.example/contact">https://www.lingxu-growth.example/contact</a></td><td>2026-04-16</td><td>联系页包含热线号码、企业微信二维码和销售顾问预约说明。</td><td>确认国内 GEO 需要官网外的来源补丁。</td></tr></tbody></table></div>
+</section><section class="report-section" id="official-validation"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 04</p><h2>官网核验</h2></div><a class="section-anchor" href="#official-validation">#04</a></div>
 <p>这是一个公开合成样本，因此所谓官网是使用 .example 保留域名构造的虚拟站点，用来展示 skill 在国内 GEO 场景中的交付结构，而不是对真实企业做审计。</p>
 <p>尽管示例是合成的，方法仍然遵循同一条原则：先统一官方承接资产，再判断哪些转化动作会离开官网，最后补上来源恢复机制。</p>
-</section><section class="report-section" id="current-diagnosis"><h2>现状诊断</h2>
+</section><section class="report-section" id="current-diagnosis"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 05</p><h2>现状诊断</h2></div><a class="section-anchor" href="#current-diagnosis">#05</a></div>
 <aside class="callout">国内 GEO 的关键不是再加更多官网页面，而是给官网外的承接动作补上可回收、可统一、可进入 CRM 的来源标识。</aside>
 <ul><li>官网可以承接品牌介绍、方案页和预约表单，但并不能天然覆盖企业微信、电话和顾问沟通链路。</li>
 <li>国内 AI 场景里，用户可能先看 AI 回答，再通过品牌搜索找到热线或微信入口，造成官网来源缺失。</li>
 <li>如果销售顾问后续录入 CRM 时没有标准化来源字段，GEO 带来的商机会被归入自然流量或未知来源。</li></ul>
-</section><section class="report-section" id="measurement-principles"><h2>效果追踪方法与原理说明</h2>
+</section><section class="report-section" id="measurement-principles"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 06</p><h2>效果追踪方法与原理说明</h2></div><a class="section-anchor" href="#measurement-principles">#06</a></div>
 <p>该示例把 GEO 价值拆成品牌层价值与效果转化层价值。品牌层价值体现在 AI 推荐带来的第三方背书、品牌可信度提升与后续主动搜索意愿增强；效果转化层价值则进一步拆成可直接观测的结果与间接促进的结果。</p>
 <p>对国内 GEO 来说，用户常常在 AI 平台里先形成判断，再转向官网、企业微信、热线或顾问沟通，因此方法论重点不是单看官网表单，而是把官网与官网外的承接动作一起写进可回收的来源体系。</p>
 <div class="flow-block"><p class="flow-title">国内 GEO 承接与归因链路图示</p><div class="flow-grid"><article class="flow-step">
@@ -467,17 +658,17 @@
               <p class="flow-step-note">同时看品牌词、咨询量、商机率、成交效率和顾问反馈，避免把 GEO 误判成单一线索渠道。</p>
             </article></div></div>
 <div class="table-wrap"><table><thead><tr><th>价值层级</th><th>监测原理</th><th>适合方法</th><th>执行动作建议</th></tr></thead><tbody><tr><td>品牌层价值</td><td>AI 平台中的推荐与引用会强化品牌可信度和默认候选心智，进而提升后续品牌搜索与主动咨询。</td><td>品牌词趋势、客服咨询话术、公众号或企微咨询反馈、自报来源。</td><td>固定品牌词与高意向问题词包，联动销售反馈做周复盘。</td></tr><tr><td>直接效果</td><td>尽可能把官网外的高意向动作写回 CRM 主键中。</td><td>活动页、口令、活码、热线分机、顾问入口、CRM 补录。</td><td>先补最小来源字典和顾问执行动作，再追求更细粒度自动化。</td></tr><tr><td>间接效果</td><td>GEO 通过背书与信任建立，促进后续咨询质量、商机率与成交效率。</td><td>活动页 UV、企微加粉量、热线接通量、有效商机率、自报 AI 来源占比。</td><td>把咨询质量和商机率纳入同一周报，避免只看访问量。</td></tr></tbody></table></div>
-</section><section class="report-section" id="direct-tracking"><h2>直接效果追踪方案</h2>
+</section><section class="report-section" id="direct-tracking"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 07</p><h2>直接效果追踪方案</h2></div><a class="section-anchor" href="#direct-tracking">#07</a></div>
 <div class="table-wrap"><table><thead><tr><th>监测动作</th><th>实现方式</th><th>适配理由</th><th>优先级</th></tr></thead><tbody><tr><td>GEO 专属活动页</td><td>围绕销售自动化、线索管理、顾问协同三类高意向主题建设独立活动页，并绑定专属咨询 CTA。</td><td>把 AI 触发的高意向访问和普通官网访问拆开。</td><td>P0</td></tr><tr><td>咨询口令 / 诊断码</td><td>为 DeepSeek、豆包、元宝等场景分别设计可记忆的咨询口令或诊断码，并要求顾问录入 CRM。</td><td>适合在 referer 不稳定时恢复来源。</td><td>P0</td></tr><tr><td>企业微信活码分流</td><td>按平台或关键词主题配置不同企微活码，并将活码 ID 回写到线索记录。</td><td>国内高意向线索常直接转向企业微信沟通。</td><td>P0</td></tr><tr><td>热线分机 / IVR 标识</td><td>为 GEO 活动页配置专属热线分机或电话菜单选项，并在通话系统中记录分机来源。</td><td>电话仍是部分中国 B2B 场景里的关键承接动作。</td><td>P1</td></tr><tr><td>顾问首问标准问卷</td><td>顾问在首次沟通中必须追问&#x27;最初从哪里知道我们&#x27;，并规范记录到 self_report_source 字段。</td><td>补足用户绕过官网直接联系顾问时的来源信息。</td><td>P1</td></tr><tr><td>CRM 手工补录状态</td><td>为人工修正来源设置 consultant_backfill_status 和 backfill_reason 字段。</td><td>避免人工补录动作不可审计。</td><td>P1</td></tr></tbody></table></div>
-</section><section class="report-section" id="indirect-tracking"><h2>间接效果追踪方案</h2>
+</section><section class="report-section" id="indirect-tracking"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 08</p><h2>间接效果追踪方案</h2></div><a class="section-anchor" href="#indirect-tracking">#08</a></div>
 <div class="table-wrap"><table><thead><tr><th>指标</th><th>定义</th><th>取数来源</th><th>更新频率</th><th>解释方式</th></tr></thead><tbody><tr><td>品牌词与问题词问询量</td><td>品牌词和高意向问题词的搜索趋势与客服咨询量变化。</td><td>搜索趋势工具 / 客服系统。</td><td>周 / 月</td><td>用于观察心智变化，不能单独视为成交贡献。</td></tr><tr><td>GEO 活动页 UV</td><td>国内 GEO 专属活动页访问与 CTA 点击量。</td><td>站点分析平台。</td><td>日 / 周</td><td>衡量官网承接是否足够清晰。</td></tr><tr><td>企微加粉量</td><td>不同活码带来的新增企业微信咨询量。</td><td>企业微信后台 / CRM。</td><td>日 / 周</td><td>国内线索常在这里首次沉淀。</td></tr><tr><td>热线接通量</td><td>专属分机或电话菜单的接通与有效通话数量。</td><td>电话系统。</td><td>周</td><td>补足跳过表单的咨询路径。</td></tr><tr><td>有效商机率</td><td>GEO 来源线索进入有效商机阶段的比例。</td><td>CRM。</td><td>周 / 月</td><td>比单纯咨询量更接近真实业务价值。</td></tr><tr><td>自报 AI 来源占比</td><td>问卷或顾问首问中明确提到 AI 平台的线索占比。</td><td>问卷系统 / CRM。</td><td>周 / 月</td><td>帮助解释无 referer 的线索恢复效果。</td></tr></tbody></table></div>
-</section><section class="report-section" id="measurement-boundaries"><h2>监测效果边界说明</h2>
+</section><section class="report-section" id="measurement-boundaries"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 09</p><h2>监测效果边界说明</h2></div><a class="section-anchor" href="#measurement-boundaries">#09</a></div>
 <p>即便已经配置活动页、口令、活码、热线和 CRM 补录，GEO 的整体价值依然无法被完整显性统计。国内 GEO 最大的难点在于，很多高意向用户会跨端跳转、直接加企微、直接打电话，或者在顾问沟通中才暴露真实来源。</p>
 <p>因此建议把 `20%~30%` 理解为一种保守规划假设：刚完成监测体系部署时，企业通常只能稳定观测到总 GEO 贡献的一部分；剩余价值更多体现在可部分恢复层和品牌长期价值层。随着顾问执行一致性和 CRM 字段质量提升，可见比例才可能继续上升。</p>
 <aside class="callout">国内 GEO 不宜承诺全量归因。更稳的目标是：先拿到那一部分可稳定观测的直接结果，再结合品牌词、咨询质量和商机率变化，推断 GEO 对整体转化体系的真实推动。</aside>
 <div class="table-wrap"><table><thead><tr><th>贡献层</th><th>可见度</th><th>典型信号</th><th>解释边界</th></tr></thead><tbody><tr><td>可直接观测层</td><td>低到中等</td><td>活动页表单、口令报码、活码新增、热线分机、顾问入口。</td><td>适合建立最小闭环，但通常只覆盖总 GEO 贡献的一部分。</td></tr><tr><td>可部分恢复层</td><td>中等</td><td>首问问卷、自报来源、顾问补录、销售备注、后续品牌搜索。</td><td>可以显著增强解释力，但对执行一致性依赖较高。</td></tr><tr><td>暂时不可观测层</td><td>低</td><td>AI 背书带来的品牌信任、成交阻力下降、销售说服成本下降。</td><td>更适合通过品牌词、商机率、成交效率和销售反馈做长期观察。</td></tr></tbody></table></div>
-</section><section class="report-section" id="observability-estimation"><h2>可观测性估算框架</h2>
-<p>基于星帆企服这类国内顾问转化型业务的多触点特征，当前更适合把可观测性拆成三层：Observed 用来承接活动页、口令、活码、热线等强信号；Recoverable 用来容纳首问问卷、顾问补录和销售备注；Unobservable 则留给 AI 背书带来的品牌与信任效应。</p>
+</section><section class="report-section" id="observability-estimation"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 10</p><h2>可观测性估算框架</h2></div><a class="section-anchor" href="#observability-estimation">#10</a></div>
+<p>基于岭序商机云这类国内顾问转化型业务的多触点特征，当前更适合把可观测性拆成三层：Observed 用来承接活动页、口令、活码、热线等强信号；Recoverable 用来容纳首问问卷、顾问补录和销售备注；Unobservable 则留给 AI 背书带来的品牌与信任效应。</p>
 <p>这组规划值不是固定定律，而是当前阶段的执行假设。只要顾问执行一致性和 CRM 字段质量继续提升，Observed 占比仍有提升空间，但不应承诺很快覆盖全部 GEO 价值。</p>
 <aside class="callout">三层规划值合计为 100%。在国内 GEO 场景里，更重要的不是追求虚假的全量归因，而是先拿到那一部分可稳定解释的结果，再持续把 Recoverable 往 Observed 迁移。</aside>
 <div class="allocation-block"><p class="allocation-title">Observed / Recoverable / Unobservable 规划分配</p><div class="allocation-bar"><div class="allocation-segment" style="background:#1f5a73;width:20.00%">Observed 20%</div><div class="allocation-segment" style="background:#9c3d26;width:30.00%">Recoverable 30%</div><div class="allocation-segment" style="background:#6c8b3c;width:50.00%">Unobservable 50%</div></div><div class="allocation-grid"><article class="allocation-card">
@@ -497,18 +688,18 @@
               <p class="allocation-card-note">主要容纳 AI 背书带来的品牌信任、默认候选和成交阻力下降。</p>
             </article></div></div>
 <div class="table-wrap"><table><thead><tr><th>层级</th><th>当前规划值</th><th>适用前提</th><th>下一步校准动作</th></tr></thead><tbody><tr><td>Observed</td><td>20%</td><td>活动页、活码、热线和顾问入口都能写回统一来源字段。</td><td>继续压缩来源字段漏填率，优先解决热线与顾问入口回传。</td></tr><tr><td>Recoverable</td><td>30%</td><td>顾问首问、自报来源和补录审核可以稳定执行。</td><td>把问卷口径和补录状态做成强制字段，并加入抽查。</td></tr><tr><td>Unobservable</td><td>50%</td><td>AI 背书更多体现在品牌心智、信任建立与成交效率改善。</td><td>联动品牌词、有效商机率、成交周期和销售反馈做月度复盘。</td></tr></tbody></table></div>
-</section><section class="report-section" id="data-model"><h2>归因口径与数据表设计</h2>
+</section><section class="report-section" id="data-model"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 11</p><h2>归因口径与数据表设计</h2></div><a class="section-anchor" href="#data-model">#11</a></div>
 <div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th><th>来源</th></tr></thead><tbody><tr><td>lead_id</td><td>统一线索主键。</td><td>CRM / 表单系统</td></tr><tr><td>channel_group</td><td>记录 GEO / organic / paid / partner 等来源组。</td><td>表单字段 / CRM</td></tr><tr><td>ai_platform</td><td>记录 DeepSeek、豆包、元宝、Kimi 等平台信息。</td><td>来源补丁 / 自报问卷</td></tr><tr><td>entry_patch_type</td><td>记录口令、活码、热线、问卷、顾问补录等补丁类型。</td><td>承接动作配置</td></tr><tr><td>campaign_code</td><td>口令、诊断码或活动页编码。</td><td>活动页 / CRM</td></tr><tr><td>wechat_qr_id</td><td>企业微信活码 ID。</td><td>企微配置</td></tr><tr><td>hotline_ext</td><td>热线分机或电话菜单标识。</td><td>电话系统</td></tr><tr><td>self_report_source</td><td>用户自报的最初来源。</td><td>问卷 / 顾问首问</td></tr><tr><td>consultant_backfill_status</td><td>人工补录是否完成与是否被审核。</td><td>CRM</td></tr></tbody></table></div>
-</section><section class="report-section" id="roadmap"><h2>优先级路线图</h2>
+</section><section class="report-section" id="roadmap"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 12</p><h2>优先级路线图</h2></div><a class="section-anchor" href="#roadmap">#12</a></div>
 <ul><li>30 天：上线 1 到 2 个国内 GEO 活动页、配置企微活码、增加顾问首问问卷和 CRM 来源字段。</li>
 <li>60 天：打通活动页、活码、热线和 CRM 的统一字段字典，形成第一版国内 GEO 周报。</li>
 <li>90 天：扩展不同 AI 平台的来源编码规则，并比较不同平台带来的有效商机率差异。</li></ul>
-</section><section class="report-section" id="gaps"><h2>置信度与缺口</h2>
+</section><section class="report-section" id="gaps"><div class="section-head"><div class="section-heading"><p class="section-kicker">Module 13</p><h2>置信度与缺口</h2></div><a class="section-anchor" href="#gaps">#13</a></div>
 <ul><li>本示例是公开合成样本，不对应任何真实企业、真实域名或真实经营数据。</li>
 <li>所有指标、成熟度和流程都用于演示方法，不应被解读为真实市场结论。</li>
 <li>如果用于真实项目，仍需用户补充实际官网结构、企微配置、CRM 字段、电话系统和销售流程。</li></ul>
 </section>
-    <p class="footer">Generated on 2026-04-16 16:22:33</p>
+    <p class="footer">Generated on 2026-04-16 16:42:09</p>
   </main>
 </body>
 </html>

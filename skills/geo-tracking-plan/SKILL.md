@@ -42,6 +42,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `references/market-split-framework.md`
 - `references/quality-gates.md`
 - `references/html-output-outline.md`
+- `references/report-ui-rules.md`
 - `references/output-file-workflow.md`
 - `references/open-source-sanitization.md`
 - `references/observability-estimation-framework.md`
@@ -143,6 +144,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `references/market-split-framework.md`：国内 GEO 与海外 GEO 的监测差异和路由规则
 - `references/quality-gates.md`：开源版 skill 的质量门
 - `references/html-output-outline.md`：HTML 报告结构与可视化模块
+- `references/report-ui-rules.md`：设计系统化的 HTML 报告 UI 规则
 - `references/output-file-workflow.md`：报告输入结构与文件生成流程
 - `references/open-source-sanitization.md`：去隐私、去内网依赖、公开样例替换规则
 - `references/observability-estimation-framework.md`：三层可观测性估算框架与区间规则

@@ -4,6 +4,8 @@
 
 最终交付应能作为“给业务方或内部决策沟通使用的可视化方案页面”直接阅读，而不是终端结果堆叠。
 
+UI 规则按 `references/report-ui-rules.md` 执行：优先使用 token、组件、文档导航和高可读性数据展示。
+
 ## Required Sections
 
 1. `封面摘要`

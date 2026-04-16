@@ -12,11 +12,11 @@
     "examples/hubspot-demo/report_input.json",
     "examples/hubspot-demo/hubspot-geo-tracking-plan.html",
     "examples/hubspot-demo/hubspot-geo-tracking-plan.docx",
-    "examples/xingfan-demo/report_input.json",
-    "examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html",
-    "examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx",
+    "examples/lingxu-demo/report_input.json",
+    "examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html",
+    "examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx",
     "assets/screenshots/hubspot-geo-tracking-plan.png",
-    "assets/screenshots/xingfan-cn-geo-tracking-plan.png"
+    "assets/screenshots/lingxu-cn-geo-tracking-plan.png"
   ],
   "primary_outputs": [
     "tracking-plan-summary",

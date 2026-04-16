@@ -62,11 +62,32 @@ def render_html(data: dict[str, Any]) -> str:
         )
 
     sections_html = []
+    nav_links = []
     for index, section in enumerate(data["sections"], start=1):
         section_id = html.escape(section.get("id", f"section-{index}"))
+        section_title = html.escape(section["title"])
+        section_number = f"{index:02d}"
+        nav_links.append(
+            """
+            <a class="nav-chip" href="#{section_id}">
+              <span class="nav-chip-index">{section_number}</span>
+              <span class="nav-chip-label">{section_title}</span>
+            </a>
+            """.format(
+                section_id=section_id,
+                section_number=section_number,
+                section_title=section_title,
+            ).strip()
+        )
         parts = [
             f"<section class=\"report-section\" id=\"{section_id}\">"
-            f"<h2>{html.escape(section['title'])}</h2>"
+            "<div class=\"section-head\">"
+            "<div class=\"section-heading\">"
+            f"<p class=\"section-kicker\">Module {section_number}</p>"
+            f"<h2>{section_title}</h2>"
+            "</div>"
+            f"<a class=\"section-anchor\" href=\"#{section_id}\">#{section_number}</a>"
+            "</div>"
         ]
         for paragraph in section.get("paragraphs", []):
             parts.append(f"<p>{html.escape(paragraph)}</p>")
@@ -104,16 +125,23 @@ def render_html(data: dict[str, Any]) -> str:
   <title>{title}</title>
   <style>
     :root {{
-      --ink: #1c2431;
-      --muted: #5d6a7a;
-      --line: #d7dfe8;
-      --bg: #f5f1e8;
-      --panel: rgba(255, 255, 255, 0.88);
-      --panel-strong: #fffdfa;
-      --accent: #9c3d26;
-      --accent-soft: #f4d9cf;
+      --font-sans: "IBM Plex Sans", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-serif: "IBM Plex Serif", "Songti SC", Georgia, serif;
+      --ink: #16202a;
+      --muted: #5a6b7c;
+      --line: #d7e0e8;
+      --line-strong: #b9c6d2;
+      --bg: #edf2f5;
+      --panel: rgba(255, 255, 255, 0.86);
+      --panel-strong: #ffffff;
+      --panel-muted: #f7fafc;
+      --accent: #ae5630;
+      --accent-soft: #f8e1d5;
       --accent-alt: #1f5a73;
-      --shadow: 0 18px 42px rgba(28, 36, 49, 0.12);
+      --success: #557a46;
+      --navy-soft: #eef4f7;
+      --shadow: 0 18px 42px rgba(22, 32, 42, 0.08);
+      --shadow-soft: 0 10px 24px rgba(22, 32, 42, 0.05);
     }}
 
     * {{
@@ -122,26 +150,29 @@ def render_html(data: dict[str, Any]) -> str:
 
     body {{
       margin: 0;
-      font-family: "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-sans);
       color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(156, 61, 38, 0.14), transparent 28%),
-        radial-gradient(circle at top right, rgba(31, 90, 115, 0.12), transparent 26%),
-        linear-gradient(180deg, #f9f6ef 0%, var(--bg) 100%);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0)) 0 0 / 100% 140px no-repeat,
+        radial-gradient(circle at top left, rgba(174, 86, 48, 0.12), transparent 26%),
+        radial-gradient(circle at top right, rgba(31, 90, 115, 0.1), transparent 24%),
+        linear-gradient(180deg, #f6f8fa 0%, var(--bg) 100%);
       line-height: 1.7;
     }}
 
     .page {{
-      width: min(1160px, calc(100vw - 40px));
-      margin: 28px auto 64px;
+      width: min(1240px, calc(100vw - 36px));
+      margin: 22px auto 72px;
     }}
 
     .hero {{
-      background: linear-gradient(135deg, rgba(255, 253, 250, 0.96), rgba(250, 242, 235, 0.94));
-      border: 1px solid rgba(156, 61, 38, 0.16);
-      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(250, 252, 253, 0.96)),
+        linear-gradient(120deg, rgba(174, 86, 48, 0.04), rgba(31, 90, 115, 0.04));
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      border-radius: 32px;
       box-shadow: var(--shadow);
-      padding: 40px 42px 34px;
+      padding: 40px 42px 30px;
       position: relative;
       overflow: hidden;
     }}
@@ -149,15 +180,14 @@ def render_html(data: dict[str, Any]) -> str:
     .hero::after {{
       content: "";
       position: absolute;
-      inset: auto -60px -80px auto;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(156, 61, 38, 0.18), transparent 68%);
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-alt), var(--accent), var(--success));
     }}
 
     .eyebrow {{
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       font-size: 12px;
       color: var(--accent-alt);
@@ -165,7 +195,7 @@ def render_html(data: dict[str, Any]) -> str:
     }}
 
     h1 {{
-      font-family: Georgia, "Songti SC", "STSong", serif;
+      font-family: var(--font-serif);
       font-size: clamp(34px, 4vw, 52px);
       line-height: 1.08;
       margin: 0 0 14px;
@@ -189,9 +219,9 @@ def render_html(data: dict[str, Any]) -> str:
 
     .meta span {{
       padding: 7px 12px;
-      border: 1px solid rgba(31, 90, 115, 0.15);
+      border: 1px solid rgba(31, 90, 115, 0.16);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(247, 250, 252, 0.92);
     }}
 
     .summary-grid {{
@@ -202,12 +232,22 @@ def render_html(data: dict[str, Any]) -> str:
     }}
 
     .summary-card {{
+      position: relative;
       background: var(--panel);
-      border: 1px solid rgba(28, 36, 49, 0.08);
+      border: 1px solid rgba(22, 32, 42, 0.08);
       border-radius: 22px;
       padding: 20px 20px 18px;
       min-height: 170px;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(10px);
+    }}
+
+    .summary-card::before {{
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, rgba(31, 90, 115, 0.8), rgba(174, 86, 48, 0.7));
     }}
 
     .summary-label {{
@@ -221,7 +261,7 @@ def render_html(data: dict[str, Any]) -> str:
 
     .summary-value {{
       margin: 0 0 10px;
-      font-family: Georgia, "Songti SC", serif;
+      font-family: var(--font-serif);
       font-size: 30px;
       line-height: 1.15;
     }}
@@ -232,18 +272,135 @@ def render_html(data: dict[str, Any]) -> str:
       font-size: 14px;
     }}
 
+    .report-nav {{
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      border-radius: 24px;
+      padding: 18px 20px 20px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }}
+
+    .report-nav-head {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }}
+
+    .report-nav-title {{
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }}
+
+    .report-nav-note {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }}
+
+    .report-nav-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }}
+
+    .nav-chip {{
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 13px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      background: var(--panel-muted);
+      color: inherit;
+      text-decoration: none;
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }}
+
+    .nav-chip:hover {{
+      transform: translateY(-1px);
+      border-color: rgba(31, 90, 115, 0.26);
+      box-shadow: 0 10px 20px rgba(22, 32, 42, 0.06);
+      text-decoration: none;
+    }}
+
+    .nav-chip-index {{
+      flex: 0 0 auto;
+      min-width: 34px;
+      padding: 5px 0;
+      border-radius: 999px;
+      background: rgba(31, 90, 115, 0.1);
+      color: var(--accent-alt);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }}
+
+    .nav-chip-label {{
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.45;
+    }}
+
     .report-section {{
       margin-top: 26px;
       background: var(--panel-strong);
-      border: 1px solid rgba(28, 36, 49, 0.08);
+      border: 1px solid rgba(22, 32, 42, 0.08);
       border-radius: 24px;
       padding: 28px 30px;
-      box-shadow: 0 10px 24px rgba(28, 36, 49, 0.06);
+      box-shadow: var(--shadow-soft);
+    }}
+
+    .section-head {{
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }}
+
+    .section-heading {{
+      min-width: 0;
+    }}
+
+    .section-kicker {{
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }}
+
+    .section-anchor {{
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(22, 32, 42, 0.08);
+      background: var(--navy-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }}
+
+    .section-anchor:hover {{
+      color: var(--accent-alt);
+      text-decoration: none;
     }}
 
     .report-section h2 {{
-      margin: 0 0 16px;
-      font-family: Georgia, "Songti SC", serif;
+      margin: 0;
+      font-family: var(--font-serif);
       font-size: 28px;
       line-height: 1.2;
     }}
@@ -260,9 +417,9 @@ def render_html(data: dict[str, Any]) -> str:
 
     .callout {{
       margin: 16px 0;
-      border-left: 4px solid var(--accent);
-      background: var(--accent-soft);
-      padding: 16px 18px;
+      border-left: 4px solid var(--accent-alt);
+      background: linear-gradient(180deg, rgba(239, 246, 249, 0.96), rgba(248, 250, 251, 0.98));
+      padding: 16px 18px 16px 20px;
       border-radius: 14px;
       font-weight: 600;
     }}
@@ -272,6 +429,8 @@ def render_html(data: dict[str, Any]) -> str:
       margin-top: 16px;
       border-radius: 18px;
       border: 1px solid var(--line);
+      background: white;
+      box-shadow: inset 0 0 0 1px rgba(22, 32, 42, 0.02);
     }}
 
     .flow-block {{
@@ -430,7 +589,7 @@ def render_html(data: dict[str, Any]) -> str:
     table {{
       width: 100%;
       border-collapse: collapse;
-      min-width: 640px;
+      min-width: 680px;
       background: white;
     }}
 
@@ -449,7 +608,7 @@ def render_html(data: dict[str, Any]) -> str:
     }}
 
     tbody tr:nth-child(even) {{
-      background: #faf7f2;
+      background: #f8fbfd;
     }}
 
     a {{
@@ -463,7 +622,7 @@ def render_html(data: dict[str, Any]) -> str:
     }}
 
     .footer {{
-      margin-top: 22px;
+      margin-top: 26px;
       text-align: center;
       color: var(--muted);
       font-size: 13px;
@@ -476,9 +635,14 @@ def render_html(data: dict[str, Any]) -> str:
       }}
 
       .hero,
-      .report-section {{
+      .report-section,
+      .report-nav {{
         padding: 22px 18px;
         border-radius: 20px;
+      }}
+
+      .section-head {{
+        flex-direction: column;
       }}
 
       .flow-step::after {{
@@ -490,7 +654,7 @@ def render_html(data: dict[str, Any]) -> str:
 <body>
   <main class="page">
     <header class="hero">
-      <p class="eyebrow">GEO Attribution Framework</p>
+      <p class="eyebrow">GEO Tracking Plan</p>
       <h1>{title}</h1>
       <p class="subtitle">{subtitle}</p>
       <div class="meta">
@@ -502,6 +666,15 @@ def render_html(data: dict[str, Any]) -> str:
         {''.join(cards_html)}
       </section>
     </header>
+    <section class="report-nav" aria-label="Report modules">
+      <div class="report-nav-head">
+        <p class="report-nav-title">Report Modules</p>
+        <p class="report-nav-note">Design-system style navigation for quick scanning, review, and handoff.</p>
+      </div>
+      <div class="report-nav-grid">
+        {''.join(nav_links)}
+      </div>
+    </section>
     {''.join(sections_html)}
     <p class="footer">Generated on {html.escape(dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}</p>
   </main>

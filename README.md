@@ -75,14 +75,14 @@ The catalog is grouped by job family so visitors can tell whether a skill is mea
       Overseas demo: <a href="skills/geo-tracking-plan/examples/hubspot-demo/report_input.json">HubSpot input</a> ·
       <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html">HTML</a> ·
       <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx">DOCX</a><br>
-      China synthetic demo: <a href="skills/geo-tracking-plan/examples/xingfan-demo/report_input.json">星帆企服 input</a> ·
-      <a href="skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html">HTML</a> ·
-      <a href="skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx">DOCX</a><br><br>
+      China synthetic demo: <a href="skills/geo-tracking-plan/examples/lingxu-demo/report_input.json">岭序商机云 input</a> ·
+      <a href="skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html">HTML</a> ·
+      <a href="skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx">DOCX</a><br><br>
       <strong>Links</strong><br>
       <a href="docs/skills/geo-tracking-plan.md">Guide</a> ·
       <a href="skills/geo-tracking-plan">Package</a> ·
       <a href="skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png">Overseas screenshot</a> ·
-      <a href="skills/geo-tracking-plan/assets/screenshots/xingfan-cn-geo-tracking-plan.png">China screenshot</a>
+      <a href="skills/geo-tracking-plan/assets/screenshots/lingxu-cn-geo-tracking-plan.png">China screenshot</a>
     </td>
   </tr>
 </table>

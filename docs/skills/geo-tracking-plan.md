@@ -35,6 +35,7 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 - 方法可解释：补充品牌价值、直接效果、间接效果之间的原理说明，而不是只给动作清单。
 - 边界清晰：显式说明可直接观测、可部分恢复和暂时不可观测的贡献边界。
 - 可估算：输出 `Observed / Recoverable / Unobservable` 三层规划视图，方便业务沟通。
+- 文档型 UI：HTML 报告采用 token、组件与模块导航组织方式，适合阅读与交接。
 - 可交付：支持生成 HTML 和 DOCX 版本的方案。
 - 开源安全：不依赖飞书、私有 CLI、内网系统或未授权资料。
 
@@ -127,8 +128,8 @@ Artifacts:
 ### 国内路径 / China Path
 
 ```markdown
-- company_name: 星帆企服
-- official_site: https://www.starsail-crm.example/
+- company_name: 岭序商机云
+- official_site: https://www.lingxu-growth.example/
 - market_scope: china
 - category: B2B SaaS + consultant-led conversion
 - typical_conversion_actions: 咨询预约, 企业微信加粉, 电话回呼, 产品试用
@@ -139,9 +140,9 @@ Artifacts:
 
 Artifacts:
 
-- Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/xingfan-demo/report_input.json)
-- HTML report: [xingfan-cn-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.html)
-- DOCX report: [xingfan-cn-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/xingfan-demo/xingfan-cn-geo-tracking-plan.docx)
+- Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/lingxu-demo/report_input.json)
+- HTML report: [lingxu-cn-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html)
+- DOCX report: [lingxu-cn-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx)
 
 ### 对比重点 / What The Two Demos Show
 
@@ -161,7 +162,7 @@ HubSpot HTML demo preview:
 
 China synthetic HTML demo preview:
 
-![China GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/xingfan-cn-geo-tracking-plan.png)
+![China GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/lingxu-cn-geo-tracking-plan.png)
 
 ## Package Links
 
