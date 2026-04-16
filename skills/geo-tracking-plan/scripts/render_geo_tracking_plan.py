@@ -75,6 +75,8 @@ def render_html(data: dict[str, Any]) -> str:
         if section.get("bullets"):
             bullets = "\n".join(f"<li>{html.escape(item)}</li>" for item in section["bullets"])
             parts.append(f"<ul>{bullets}</ul>")
+        if section.get("flow"):
+            parts.append(render_flow_html(section["flow"]))
         if section.get("table"):
             headers = "".join(
                 f"<th>{html.escape(header)}</th>" for header in section["table"]["headers"]
@@ -270,6 +272,77 @@ def render_html(data: dict[str, Any]) -> str:
       border: 1px solid var(--line);
     }}
 
+    .flow-block {{
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(31, 90, 115, 0.14);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(247, 249, 252, 0.96), rgba(255, 255, 255, 0.98));
+    }}
+
+    .flow-title {{
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }}
+
+    .flow-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }}
+
+    .flow-step {{
+      position: relative;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      box-shadow: 0 8px 18px rgba(28, 36, 49, 0.05);
+    }}
+
+    .flow-step::after {{
+      content: "→";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(31, 90, 115, 0.45);
+      font-size: 18px;
+      font-weight: 700;
+    }}
+
+    .flow-step:last-child::after {{
+      display: none;
+    }}
+
+    .flow-label {{
+      margin: 0 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }}
+
+    .flow-step-title {{
+      margin: 0 0 8px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 21px;
+      line-height: 1.2;
+    }}
+
+    .flow-step-note {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }}
+
     table {{
       width: 100%;
       border-collapse: collapse;
@@ -323,6 +396,10 @@ def render_html(data: dict[str, Any]) -> str:
         padding: 22px 18px;
         border-radius: 20px;
       }}
+
+      .flow-step::after {{
+        display: none;
+      }}
     }}
   </style>
 </head>
@@ -357,6 +434,29 @@ def format_html_cell(cell: Any) -> str:
     return html.escape(text)
 
 
+def render_flow_html(flow: dict[str, Any]) -> str:
+    title = html.escape(flow.get("title", "Process Flow"))
+    step_html = []
+    for step in flow.get("steps", []):
+        step_html.append(
+            """
+            <article class="flow-step">
+              <p class="flow-label">{label}</p>
+              <h3 class="flow-step-title">{title}</h3>
+              <p class="flow-step-note">{note}</p>
+            </article>
+            """.format(
+                label=html.escape(step.get("label", "")),
+                title=html.escape(step.get("title", "")),
+                note=html.escape(step.get("note", "")),
+            ).strip()
+        )
+    return (
+        f"<div class=\"flow-block\"><p class=\"flow-title\">{title}</p>"
+        f"<div class=\"flow-grid\">{''.join(step_html)}</div></div>"
+    )
+
+
 def render_docx(data: dict[str, Any], output_path: Path) -> None:
     body = []
     body.append(paragraph_xml(data["title"], size=34, bold=True, align="center", after=180))
@@ -384,6 +484,18 @@ def render_docx(data: dict[str, Any], output_path: Path) -> None:
             body.append(paragraph_xml(f"提示：{section['callout']}", size=21, bold=True))
         for bullet in section.get("bullets", []):
             body.append(paragraph_xml(f"• {bullet}", size=21))
+        if section.get("flow"):
+            flow = section["flow"]
+            flow_title = flow.get("title")
+            if flow_title:
+                body.append(paragraph_xml(flow_title, size=22, bold=True, after=100))
+            flow_headers = ["阶段", "步骤", "说明"]
+            flow_rows = [
+                [step.get("label", ""), step.get("title", ""), step.get("note", "")]
+                for step in flow.get("steps", [])
+            ]
+            if flow_rows:
+                body.append(table_xml(flow_headers, flow_rows))
         if section.get("table"):
             body.append(table_xml(section["table"]["headers"], section["table"]["rows"]))
 

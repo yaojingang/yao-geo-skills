@@ -176,6 +176,77 @@
       border: 1px solid var(--line);
     }
 
+    .flow-block {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(31, 90, 115, 0.14);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(247, 249, 252, 0.96), rgba(255, 255, 255, 0.98));
+    }
+
+    .flow-title {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      box-shadow: 0 8px 18px rgba(28, 36, 49, 0.05);
+    }
+
+    .flow-step::after {
+      content: "→";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(31, 90, 115, 0.45);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .flow-step:last-child::after {
+      display: none;
+    }
+
+    .flow-label {
+      margin: 0 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .flow-step-title {
+      margin: 0 0 8px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .flow-step-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -228,6 +299,10 @@
       .report-section {
         padding: 22px 18px;
         border-radius: 20px;
+      }
+
+      .flow-step::after {
+        display: none;
       }
     }
   </style>
@@ -285,10 +360,40 @@
 <ul><li>官网承接能力强，具备多层 CTA 和多产品页，但不天然等于 GEO 可归因。</li>
 <li>如果 GEO 来源被混入自然流量或内容流量，则很难解释 AI 平台的真实贡献。</li>
 <li>PLG 与销售协同并存，必须同时跟踪注册、激活、演示和升级，不适合只盯单一指标。</li></ul>
+</section><section class="report-section" id="measurement-principles"><h2>效果追踪方法与原理说明</h2>
+<p>该示例把 GEO 价值拆成两个总层面：品牌层价值与效果转化层价值。品牌层价值来自 AI 推荐带来的第三方背书，会提升品牌可信度、默认候选心智和后续主动搜索意愿；效果转化层价值则继续拆成可直接监测的结果与间接促进的结果。</p>
+<p>对 HubSpot 这类海外 SaaS，公司官网本身就是主承接阵地，因此可以更强依赖产品页、注册页、表单字段、页面事件和升级链路来做归因聚合；但即便如此，仍然不能假设所有 GEO 贡献都能被直接统计。</p>
+<div class="flow-block"><p class="flow-title">海外 GEO 承接与归因链路图示</p><div class="flow-grid"><article class="flow-step">
+              <p class="flow-label">Step 1</p>
+              <h3 class="flow-step-title">AI 平台展示品牌</h3>
+              <p class="flow-step-note">在 ChatGPT、Gemini 等平台中被推荐、引用或对比展示，形成品牌背书。</p>
+            </article><article class="flow-step">
+              <p class="flow-label">Step 2</p>
+              <h3 class="flow-step-title">访问官网或主题页</h3>
+              <p class="flow-step-note">用户进入产品页、资源页、注册页或定价页，开始留下可回传的页面与来源信号。</p>
+            </article><article class="flow-step">
+              <p class="flow-label">Step 3</p>
+              <h3 class="flow-step-title">表单与 CTA 识别来源</h3>
+              <p class="flow-step-note">通过 landing_page_id、ai_platform、keyword_theme、offer_code 等字段把高意向访问写入线索主键。</p>
+            </article><article class="flow-step">
+              <p class="flow-label">Step 4</p>
+              <h3 class="flow-step-title">激活与升级回传</h3>
+              <p class="flow-step-note">把注册、激活、演示预约和升级动作回传到统一来源字典中。</p>
+            </article><article class="flow-step">
+              <p class="flow-label">Step 5</p>
+              <h3 class="flow-step-title">品牌与转化联合复盘</h3>
+              <p class="flow-step-note">将品牌词、UV、注册率、激活率和升级率一起解释，避免把 GEO 误读成单一流量渠道。</p>
+            </article></div></div>
+<div class="table-wrap"><table><thead><tr><th>价值层级</th><th>监测原理</th><th>适合方法</th><th>执行动作建议</th></tr></thead><tbody><tr><td>品牌层价值</td><td>AI 推荐会形成高信任度背书，并提升后续品牌搜索与主动访问概率。</td><td>品牌词检索量、直接访问、品牌页 UV、销售沟通反馈。</td><td>固定品牌词包，按周对比趋势，并结合 AI 平台重点主题复盘。</td></tr><tr><td>直接效果</td><td>把 AI 触发的访问尽可能写入官网注册、表单和升级主键。</td><td>referer / URL 参数、专属落地页、表单隐藏字段、专属权益码。</td><td>优先补字段和专属主题页，再打通注册、激活与升级回传。</td></tr><tr><td>间接效果</td><td>GEO 会通过品牌心智和内容承接提升中间转化，而非只增加一次访问。</td><td>UV、CTA 点击率、注册率、激活率、升级率、自报来源。</td><td>把主题页表现和销售协同路径一起纳入周报，而不是只看流量。</td></tr></tbody></table></div>
 </section><section class="report-section" id="direct-tracking"><h2>直接效果追踪方案</h2>
 <div class="table-wrap"><table><thead><tr><th>监测动作</th><th>实现方式</th><th>适配理由</th><th>优先级</th></tr></thead><tbody><tr><td>GEO 专属注册页</td><td>围绕 CRM、Marketing、Sales 三条主题分别建设专属 GEO 承接页，并绑定统一表单字段。</td><td>便于将 AI 触发的高意向需求和普通自然访问分开。</td><td>P0</td></tr><tr><td>表单隐藏字段</td><td>新增 channel_group、ai_platform、keyword_theme、landing_page_id、offer_code。</td><td>为后续注册、激活、升级归因提供主键。</td><td>P0</td></tr><tr><td>AI 专属权益包</td><td>为 AI 流量提供独立模板包、诊断包或试用权益码。</td><td>适合对来源字段缺失做低成本补丁。</td><td>P1</td></tr><tr><td>演示预约分流</td><td>给高意向 GEO 页面加入专属 demo CTA 与日历入口。</td><td>方便把销售协同型转化和自助型注册拆开。</td><td>P1</td></tr></tbody></table></div>
 </section><section class="report-section" id="indirect-tracking"><h2>间接效果追踪方案</h2>
 <div class="table-wrap"><table><thead><tr><th>指标</th><th>定义</th><th>取数来源</th><th>更新频率</th><th>解释方式</th></tr></thead><tbody><tr><td>品牌词检索量</td><td>HubSpot 及产品主题相关品牌词变化。</td><td>搜索趋势工具或品牌监测工具。</td><td>周 / 月</td><td>用于判断品牌心智变化，不能单独视为 GEO 成交贡献。</td></tr><tr><td>GEO 落地页 UV</td><td>专属 GEO 页访问量与 CTA 点击量。</td><td>站点分析平台。</td><td>日 / 周</td><td>衡量承接质量与内容匹配度。</td></tr><tr><td>注册转化率</td><td>GEO 承接页访问到免费注册成功的比例。</td><td>表单系统 / 产品分析平台。</td><td>周</td><td>是 SaaS 类业务最关键的中间指标之一。</td></tr><tr><td>激活率</td><td>完成关键激活动作的注册用户占比。</td><td>产品分析平台。</td><td>周 / 月</td><td>用于过滤低质量注册。</td></tr><tr><td>升级率</td><td>GEO 来源用户进入付费或高意向销售流程的比例。</td><td>Billing / CRM。</td><td>月</td><td>用于判断 GEO 是否带来真正业务价值。</td></tr></tbody></table></div>
+</section><section class="report-section" id="measurement-boundaries"><h2>监测效果边界说明</h2>
+<p>即便采用 referer、专属落地页、表单字段和升级回传，GEO 的总价值也无法被后台完整显性统计。更稳妥的做法，是把可见贡献、可部分恢复贡献和暂时不可见贡献拆开解释。</p>
+<p>对于 HubSpot 这类海外官网承接较强的 SaaS，公司官网、注册和升级链路都较标准化，因此可直接观测的 GEO 贡献通常有机会高于一般中国场景；但在项目早期，仍建议把 `20%~30%` 视为保守规划假设，而不是把更高可见度写成必然事实。</p>
+<aside class="callout">建议把 `20%~30%` 写成保守规划假设：当观测链路成熟时可见比例可能继续提升，但不应把它写成跨行业固定定律，也不应直接套用固定倍数去反推总 ROI。</aside>
+<div class="table-wrap"><table><thead><tr><th>贡献层</th><th>可见度</th><th>典型信号</th><th>解释边界</th></tr></thead><tbody><tr><td>可直接观测层</td><td>中等到较高</td><td>referer、专属页、表单字段、注册、激活、升级回传。</td><td>适合做最硬的 GEO 结果归因，但依旧不能视为总贡献全量。</td></tr><tr><td>可部分恢复层</td><td>中等</td><td>自报来源、销售反馈、品牌词后续访问、跨页行为。</td><td>更适合做趋势校准和渠道解释，不能单独证明 GEO 成交。</td></tr><tr><td>暂时不可观测层</td><td>低</td><td>AI 背书带来的品牌信任提升、后续顾虑下降、长周期成交效率改善。</td><td>只能通过品牌词、线索质量和成交效率的长期变化间接理解。</td></tr></tbody></table></div>
 </section><section class="report-section" id="data-model"><h2>归因口径与数据表设计</h2>
 <div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th><th>来源</th></tr></thead><tbody><tr><td>lead_id</td><td>注册或线索主键。</td><td>表单或 CRM</td></tr><tr><td>channel_group</td><td>统一记录 GEO / organic / paid / partner 等来源组。</td><td>表单字段</td></tr><tr><td>ai_platform</td><td>记录 AI 平台或 AI 内容入口。</td><td>来源参数 / 自报问卷</td></tr><tr><td>keyword_theme</td><td>记录触发的关键词主题，而不是只记录单词。</td><td>页面映射表</td></tr><tr><td>landing_page_id</td><td>承接页唯一 ID。</td><td>站点配置</td></tr><tr><td>activation_status</td><td>是否完成关键激活动作。</td><td>产品分析平台</td></tr></tbody></table></div>
 </section><section class="report-section" id="roadmap"><h2>优先级路线图</h2>
@@ -300,7 +405,7 @@
 <li>所有指标数值与成熟度判断均为方法演示，不代表真实业务表现。</li>
 <li>如果用于真实项目，仍需用户补充实际站点分析、表单、产品分析和 CRM 数据。</li></ul>
 </section>
-    <p class="footer">Generated on 2026-04-16 15:34:14</p>
+    <p class="footer">Generated on 2026-04-16 16:07:02</p>
   </main>
 </body>
 </html>
