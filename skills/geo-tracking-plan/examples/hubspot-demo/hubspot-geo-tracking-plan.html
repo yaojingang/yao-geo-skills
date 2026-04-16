@@ -247,6 +247,88 @@
       line-height: 1.6;
     }
 
+    .allocation-block {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 245, 241, 0.96));
+    }
+
+    .allocation-title {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .allocation-bar {
+      display: flex;
+      min-height: 24px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf3;
+      box-shadow: inset 0 0 0 1px rgba(28, 36, 49, 0.06);
+    }
+
+    .allocation-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      min-width: 52px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .allocation-card {
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      padding: 14px 15px;
+      box-shadow: 0 8px 18px rgba(28, 36, 49, 0.05);
+    }
+
+    .allocation-card-label {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .allocation-card-value {
+      margin: 0 0 6px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .allocation-card-range {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .allocation-card-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -394,6 +476,27 @@
 <p>对于 HubSpot 这类海外官网承接较强的 SaaS，公司官网、注册和升级链路都较标准化，因此可直接观测的 GEO 贡献通常有机会高于一般中国场景；但在项目早期，仍建议把 `20%~30%` 视为保守规划假设，而不是把更高可见度写成必然事实。</p>
 <aside class="callout">建议把 `20%~30%` 写成保守规划假设：当观测链路成熟时可见比例可能继续提升，但不应把它写成跨行业固定定律，也不应直接套用固定倍数去反推总 ROI。</aside>
 <div class="table-wrap"><table><thead><tr><th>贡献层</th><th>可见度</th><th>典型信号</th><th>解释边界</th></tr></thead><tbody><tr><td>可直接观测层</td><td>中等到较高</td><td>referer、专属页、表单字段、注册、激活、升级回传。</td><td>适合做最硬的 GEO 结果归因，但依旧不能视为总贡献全量。</td></tr><tr><td>可部分恢复层</td><td>中等</td><td>自报来源、销售反馈、品牌词后续访问、跨页行为。</td><td>更适合做趋势校准和渠道解释，不能单独证明 GEO 成交。</td></tr><tr><td>暂时不可观测层</td><td>低</td><td>AI 背书带来的品牌信任提升、后续顾虑下降、长周期成交效率改善。</td><td>只能通过品牌词、线索质量和成交效率的长期变化间接理解。</td></tr></tbody></table></div>
+</section><section class="report-section" id="observability-estimation"><h2>可观测性估算框架</h2>
+<p>基于 HubSpot 这类海外 SaaS 的官网承接能力、表单字段可塑性、注册与升级链路标准化程度，当前更适合采用三层规划视图：先用可直接观测层校准方向，再用可部分恢复层增强解释力，最后保留不可观测层来容纳 AI 背书和品牌长期效应。</p>
+<p>以下分配不是经营结果，只是当前方案阶段的规划值。随着 landing_page_id、ai_platform、keyword_theme、activation_status 和升级回传链路更稳定，Observed 的占比有机会继续提升。</p>
+<aside class="callout">三层规划值合计为 100%，目的是帮助团队解释“看得见的贡献”和“尚未完全看见的贡献”之间的关系，而不是把这组数值当成财务结算口径。</aside>
+<div class="allocation-block"><p class="allocation-title">Observed / Recoverable / Unobservable 规划分配</p><div class="allocation-bar"><div class="allocation-segment" style="background:#1f5a73;width:35.00%">Observed 35%</div><div class="allocation-segment" style="background:#9c3d26;width:25.00%">Recoverable 25%</div><div class="allocation-segment" style="background:#6c8b3c;width:40.00%">Unobservable 40%</div></div><div class="allocation-grid"><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#1f5a73">Observed</p>
+              <p class="allocation-card-value">35%</p>
+              <p class="allocation-card-range">建议区间：30%~40%</p>
+              <p class="allocation-card-note">依赖官网页矩阵、表单字段、注册与升级回传，适合做最硬的 GEO 结果校准。</p>
+            </article><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#9c3d26">Recoverable</p>
+              <p class="allocation-card-value">25%</p>
+              <p class="allocation-card-range">建议区间：20%~30%</p>
+              <p class="allocation-card-note">依赖自报来源、销售反馈和跨页行为解释，用来增强而不是替代强归因。</p>
+            </article><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#6c8b3c">Unobservable</p>
+              <p class="allocation-card-value">40%</p>
+              <p class="allocation-card-range">建议区间：30%~45%</p>
+              <p class="allocation-card-note">主要容纳 AI 背书带来的品牌信任与长周期成交效率改善。</p>
+            </article></div></div>
+<div class="table-wrap"><table><thead><tr><th>层级</th><th>当前规划值</th><th>适用前提</th><th>下一步校准动作</th></tr></thead><tbody><tr><td>Observed</td><td>35%</td><td>专属 GEO 注册页、字段字典、注册与激活事件都能稳定回传。</td><td>继续打通升级回传和 demo 预约分流。</td></tr><tr><td>Recoverable</td><td>25%</td><td>销售反馈、自报来源和跨页行为可被标准化记录。</td><td>补统一问卷口径，减少不同团队记录方式差异。</td></tr><tr><td>Unobservable</td><td>40%</td><td>AI 背书更多体现在品牌心智、默认候选和后续成交效率改善。</td><td>联合品牌词、线索质量和销售周期一起做季度复盘。</td></tr></tbody></table></div>
 </section><section class="report-section" id="data-model"><h2>归因口径与数据表设计</h2>
 <div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th><th>来源</th></tr></thead><tbody><tr><td>lead_id</td><td>注册或线索主键。</td><td>表单或 CRM</td></tr><tr><td>channel_group</td><td>统一记录 GEO / organic / paid / partner 等来源组。</td><td>表单字段</td></tr><tr><td>ai_platform</td><td>记录 AI 平台或 AI 内容入口。</td><td>来源参数 / 自报问卷</td></tr><tr><td>keyword_theme</td><td>记录触发的关键词主题，而不是只记录单词。</td><td>页面映射表</td></tr><tr><td>landing_page_id</td><td>承接页唯一 ID。</td><td>站点配置</td></tr><tr><td>activation_status</td><td>是否完成关键激活动作。</td><td>产品分析平台</td></tr></tbody></table></div>
 </section><section class="report-section" id="roadmap"><h2>优先级路线图</h2>
@@ -405,7 +508,7 @@
 <li>所有指标数值与成熟度判断均为方法演示，不代表真实业务表现。</li>
 <li>如果用于真实项目，仍需用户补充实际站点分析、表单、产品分析和 CRM 数据。</li></ul>
 </section>
-    <p class="footer">Generated on 2026-04-16 16:07:02</p>
+    <p class="footer">Generated on 2026-04-16 16:22:33</p>
   </main>
 </body>
 </html>

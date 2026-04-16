@@ -44,6 +44,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `references/html-output-outline.md`
 - `references/output-file-workflow.md`
 - `references/open-source-sanitization.md`
+- `references/observability-estimation-framework.md`
 
 ## Workflow
 
@@ -78,6 +79,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
    - 间接效果：品牌词检索量、官网 UV、落地页 UV、CTA 点击率、注册率、预约率、线索率、成交率、自报来源问卷。
    - 在 `现状诊断` 下必须增加 `效果追踪方法与原理说明` 模块，用表格列出所有直接与间接监测的原理、方法、适用条件、执行动作建议；如交付为 HTML，优先再配一组流程图示。
    - 在 `间接效果追踪方案` 下必须增加 `监测效果边界说明` 模块，说明可直接观测的 GEO 效果通常只是总贡献的一部分，常见保守规划假设约为 `20%~30%`，海外官网承接强的场景可能更高；该比例只能作为规划与解释边界，不能写成跨行业固定事实。
+   - 在 `监测效果边界说明` 下必须继续增加 `可观测性估算框架` 模块，输出 `Observed / Recoverable / Unobservable` 三层规划值或区间、适用前提、主要决定因素和下一阶段校准动作。
    - 明确说明：GEO 总效果通常不能被完整追踪，方案重点是建立足够解释趋势、校准方向和指导优化动作的最小闭环。
 9. 结合企业实际情况和市场类型筛选方案。
    - 高客单、长决策链业务优先做线索归因、专属顾问入口、表单字段、问卷补充。
@@ -110,6 +112,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `直接效果追踪方案`
 - `间接效果追踪方案`
 - `监测效果边界说明`
+- `可观测性估算框架`
 - `归因口径与数据表设计`
 - `优先级路线图`
 - `置信度与缺口`
@@ -125,7 +128,8 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - “最新”相关说法都带绝对日期。
 - 输出明确区分了直接效果和间接效果。
 - 输出明确区分了品牌层价值、直接效果和间接效果，并解释三者关系。
-- 输出包含 `效果追踪方法与原理说明` 以及 `监测效果边界说明`。
+- 输出包含 `效果追踪方法与原理说明`、`监测效果边界说明` 以及 `可观测性估算框架`。
+- 如果输出了 `Observed / Recoverable / Unobservable` 三层百分比分配，三者合计必须为 `100%`。
 - 方案体现企业业务类型、转化链路和站点能力差异，而不是通用模板套话。
 - `20%~30%` 之类的可观测占比若被使用，必须写成保守规划假设或边界说明，不能冒充普适结论。
 - 如果公开证据不足，显式写出信息缺口与降低确定性的原因。
@@ -141,6 +145,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `references/html-output-outline.md`：HTML 报告结构与可视化模块
 - `references/output-file-workflow.md`：报告输入结构与文件生成流程
 - `references/open-source-sanitization.md`：去隐私、去内网依赖、公开样例替换规则
+- `references/observability-estimation-framework.md`：三层可观测性估算框架与区间规则
 - `scripts/render_geo_tracking_plan.py`：生成 HTML / Word 交付件
 - `examples/hubspot-demo/report_input.json`：公开演示输入样例
 - `evals/trigger_cases.json`：触发边界

@@ -77,6 +77,8 @@ def render_html(data: dict[str, Any]) -> str:
             parts.append(f"<ul>{bullets}</ul>")
         if section.get("flow"):
             parts.append(render_flow_html(section["flow"]))
+        if section.get("allocation"):
+            parts.append(render_allocation_html(section["allocation"]))
         if section.get("table"):
             headers = "".join(
                 f"<th>{html.escape(header)}</th>" for header in section["table"]["headers"]
@@ -343,6 +345,88 @@ def render_html(data: dict[str, Any]) -> str:
       line-height: 1.6;
     }}
 
+    .allocation-block {{
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 245, 241, 0.96));
+    }}
+
+    .allocation-title {{
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }}
+
+    .allocation-bar {{
+      display: flex;
+      min-height: 24px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf3;
+      box-shadow: inset 0 0 0 1px rgba(28, 36, 49, 0.06);
+    }}
+
+    .allocation-segment {{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      min-width: 52px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }}
+
+    .allocation-grid {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }}
+
+    .allocation-card {{
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      padding: 14px 15px;
+      box-shadow: 0 8px 18px rgba(28, 36, 49, 0.05);
+    }}
+
+    .allocation-card-label {{
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }}
+
+    .allocation-card-value {{
+      margin: 0 0 6px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 28px;
+      line-height: 1.1;
+    }}
+
+    .allocation-card-range {{
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }}
+
+    .allocation-card-note {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }}
+
     table {{
       width: 100%;
       border-collapse: collapse;
@@ -457,6 +541,52 @@ def render_flow_html(flow: dict[str, Any]) -> str:
     )
 
 
+def render_allocation_html(allocation: dict[str, Any]) -> str:
+    title = html.escape(allocation.get("title", "Allocation"))
+    palette = ["#1f5a73", "#9c3d26", "#6c8b3c", "#7b5ea7"]
+    segments = allocation.get("segments", [])
+    numeric_values = [max(parse_numeric(segment.get("value")), 0.0) for segment in segments]
+    total = sum(numeric_values) or 1.0
+
+    bar_html = []
+    card_html = []
+    for index, segment in enumerate(segments):
+        color = palette[index % len(palette)]
+        value = numeric_values[index]
+        width = max((value / total) * 100, 8 if value > 0 else 0)
+        label = html.escape(str(segment.get("label", "")))
+        value_text = html.escape(str(segment.get("value", "")))
+        range_text = html.escape(str(segment.get("range", "")))
+        note_text = html.escape(str(segment.get("note", "")))
+        bar_html.append(
+            f"<div class=\"allocation-segment\" style=\"background:{color};width:{width:.2f}%\">"
+            f"{label} {value_text}%</div>"
+        )
+        card_html.append(
+            f"""
+            <article class="allocation-card">
+              <p class="allocation-card-label" style="color:{color}">{label}</p>
+              <p class="allocation-card-value">{value_text}%</p>
+              <p class="allocation-card-range">建议区间：{range_text}</p>
+              <p class="allocation-card-note">{note_text}</p>
+            </article>
+            """.strip()
+        )
+
+    return (
+        f"<div class=\"allocation-block\"><p class=\"allocation-title\">{title}</p>"
+        f"<div class=\"allocation-bar\">{''.join(bar_html)}</div>"
+        f"<div class=\"allocation-grid\">{''.join(card_html)}</div></div>"
+    )
+
+
+def parse_numeric(value: Any) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def render_docx(data: dict[str, Any], output_path: Path) -> None:
     body = []
     body.append(paragraph_xml(data["title"], size=34, bold=True, align="center", after=180))
@@ -496,6 +626,23 @@ def render_docx(data: dict[str, Any], output_path: Path) -> None:
             ]
             if flow_rows:
                 body.append(table_xml(flow_headers, flow_rows))
+        if section.get("allocation"):
+            allocation = section["allocation"]
+            allocation_title = allocation.get("title")
+            if allocation_title:
+                body.append(paragraph_xml(allocation_title, size=22, bold=True, after=100))
+            allocation_headers = ["层级", "规划值", "建议区间", "说明"]
+            allocation_rows = [
+                [
+                    segment.get("label", ""),
+                    f"{segment.get('value', '')}%",
+                    segment.get("range", ""),
+                    segment.get("note", ""),
+                ]
+                for segment in allocation.get("segments", [])
+            ]
+            if allocation_rows:
+                body.append(table_xml(allocation_headers, allocation_rows))
         if section.get("table"):
             body.append(table_xml(section["table"]["headers"], section["table"]["rows"]))
 

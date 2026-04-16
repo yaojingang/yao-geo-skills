@@ -34,6 +34,7 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 - 双层监测：同时输出直接效果与间接效果。
 - 方法可解释：补充品牌价值、直接效果、间接效果之间的原理说明，而不是只给动作清单。
 - 边界清晰：显式说明可直接观测、可部分恢复和暂时不可观测的贡献边界。
+- 可估算：输出 `Observed / Recoverable / Unobservable` 三层规划视图，方便业务沟通。
 - 可交付：支持生成 HTML 和 DOCX 版本的方案。
 - 开源安全：不依赖飞书、私有 CLI、内网系统或未授权资料。
 
@@ -84,8 +85,9 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 5. Design direct tracking methods.
 6. Design indirect tracking methods.
 7. Explain the tracking principles, value layers, and observability boundaries.
-8. Define metrics, data fields, and rollout roadmap.
-9. Render HTML and DOCX if requested.
+8. Estimate an `Observed / Recoverable / Unobservable` planning split with conditions.
+9. Define metrics, data fields, and rollout roadmap.
+10. Render HTML and DOCX if requested.
 
 ## 国内与海外 GEO 的差异 / China vs Overseas GEO
 

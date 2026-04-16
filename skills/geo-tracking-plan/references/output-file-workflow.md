@@ -56,6 +56,17 @@ python3 scripts/render_geo_tracking_plan.py \
           }
         ]
       },
+      "allocation": {
+        "title": "分配标题",
+        "segments": [
+          {
+            "label": "Observed",
+            "value": 35,
+            "range": "30%~40%",
+            "note": "说明"
+          }
+        ]
+      },
       "table": {
         "headers": ["列1", "列2"],
         "rows": [["值1", "值2"]]
@@ -67,8 +78,10 @@ python3 scripts/render_geo_tracking_plan.py \
 
 ## Section Rules
 
-- `paragraphs`、`bullets`、`flow`、`table` 都是可选
+- `paragraphs`、`bullets`、`flow`、`allocation`、`table` 都是可选
 - `flow.steps` 适合表达 “AI 曝光 -> 承接 -> 识别 -> 归因 -> 复盘” 这类链路图示
+- `allocation.segments` 适合表达 `Observed / Recoverable / Unobservable` 三层估算
+- 如果 `allocation.segments.value` 使用百分比分配，建议合计为 `100`
 - `table.headers` 与每行列数必须一致
 - 内容里优先使用绝对日期
 - 证据表优先包含：来源、更新时间、关键事实、用途
@@ -85,6 +98,7 @@ python3 scripts/render_geo_tracking_plan.py \
 - 直接效果追踪方案
 - 间接效果追踪方案
 - 监测效果边界说明
+- 可观测性估算框架
 - 归因口径与数据表设计
 - 优先级路线图
 - 置信度与缺口

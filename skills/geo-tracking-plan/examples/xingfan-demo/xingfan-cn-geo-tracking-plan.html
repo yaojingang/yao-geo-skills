@@ -247,6 +247,88 @@
       line-height: 1.6;
     }
 
+    .allocation-block {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 245, 241, 0.96));
+    }
+
+    .allocation-title {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-alt);
+    }
+
+    .allocation-bar {
+      display: flex;
+      min-height: 24px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf3;
+      box-shadow: inset 0 0 0 1px rgba(28, 36, 49, 0.06);
+    }
+
+    .allocation-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      min-width: 52px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .allocation-card {
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(28, 36, 49, 0.08);
+      padding: 14px 15px;
+      box-shadow: 0 8px 18px rgba(28, 36, 49, 0.05);
+    }
+
+    .allocation-card-label {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .allocation-card-value {
+      margin: 0 0 6px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .allocation-card-range {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .allocation-card-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -394,6 +476,27 @@
 <p>因此建议把 `20%~30%` 理解为一种保守规划假设：刚完成监测体系部署时，企业通常只能稳定观测到总 GEO 贡献的一部分；剩余价值更多体现在可部分恢复层和品牌长期价值层。随着顾问执行一致性和 CRM 字段质量提升，可见比例才可能继续上升。</p>
 <aside class="callout">国内 GEO 不宜承诺全量归因。更稳的目标是：先拿到那一部分可稳定观测的直接结果，再结合品牌词、咨询质量和商机率变化，推断 GEO 对整体转化体系的真实推动。</aside>
 <div class="table-wrap"><table><thead><tr><th>贡献层</th><th>可见度</th><th>典型信号</th><th>解释边界</th></tr></thead><tbody><tr><td>可直接观测层</td><td>低到中等</td><td>活动页表单、口令报码、活码新增、热线分机、顾问入口。</td><td>适合建立最小闭环，但通常只覆盖总 GEO 贡献的一部分。</td></tr><tr><td>可部分恢复层</td><td>中等</td><td>首问问卷、自报来源、顾问补录、销售备注、后续品牌搜索。</td><td>可以显著增强解释力，但对执行一致性依赖较高。</td></tr><tr><td>暂时不可观测层</td><td>低</td><td>AI 背书带来的品牌信任、成交阻力下降、销售说服成本下降。</td><td>更适合通过品牌词、商机率、成交效率和销售反馈做长期观察。</td></tr></tbody></table></div>
+</section><section class="report-section" id="observability-estimation"><h2>可观测性估算框架</h2>
+<p>基于星帆企服这类国内顾问转化型业务的多触点特征，当前更适合把可观测性拆成三层：Observed 用来承接活动页、口令、活码、热线等强信号；Recoverable 用来容纳首问问卷、顾问补录和销售备注；Unobservable 则留给 AI 背书带来的品牌与信任效应。</p>
+<p>这组规划值不是固定定律，而是当前阶段的执行假设。只要顾问执行一致性和 CRM 字段质量继续提升，Observed 占比仍有提升空间，但不应承诺很快覆盖全部 GEO 价值。</p>
+<aside class="callout">三层规划值合计为 100%。在国内 GEO 场景里，更重要的不是追求虚假的全量归因，而是先拿到那一部分可稳定解释的结果，再持续把 Recoverable 往 Observed 迁移。</aside>
+<div class="allocation-block"><p class="allocation-title">Observed / Recoverable / Unobservable 规划分配</p><div class="allocation-bar"><div class="allocation-segment" style="background:#1f5a73;width:20.00%">Observed 20%</div><div class="allocation-segment" style="background:#9c3d26;width:30.00%">Recoverable 30%</div><div class="allocation-segment" style="background:#6c8b3c;width:50.00%">Unobservable 50%</div></div><div class="allocation-grid"><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#1f5a73">Observed</p>
+              <p class="allocation-card-value">20%</p>
+              <p class="allocation-card-range">建议区间：15%~25%</p>
+              <p class="allocation-card-note">主要来自活动页表单、口令报码、活码新增和热线分机等可直接回收信号。</p>
+            </article><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#9c3d26">Recoverable</p>
+              <p class="allocation-card-value">30%</p>
+              <p class="allocation-card-range">建议区间：25%~35%</p>
+              <p class="allocation-card-note">依赖首问问卷、顾问补录、销售备注和后续品牌搜索解释。</p>
+            </article><article class="allocation-card">
+              <p class="allocation-card-label" style="color:#6c8b3c">Unobservable</p>
+              <p class="allocation-card-value">50%</p>
+              <p class="allocation-card-range">建议区间：40%~60%</p>
+              <p class="allocation-card-note">主要容纳 AI 背书带来的品牌信任、默认候选和成交阻力下降。</p>
+            </article></div></div>
+<div class="table-wrap"><table><thead><tr><th>层级</th><th>当前规划值</th><th>适用前提</th><th>下一步校准动作</th></tr></thead><tbody><tr><td>Observed</td><td>20%</td><td>活动页、活码、热线和顾问入口都能写回统一来源字段。</td><td>继续压缩来源字段漏填率，优先解决热线与顾问入口回传。</td></tr><tr><td>Recoverable</td><td>30%</td><td>顾问首问、自报来源和补录审核可以稳定执行。</td><td>把问卷口径和补录状态做成强制字段，并加入抽查。</td></tr><tr><td>Unobservable</td><td>50%</td><td>AI 背书更多体现在品牌心智、信任建立与成交效率改善。</td><td>联动品牌词、有效商机率、成交周期和销售反馈做月度复盘。</td></tr></tbody></table></div>
 </section><section class="report-section" id="data-model"><h2>归因口径与数据表设计</h2>
 <div class="table-wrap"><table><thead><tr><th>字段</th><th>说明</th><th>来源</th></tr></thead><tbody><tr><td>lead_id</td><td>统一线索主键。</td><td>CRM / 表单系统</td></tr><tr><td>channel_group</td><td>记录 GEO / organic / paid / partner 等来源组。</td><td>表单字段 / CRM</td></tr><tr><td>ai_platform</td><td>记录 DeepSeek、豆包、元宝、Kimi 等平台信息。</td><td>来源补丁 / 自报问卷</td></tr><tr><td>entry_patch_type</td><td>记录口令、活码、热线、问卷、顾问补录等补丁类型。</td><td>承接动作配置</td></tr><tr><td>campaign_code</td><td>口令、诊断码或活动页编码。</td><td>活动页 / CRM</td></tr><tr><td>wechat_qr_id</td><td>企业微信活码 ID。</td><td>企微配置</td></tr><tr><td>hotline_ext</td><td>热线分机或电话菜单标识。</td><td>电话系统</td></tr><tr><td>self_report_source</td><td>用户自报的最初来源。</td><td>问卷 / 顾问首问</td></tr><tr><td>consultant_backfill_status</td><td>人工补录是否完成与是否被审核。</td><td>CRM</td></tr></tbody></table></div>
 </section><section class="report-section" id="roadmap"><h2>优先级路线图</h2>
@@ -405,7 +508,7 @@
 <li>所有指标、成熟度和流程都用于演示方法，不应被解读为真实市场结论。</li>
 <li>如果用于真实项目，仍需用户补充实际官网结构、企微配置、CRM 字段、电话系统和销售流程。</li></ul>
 </section>
-    <p class="footer">Generated on 2026-04-16 16:07:02</p>
+    <p class="footer">Generated on 2026-04-16 16:22:33</p>
   </main>
 </body>
 </html>
