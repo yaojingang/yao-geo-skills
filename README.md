@@ -228,6 +228,7 @@ yao-geo-skills/
 ## 仓库文档
 
 - [英文首页说明](docs/README.en.md)
+- [更新日志](docs/CHANGELOG.md)
 - [仓库设计](docs/repository-design.md)
 - [输入输出契约](docs/input-output-contract.md)
 - [命名规范](docs/naming-conventions.md)

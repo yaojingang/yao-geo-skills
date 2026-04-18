@@ -202,6 +202,7 @@ Useful paths:
 ## Repository Documents
 
 - [Chinese homepage](../README.md)
+- [Changelog](CHANGELOG.en.md)
 - [Repository Design](repository-design.md)
 - [Input And Output Contract](input-output-contract.md)
 - [Naming Conventions](naming-conventions.md)
