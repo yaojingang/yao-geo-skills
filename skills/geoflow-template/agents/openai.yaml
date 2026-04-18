@@ -1,0 +1,4 @@
+interface:
+  display_name: "GEOFlow Template"
+  short_description: "Plan GEOFlow-compatible frontend template cloning from a reference site"
+  default_prompt: "Inspect the current GEOFlow frontend contract, map the reference site's UI direction onto GEOFlow modules, and produce a preview-first theme package plan."

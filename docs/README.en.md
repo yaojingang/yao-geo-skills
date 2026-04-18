@@ -106,6 +106,7 @@ Open the skill folder in GitHub and download the files you need:
 
 - [skills/geo-tracking-plan](../skills/geo-tracking-plan)
 - [skills/geoflow-cli-ops](../skills/geoflow-cli-ops)
+- [skills/geoflow-template](../skills/geoflow-template)
 
 ## Skill Navigation
 
@@ -119,6 +120,15 @@ The current catalog is grouped into `operations / measurement / research`.
   - Links:
     - [Guide](skills/geoflow-cli-ops.md)
     - [Package](../skills/geoflow-cli-ops)
+    - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
+
+- `geoflow-template`
+  - Purpose: map a reference frontend into a GEOFlow-compatible theme package plan with tokens, module mappings, and preview-first structure.
+  - Best for: frontend template cloning, GEOFlow theme planning, reference-site style mapping, and preview-safe theme package preparation.
+  - Links:
+    - [Guide (CN)](skills/geoflow-template.md)
+    - [Guide (EN)](skills/geoflow-template.en.md)
+    - [Package](../skills/geoflow-template)
     - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
 
 ### `measurement`

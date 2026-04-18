@@ -1,0 +1,60 @@
+{
+  "recommended_threshold": 0.36,
+  "negative_patterns": [
+    "just redesign the frontend",
+    "rewrite the backend",
+    "copy the whole site html",
+    "only explain the pages",
+    "just summarize the repo"
+  ],
+  "should_trigger": [
+    {
+      "text": "给你一个网址，按 GEOFlow 现有前台模块复刻成一个可预览的模板包。",
+      "family": "reference_url_clone"
+    },
+    {
+      "text": "先梳理 GEOFlow 前台变量和模块，再设计一个首页、分类页、详情页的模板映射方案。",
+      "family": "frontend_contract_mapping"
+    },
+    {
+      "text": "我想把参考站点的样式映射到 GEOFlow，但不能改业务逻辑，只能改模板层。",
+      "family": "theme_mapping_boundary"
+    },
+    {
+      "text": "为 GEOFlow 输出一个 preview-first 的前台模板包结构和激活方案。",
+      "family": "theme_package_plan"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "帮我直接用 geoflow CLI 创建任务并发布文章。",
+      "family": "cli_ops"
+    },
+    {
+      "text": "给我解释一下 GEOFlow 首页代码结构。",
+      "family": "read_only_explanation"
+    },
+    {
+      "text": "直接帮我修改数据库字段支持模板切换。",
+      "family": "backend_schema_change"
+    },
+    {
+      "text": "帮我做一个完全新的营销官网，不用参考 GEOFlow 的模块约束。",
+      "family": "generic_frontend_design"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "把参考网站的 HTML 原样搬到 GEOFlow 里。",
+      "family": "raw_html_copy_vs_module_mapping"
+    },
+    {
+      "text": "给我写一个 skill，用 CLI 管理 GEOFlow 任务。",
+      "family": "template_skill_vs_cli_ops"
+    },
+    {
+      "text": "改 GEOFlow 后台，让网站设置里支持模板切换。",
+      "family": "system_implementation_vs_template_planning"
+    }
+  ]
+}

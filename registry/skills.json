@@ -85,6 +85,33 @@
       "summary": "Generate a company-specific GEO backend tracking plan using official-site-first retrieval, business recognition, and China-vs-overseas monitoring logic.",
       "public_repo_path": "skills/geo-tracking-plan",
       "last_updated": "2026-04-16"
+    },
+    {
+      "id": "geoflow-template",
+      "family": "geo-operations",
+      "maturity": "beta",
+      "tags": [
+        "geoflow",
+        "frontend",
+        "theme",
+        "template-clone",
+        "preview",
+        "design-tokens"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "theme-package-plan",
+        "tokens-json",
+        "mapping-json",
+        "preview-plan"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
+      "path": "skills/geoflow-template",
+      "summary": "Map a reference URL onto GEOFlow's frontend contract and generate a preview-first theme package plan with tokens, module mappings, and activation-ready structure.",
+      "public_repo_path": "skills/geoflow-template",
+      "last_updated": "2026-04-18"
     }
   ],
   "planned_families": [
