@@ -1,0 +1,30 @@
+{
+  "skill_id": "yao-geoflow-design",
+  "required_files": [
+    "SKILL.md",
+    "agents/interface.yaml",
+    "evals/trigger_cases.json",
+    "evals/trigger_cases.en.json",
+    "evals/semantic_config.json",
+    "evals/expected_artifacts.json",
+    "references/geoflow-frontend-map.md",
+    "references/template-boundary.md",
+    "references/theme-package-contract.md",
+    "references/design-optimization-playbook.md"
+  ],
+  "primary_outputs": [
+    "theme-package-plan",
+    "design-audit",
+    "optimization-plan",
+    "tokens-json",
+    "mapping-json",
+    "preview-plan"
+  ],
+  "quality_expectations": [
+    "must begin from GEOFlow's existing frontend contract",
+    "must choose clone, optimize, or hybrid mode before proposing package output",
+    "must preserve routing, SEO, and data-query boundaries unless explicitly expanded",
+    "must prefer preview-first template packages over direct production replacement",
+    "must map reference styles or optimization goals onto GEOFlow modules instead of copying raw pages verbatim"
+  ]
+}

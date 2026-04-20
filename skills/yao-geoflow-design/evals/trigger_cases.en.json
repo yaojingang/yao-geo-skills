@@ -1,0 +1,80 @@
+{
+  "recommended_threshold": 0.38,
+  "negative_patterns": [
+    "generic frontend redesign",
+    "rewrite the backend",
+    "copy the whole site html",
+    "just explain the pages",
+    "direct production activation"
+  ],
+  "should_trigger": [
+    {
+      "text": "Given a reference URL, clone it into a preview-first GEOFlow template package that preserves existing frontend modules.",
+      "family": "reference_url_clone"
+    },
+    {
+      "text": "Inventory GEOFlow frontend variables and modules, then map homepage, category, article, and archive into a template plan.",
+      "family": "frontend_contract_mapping"
+    },
+    {
+      "text": "Map a reference site's style onto GEOFlow without changing business logic, only the template layer.",
+      "family": "theme_mapping_boundary"
+    },
+    {
+      "text": "Produce a preview-first GEOFlow theme package with tokens, mappings, and activation notes.",
+      "family": "theme_package_plan"
+    },
+    {
+      "text": "Audit the current GEOFlow template and tell me what to optimize on the homepage and article page without touching backend logic.",
+      "family": "current_template_optimization"
+    },
+    {
+      "text": "Do not rebuild the whole theme; adjust the current GEOFlow frontend with incremental design changes and token refinement.",
+      "family": "incremental_design_adjustment"
+    },
+    {
+      "text": "Use a reference site as direction, but mainly optimize the current GEOFlow template with a preview-first redesign pass.",
+      "family": "hybrid_reference_plus_optimization"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "Use the geoflow CLI to create tasks and publish articles.",
+      "family": "cli_ops"
+    },
+    {
+      "text": "Explain the GEOFlow homepage code structure to me.",
+      "family": "read_only_explanation"
+    },
+    {
+      "text": "Modify the database schema so the admin can switch templates.",
+      "family": "backend_schema_change"
+    },
+    {
+      "text": "Build a brand-new marketing website from scratch without GEOFlow module constraints.",
+      "family": "generic_frontend_design"
+    },
+    {
+      "text": "Push the new template live right now without preview or confirmation.",
+      "family": "direct_activation"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "Copy the reference site's raw HTML directly into GEOFlow.",
+      "family": "raw_html_copy_vs_module_mapping"
+    },
+    {
+      "text": "Create a skill that manages GEOFlow tasks through the CLI.",
+      "family": "template_skill_vs_cli_ops"
+    },
+    {
+      "text": "Implement backend support in GEOFlow settings so templates can be switched.",
+      "family": "system_implementation_vs_template_planning"
+    },
+    {
+      "text": "Adjust CSS and card hierarchy in the current template, but keep the existing data structure.",
+      "family": "optimization_mode_vs_generic_css_edit"
+    }
+  ]
+}

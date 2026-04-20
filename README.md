@@ -106,6 +106,7 @@ git checkout main
 - [skills/geo-tracking-plan](skills/geo-tracking-plan)
 - [skills/geoflow-cli-ops](skills/geoflow-cli-ops)
 - [skills/geoflow-template](skills/geoflow-template)
+- [skills/yao-geoflow-design](skills/yao-geoflow-design)
 
 ## Skills 导航
 
@@ -134,6 +135,18 @@ git checkout main
       <a href="docs/skills/geoflow-template.md">说明页</a> ·
       <a href="docs/skills/geoflow-template.en.md">English Guide</a> ·
       <a href="skills/geoflow-template">Skill 包</a> ·
+      <a href="https://github.com/yaojingang/GEOFlow">GEOFlow 项目</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>yao-geoflow-design</code></strong><br>
+      作用：为 GEOFlow 做前台模板复刻、现有模板优化与局部样式调整，输出设计审计、token 差异、模块映射和 preview-first 设计方案。<br><br>
+      适合：GEOFlow 当前主题迭代、参考站风格映射后落地、已有模板改版前的结构梳理、细节微调和增量优化。<br><br>
+      相关入口：<br>
+      <a href="docs/skills/yao-geoflow-design.md">说明页</a> ·
+      <a href="docs/skills/yao-geoflow-design.en.md">English Guide</a> ·
+      <a href="skills/yao-geoflow-design">Skill 包</a> ·
       <a href="https://github.com/yaojingang/GEOFlow">GEOFlow 项目</a>
     </td>
   </tr>

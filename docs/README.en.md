@@ -107,6 +107,7 @@ Open the skill folder in GitHub and download the files you need:
 - [skills/geo-tracking-plan](../skills/geo-tracking-plan)
 - [skills/geoflow-cli-ops](../skills/geoflow-cli-ops)
 - [skills/geoflow-template](../skills/geoflow-template)
+- [skills/yao-geoflow-design](../skills/yao-geoflow-design)
 
 ## Skill Navigation
 
@@ -129,6 +130,15 @@ The current catalog is grouped into `operations / measurement / research`.
     - [Guide (CN)](skills/geoflow-template.md)
     - [Guide (EN)](skills/geoflow-template.en.md)
     - [Package](../skills/geoflow-template)
+    - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
+
+- `yao-geoflow-design`
+  - Purpose: clone, optimize, and refine GEOFlow-compatible frontends through design audits, token deltas, module mappings, and preview-first packages.
+  - Best for: current-template optimization, hybrid reference-plus-optimization jobs, incremental GEOFlow theme iteration, and safe frontend design adjustments.
+  - Links:
+    - [Guide (CN)](skills/yao-geoflow-design.md)
+    - [Guide (EN)](skills/yao-geoflow-design.en.md)
+    - [Package](../skills/yao-geoflow-design)
     - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
 
 ### `measurement`

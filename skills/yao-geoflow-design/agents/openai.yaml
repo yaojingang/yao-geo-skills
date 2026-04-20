@@ -1,0 +1,4 @@
+interface:
+  display_name: "Yao GEOFlow Design"
+  short_description: "Plan GEOFlow frontend cloning or optimization"
+  default_prompt: "Inspect the GEOFlow frontend contract, choose clone, optimize, or hybrid mode, and produce a preview-first package."

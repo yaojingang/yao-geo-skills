@@ -112,6 +112,34 @@
       "summary": "Map a reference URL onto GEOFlow's frontend contract and generate a preview-first theme package plan with tokens, module mappings, and activation-ready structure.",
       "public_repo_path": "skills/geoflow-template",
       "last_updated": "2026-04-18"
+    },
+    {
+      "id": "yao-geoflow-design",
+      "family": "geo-operations",
+      "maturity": "beta",
+      "tags": [
+        "geoflow",
+        "frontend",
+        "theme",
+        "template-optimization",
+        "design-system",
+        "preview"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "design-audit",
+        "theme-package-plan",
+        "optimization-plan",
+        "mapping-json",
+        "preview-plan"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
+      "path": "skills/yao-geoflow-design",
+      "summary": "Clone, optimize, and refine GEOFlow-compatible frontends by mapping reference sites or improving the current template with preview-first design packages.",
+      "public_repo_path": "skills/yao-geoflow-design",
+      "last_updated": "2026-04-20"
     }
   ],
   "planned_families": [

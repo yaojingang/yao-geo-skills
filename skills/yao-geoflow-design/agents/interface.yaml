@@ -1,0 +1,24 @@
+interface:
+  display_name: "Yao GEOFlow Design"
+  short_description: "Clone or optimize GEOFlow frontends in preview-first mode"
+  default_prompt: "Use $yao-geoflow-design to clone or optimize a GEOFlow frontend in preview-first mode."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"

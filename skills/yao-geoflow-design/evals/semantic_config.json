@@ -1,0 +1,151 @@
+{
+  "optimizer_hints": {
+    "capability": "Clone, optimize, and refine GEOFlow-compatible frontends",
+    "inputs": [
+      "reference URL",
+      "current template",
+      "GEOFlow frontend modules",
+      "design tokens",
+      "optimization goals"
+    ],
+    "trigger_actions": [
+      "clone a GEOFlow frontend template",
+      "optimize the current GEOFlow template",
+      "adjust GEOFlow modules without changing backend logic",
+      "map a reference site onto GEOFlow modules"
+    ],
+    "exclusions": [
+      "generic frontend redesign detached from GEOFlow",
+      "raw HTML copying",
+      "backend refactors",
+      "direct production activation without preview"
+    ],
+    "artifacts": [
+      "tokens.json",
+      "mapping.json",
+      "design-audit.md",
+      "tokens.delta.json",
+      "mapping.delta.json",
+      "preview plan"
+    ]
+  },
+  "fallback_positive_concepts": [
+    "geoflow_contract",
+    "clone_reference",
+    "optimize_current",
+    "preview_safe"
+  ],
+  "positive_concepts": {
+    "geoflow_contract": {
+      "weight": 0.3,
+      "phrases": [
+        "geoflow",
+        "geoflow frontend",
+        "current geoflow template",
+        "geoflow-compatible",
+        "homepage category article archive",
+        "current template"
+      ]
+    },
+    "clone_reference": {
+      "weight": 0.24,
+      "phrases": [
+        "reference url",
+        "reference site",
+        "template cloning",
+        "map a reference site",
+        "page-style replication",
+        "template plan",
+        "theme package",
+        "template package",
+        "reference-driven template"
+      ]
+    },
+    "optimize_current": {
+      "weight": 0.24,
+      "phrases": [
+        "improving the current template",
+        "current-template optimization",
+        "theme iteration",
+        "module-level ui adjustment",
+        "design-token refinement",
+        "optimize the current template",
+        "audit the current",
+        "what to optimize",
+        "incremental design adjustment",
+        "token refinement"
+      ]
+    },
+    "preview_safe": {
+      "weight": 0.16,
+      "phrases": [
+        "preview-first",
+        "without changing business logic",
+        "without changing data contracts",
+        "preview plan",
+        "preview-safe"
+      ]
+    },
+    "design_artifacts": {
+      "weight": 0.06,
+      "phrases": [
+        "tokens json",
+        "mapping json",
+        "design audit",
+        "change plan",
+        "tokens.delta.json",
+        "mapping.delta.json"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "generic_frontend": {
+      "weight": 0.28,
+      "exclusive": true,
+      "phrases": [
+        "generic frontend redesign",
+        "marketing website",
+        "new website from scratch"
+      ]
+    },
+    "raw_html_copy": {
+      "weight": 0.34,
+      "exclusive": true,
+      "phrases": [
+        "copy the whole site html",
+        "raw html",
+        "literal html copy",
+        "整页 html 原样搬",
+        "直接复制整个站"
+      ]
+    },
+    "backend_refactor": {
+      "weight": 0.32,
+      "exclusive": true,
+      "phrases": [
+        "rewrite the backend",
+        "database schema",
+        "route rewrite",
+        "seo contract change"
+      ]
+    },
+    "read_only": {
+      "weight": 0.18,
+      "exclusive": false,
+      "phrases": [
+        "just explain the pages",
+        "summarize the repo",
+        "explain homepage code structure",
+        "read-only explanation"
+      ]
+    },
+    "direct_activation": {
+      "weight": 0.28,
+      "exclusive": true,
+      "phrases": [
+        "direct production activation",
+        "ship it live without preview"
+      ]
+    }
+  }
+}
