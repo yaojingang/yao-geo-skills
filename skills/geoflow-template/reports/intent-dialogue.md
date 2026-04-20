@@ -20,7 +20,7 @@ Build a reusable skill that can:
 - do not change current GEOFlow business logic
 - do not break existing frontend data contracts
 - preserve GEOFlow page/module responsibilities
-- keep the skill distinct from `geoflow-cli-ops`
+- keep the skill distinct from `yao-geoflow-cli`
 
 ## Future System Direction
 

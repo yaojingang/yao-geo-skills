@@ -1,7 +1,7 @@
 interface:
-  display_name: "GEOFlow CLI Ops"
+  display_name: "Yao GEOFlow CLI"
   short_description: "Operate an existing GEOFlow instance from the local geoflow CLI"
-  default_prompt: "Use $geoflow-cli-ops to operate an existing GEOFlow system through the local geoflow CLI: inspect catalog data, create or manage tasks, enqueue jobs, upload drafts, review articles, and publish content."
+  default_prompt: "Use $yao-geoflow-cli to operate an existing GEOFlow system through the local geoflow CLI: inspect catalog data, create or manage tasks, enqueue jobs, upload drafts, review articles, and publish content."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

@@ -1,9 +1,9 @@
 ---
-name: geoflow-cli-ops
+name: yao-geoflow-cli
 description: Operate an existing GEOFlow system through the local geoflow CLI to inspect catalog data, create or update tasks, enqueue generation jobs, upload article drafts, review content, and publish articles. Use when the user wants CLI-based GEOFlow operations instead of the web admin, especially for task automation, article upload, bulk publish flows, or skill-driven local control. Do not use for backend implementation, schema changes, or direct database edits.
 ---
 
-# GEOFlow CLI Ops
+# Yao GEOFlow CLI
 
 Use this skill when the system already has the GEOFlow API and `bin/geoflow` CLI available, and the job is to operate that system from local commands.
 

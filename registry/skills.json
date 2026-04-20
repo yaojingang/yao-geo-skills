@@ -36,7 +36,7 @@
   },
   "skills": [
     {
-      "id": "geoflow-cli-ops",
+      "id": "yao-geoflow-cli",
       "family": "geo-operations",
       "maturity": "stable",
       "tags": [
@@ -55,9 +55,9 @@
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
-      "path": "skills/geoflow-cli-ops",
+      "path": "skills/yao-geoflow-cli",
       "summary": "Operate an existing GEOFlow system through the local geoflow CLI for catalog lookup, task execution, article upload, review, and publish flows.",
-      "public_repo_path": "skills/geoflow-cli-ops",
+      "public_repo_path": "skills/yao-geoflow-cli",
       "last_updated": "2026-04-13"
     },
     {

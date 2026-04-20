@@ -1,6 +1,6 @@
-# GEOFlow CLI Ops Brief
+# Yao GEOFlow CLI Brief
 
-- `skill_id`: `geoflow-cli-ops`
+- `skill_id`: `yao-geoflow-cli`
 - `workspace_path`:
 - `config_path`:
 - `base_url`:

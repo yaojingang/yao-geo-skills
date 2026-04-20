@@ -1,5 +1,5 @@
 {
-  "skill_id": "geoflow-cli-ops",
+  "skill_id": "yao-geoflow-cli",
   "required_files": [
     "SKILL.md",
     "agents/interface.yaml",

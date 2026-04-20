@@ -104,7 +104,7 @@ git checkout main
 直接打开对应 skill 目录，在 GitHub 页面按需下载文件：
 
 - [skills/yao-geo-tracking](skills/yao-geo-tracking)
-- [skills/geoflow-cli-ops](skills/geoflow-cli-ops)
+- [skills/yao-geoflow-cli](skills/yao-geoflow-cli)
 - [skills/geoflow-template](skills/geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
 
@@ -117,12 +117,12 @@ git checkout main
 <table>
   <tr>
     <td valign="top" width="100%">
-      <strong><code>geoflow-cli-ops</code></strong><br>
+      <strong><code>yao-geoflow-cli</code></strong><br>
       作用：通过本地 <code>geoflow</code> CLI 操作已有的 GEOFlow 系统，用于目录查询、任务管理、文章上传、审核与发布。<br><br>
       适合：已经有 GEOFlow 系统，需要通过 CLI 做运营动作、批量处理或自动化编排。<br><br>
       相关入口：<br>
-      <a href="docs/skills/geoflow-cli-ops.md">说明页</a> ·
-      <a href="skills/geoflow-cli-ops">Skill 包</a> ·
+      <a href="docs/skills/yao-geoflow-cli.md">说明页</a> ·
+      <a href="skills/yao-geoflow-cli">Skill 包</a> ·
       <a href="https://github.com/yaojingang/GEOFlow">GEOFlow 项目</a>
     </td>
   </tr>

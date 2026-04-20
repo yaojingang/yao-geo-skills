@@ -1,6 +1,6 @@
-# GEOFlow CLI Ops
+# Yao GEOFlow CLI
 
-`geoflow-cli-ops` is a local operations skill for controlling an existing GEOFlow system through the project CLI instead of the web admin.
+`yao-geoflow-cli` is a local operations skill for controlling an existing GEOFlow system through the project CLI instead of the web admin.
 
 Public project repository:
 

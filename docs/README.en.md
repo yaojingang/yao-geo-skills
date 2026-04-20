@@ -105,7 +105,7 @@ git checkout main
 Open the skill folder in GitHub and download the files you need:
 
 - [skills/yao-geo-tracking](../skills/yao-geo-tracking)
-- [skills/geoflow-cli-ops](../skills/geoflow-cli-ops)
+- [skills/yao-geoflow-cli](../skills/yao-geoflow-cli)
 - [skills/geoflow-template](../skills/geoflow-template)
 - [skills/yao-geoflow-design](../skills/yao-geoflow-design)
 
@@ -115,12 +115,12 @@ The current catalog is grouped into `operations / measurement / research`.
 
 ### `operations`
 
-- `geoflow-cli-ops`
+- `yao-geoflow-cli`
   - Purpose: operate an existing GEOFlow system through the local CLI.
   - Best for: catalog lookup, task operations, article upload, review, and publishing.
   - Links:
-    - [Guide](skills/geoflow-cli-ops.md)
-    - [Package](../skills/geoflow-cli-ops)
+    - [Guide](skills/yao-geoflow-cli.md)
+    - [Package](../skills/yao-geoflow-cli)
     - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
 
 - `geoflow-template`
