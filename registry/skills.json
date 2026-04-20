@@ -58,7 +58,7 @@
       "path": "skills/yao-geoflow-cli",
       "summary": "Operate an existing GEOFlow system through the local geoflow CLI for catalog lookup, task execution, article upload, review, and publish flows.",
       "public_repo_path": "skills/yao-geoflow-cli",
-      "last_updated": "2026-04-13"
+      "last_updated": "2026-04-20"
     },
     {
       "id": "yao-geo-tracking",
