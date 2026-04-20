@@ -1,4 +1,4 @@
-# GEOFlow Template Brief
+# Yao GEOFlow Template Brief
 
 - `skill_id`: `yao-geoflow-template`
 - `reference_url`:

@@ -1,4 +1,4 @@
-# yao-geoflow-template
+# Yao GEOFlow Template
 
 `yao-geoflow-template` maps a reference site into a **GEOFlow-compatible theme package plan**. It does not replace the live frontend directly. Instead, it produces `tokens.json`, `mapping.json`, `manifest.json`, and a preview-first theme package structure that can later be wired into GEOFlow.
 

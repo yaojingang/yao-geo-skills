@@ -1,4 +1,4 @@
-# yao-geoflow-template
+# Yao GEOFlow Template
 
 `yao-geoflow-template` 用来把一个参考网址的前台视觉风格，映射成 **GEOFlow 兼容的主题包方案**。它不直接替换生产前台，而是先输出 `tokens.json`、`mapping.json`、`manifest.json` 和 preview-first 的模板包结构。
 

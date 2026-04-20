@@ -1,4 +1,4 @@
-# GEOFlow Template
+# Yao GEOFlow Template
 
 `yao-geoflow-template` is a local skill for analyzing the current GEOFlow frontend contract, mapping it to reference site styles, and producing a reusable theme-package plan for previewable template variants.
 
