@@ -1,6 +1,6 @@
-# geoflow-template
+# yao-geoflow-template
 
-`geoflow-template` 用来把一个参考网址的前台视觉风格，映射成 **GEOFlow 兼容的主题包方案**。它不直接替换生产前台，而是先输出 `tokens.json`、`mapping.json`、`manifest.json` 和 preview-first 的模板包结构。
+`yao-geoflow-template` 用来把一个参考网址的前台视觉风格，映射成 **GEOFlow 兼容的主题包方案**。它不直接替换生产前台，而是先输出 `tokens.json`、`mapping.json`、`manifest.json` 和 preview-first 的模板包结构。
 
 ## 中文概述
 
@@ -20,7 +20,7 @@
 
 ## English Overview
 
-Use `geoflow-template` when the job is to turn a reference frontend into a **GEOFlow-compatible theme package plan**.
+Use `yao-geoflow-template` when the job is to turn a reference frontend into a **GEOFlow-compatible theme package plan**.
 
 Best for:
 
@@ -38,9 +38,9 @@ Not for:
 
 ## Package Links
 
-- Skill package: [skills/geoflow-template](../../skills/geoflow-template)
-- Trigger boundary: [trigger_cases.json](../../skills/geoflow-template/evals/trigger_cases.json)
-- Frontend map: [geoflow-frontend-map.md](../../skills/geoflow-template/references/geoflow-frontend-map.md)
-- Theme contract: [theme-package-contract.md](../../skills/geoflow-template/references/theme-package-contract.md)
-- Example mapping report: [qiaomu-blog-mapping-2026-04-18.md](../../skills/geoflow-template/reports/qiaomu-blog-mapping-2026-04-18.md)
+- Skill package: [skills/yao-geoflow-template](../../skills/yao-geoflow-template)
+- Trigger boundary: [trigger_cases.json](../../skills/yao-geoflow-template/evals/trigger_cases.json)
+- Frontend map: [geoflow-frontend-map.md](../../skills/yao-geoflow-template/references/geoflow-frontend-map.md)
+- Theme contract: [theme-package-contract.md](../../skills/yao-geoflow-template/references/theme-package-contract.md)
+- Example mapping report: [qiaomu-blog-mapping-2026-04-18.md](../../skills/yao-geoflow-template/reports/qiaomu-blog-mapping-2026-04-18.md)
 - Public project: [GEOFlow](https://github.com/yaojingang/GEOFlow)

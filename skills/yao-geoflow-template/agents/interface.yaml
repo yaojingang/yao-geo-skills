@@ -1,7 +1,7 @@
 interface:
-  display_name: "GEOFlow Template"
+  display_name: "Yao GEOFlow Template"
   short_description: "Map reference-site styles onto GEOFlow frontend modules and generate preview-first template package plans"
-  default_prompt: "Use $geoflow-template to inventory the current GEOFlow frontend contract, map a reference site's style onto GEOFlow modules, and produce a preview-first template package plan without changing business logic."
+  default_prompt: "Use $yao-geoflow-template to inventory the current GEOFlow frontend contract, map a reference site's style onto GEOFlow modules, and produce a preview-first template package plan without changing business logic."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

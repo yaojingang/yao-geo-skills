@@ -1,5 +1,5 @@
 ---
-name: geoflow-template
+name: yao-geoflow-template
 description: Analyze the current GEOFlow frontend contract, map a reference URL onto GEOFlow's existing frontend modules, and prepare a preview-first template package plan for homepage, category, article, archive, and ad-slot UI replacement without changing business logic or data contracts. Use when the user wants GEOFlow frontend template cloning, UI template packaging, page-style replication from a reference site, or a GEOFlow-compatible theme/module map. Do not use for generic frontend redesign, arbitrary HTML copying, backend refactors, or direct production template activation.
 ---
 

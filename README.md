@@ -105,7 +105,7 @@ git checkout main
 
 - [skills/yao-geo-tracking](skills/yao-geo-tracking)
 - [skills/yao-geoflow-cli](skills/yao-geoflow-cli)
-- [skills/geoflow-template](skills/geoflow-template)
+- [skills/yao-geoflow-template](skills/yao-geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
 
 ## Skills 导航
@@ -128,13 +128,13 @@ git checkout main
   </tr>
   <tr>
     <td valign="top" width="100%">
-      <strong><code>geoflow-template</code></strong><br>
+      <strong><code>yao-geoflow-template</code></strong><br>
       作用：把参考网址的前台视觉风格映射成 GEOFlow 兼容的主题包方案，输出模块映射、设计 token 和 preview-first 模板结构。<br><br>
       适合：GEOFlow 前台模板复刻、参考站样式映射、主题包规划、模板预览与启用前的前置准备。<br><br>
       相关入口：<br>
-      <a href="docs/skills/geoflow-template.md">说明页</a> ·
-      <a href="docs/skills/geoflow-template.en.md">English Guide</a> ·
-      <a href="skills/geoflow-template">Skill 包</a> ·
+      <a href="docs/skills/yao-geoflow-template.md">说明页</a> ·
+      <a href="docs/skills/yao-geoflow-template.en.md">English Guide</a> ·
+      <a href="skills/yao-geoflow-template">Skill 包</a> ·
       <a href="https://github.com/yaojingang/GEOFlow">GEOFlow 项目</a>
     </td>
   </tr>

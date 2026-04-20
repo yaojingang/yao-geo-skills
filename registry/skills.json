@@ -87,7 +87,7 @@
       "last_updated": "2026-04-20"
     },
     {
-      "id": "geoflow-template",
+      "id": "yao-geoflow-template",
       "family": "geo-operations",
       "maturity": "beta",
       "tags": [
@@ -108,10 +108,10 @@
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
-      "path": "skills/geoflow-template",
+      "path": "skills/yao-geoflow-template",
       "summary": "Map a reference URL onto GEOFlow's frontend contract and generate a preview-first theme package plan with tokens, module mappings, and activation-ready structure.",
-      "public_repo_path": "skills/geoflow-template",
-      "last_updated": "2026-04-18"
+      "public_repo_path": "skills/yao-geoflow-template",
+      "last_updated": "2026-04-20"
     },
     {
       "id": "yao-geoflow-design",

@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Serve geoflow-template preview files.")
+    parser = argparse.ArgumentParser(description="Serve yao-geoflow-template preview files.")
     parser.add_argument("--port", type=int, default=45731)
     parser.add_argument(
         "--root",

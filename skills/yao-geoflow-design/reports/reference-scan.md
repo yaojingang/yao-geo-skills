@@ -46,7 +46,7 @@ What not to borrow:
 
 This package should be a `production` archetype:
 
-- the route can be confused with generic frontend design, `geoflow-template`, or GEOFlow CLI ops
+- the route can be confused with generic frontend design, `yao-geoflow-template`, or GEOFlow CLI ops
 - the skill needs one authoritative frontend contract reference
 - the package should stay compact, but it must defend its boundary clearly
 - the package must separate `clone`, `optimize`, and `hybrid` jobs early so outputs do not drift

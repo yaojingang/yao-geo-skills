@@ -1,6 +1,6 @@
 # GEOFlow Template Brief
 
-- `skill_id`: `geoflow-template`
+- `skill_id`: `yao-geoflow-template`
 - `reference_url`:
 - `target_geoflow_workspace`:
 - `template_id`:

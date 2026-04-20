@@ -1,5 +1,5 @@
 {
-  "skill_id": "geoflow-template",
+  "skill_id": "yao-geoflow-template",
   "required_files": [
     "SKILL.md",
     "agents/interface.yaml",

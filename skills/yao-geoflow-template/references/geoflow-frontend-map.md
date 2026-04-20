@@ -1,6 +1,6 @@
 # GEOFlow 前台模块与变量地图
 
-本文档是 `geoflow-template` 的核心参考。目标不是解释业务，而是定义：当前 GEOFlow 前台页面由哪些稳定模块组成、依赖哪些变量和函数、哪些位置可以替换样式、哪些契约必须保留。
+本文档是 `yao-geoflow-template` 的核心参考。目标不是解释业务，而是定义：当前 GEOFlow 前台页面由哪些稳定模块组成、依赖哪些变量和函数、哪些位置可以替换样式、哪些契约必须保留。
 
 工作区基线：
 - 代码库：标准 GEOFlow PHP 工作区（根目录包含 `index.php`、`article.php`、`category.php`、`archive.php`、`includes/header.php`）
