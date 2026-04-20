@@ -1,8 +1,8 @@
 {
-  "name": "geo-tracking-plan",
-  "version": "0.2.0",
+  "name": "yao-geo-tracking",
+  "version": "0.2.1",
   "owner": "Yao Team",
-  "updated_at": "2026-04-16",
+  "updated_at": "2026-04-20",
   "status": "active",
   "maturity_tier": "incubating",
   "lifecycle_stage": "incubating",

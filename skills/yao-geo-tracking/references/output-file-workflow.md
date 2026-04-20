@@ -13,7 +13,7 @@
 2. 再运行：
 
 ```bash
-python3 scripts/render_geo_tracking_plan.py \
+python3 scripts/render_yao_geo_tracking.py \
   --input <report_input.json> \
   --output-dir <output-dir>
 ```
@@ -108,5 +108,5 @@ python3 scripts/render_geo_tracking_plan.py \
 可直接参考：
 
 - `examples/hubspot-demo/report_input.json`
-- `examples/hubspot-demo/hubspot-geo-tracking-plan.html`
-- `examples/hubspot-demo/hubspot-geo-tracking-plan.docx`
+- `examples/hubspot-demo/hubspot-yao-geo-tracking.html`
+- `examples/hubspot-demo/hubspot-yao-geo-tracking.docx`

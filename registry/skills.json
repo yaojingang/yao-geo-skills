@@ -61,7 +61,7 @@
       "last_updated": "2026-04-13"
     },
     {
-      "id": "geo-tracking-plan",
+      "id": "yao-geo-tracking",
       "family": "geo-measurement",
       "maturity": "beta",
       "tags": [
@@ -81,10 +81,10 @@
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
-      "path": "skills/geo-tracking-plan",
+      "path": "skills/yao-geo-tracking",
       "summary": "Generate a company-specific GEO backend tracking plan using official-site-first retrieval, business recognition, and China-vs-overseas monitoring logic.",
-      "public_repo_path": "skills/geo-tracking-plan",
-      "last_updated": "2026-04-16"
+      "public_repo_path": "skills/yao-geo-tracking",
+      "last_updated": "2026-04-20"
     },
     {
       "id": "geoflow-template",

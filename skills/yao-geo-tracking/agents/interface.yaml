@@ -1,7 +1,7 @@
 interface:
-  display_name: "GEO Tracking Plan"
+  display_name: "Yao GEO Tracking"
   short_description: "Generate a company-specific GEO tracking plan with optional HTML and Word deliverables."
-  default_prompt: "Use $geo-tracking-plan to start from a company name and supporting context, perform authoritative retrieval anchored on the official website, identify business and market characteristics, then produce a personalized GEO backend tracking plan, direct-vs-indirect tracking design, domestic-vs-overseas monitoring emphasis, data model, roadmap, and optional HTML and Word deliverables."
+  default_prompt: "Use $yao-geo-tracking to start from a company name and supporting context, perform authoritative retrieval anchored on the official website, identify business and market characteristics, then produce a personalized GEO backend tracking plan, direct-vs-indirect tracking design, domestic-vs-overseas monitoring emphasis, data model, roadmap, and optional HTML and Word deliverables."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

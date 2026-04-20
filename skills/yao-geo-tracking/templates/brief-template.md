@@ -1,6 +1,6 @@
-# GEO Tracking Plan Brief
+# Yao GEO Tracking Brief
 
-- `skill_id`: `geo-tracking-plan`
+- `skill_id`: `yao-geo-tracking`
 - `company_name`:
 - `brand_aliases`:
 - `official_site`:

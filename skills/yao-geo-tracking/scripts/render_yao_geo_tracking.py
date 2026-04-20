@@ -39,7 +39,7 @@ def slugify(value: str) -> str:
     lowered = value.lower().strip()
     lowered = re.sub(r"[^a-z0-9]+", "-", lowered)
     lowered = re.sub(r"-{2,}", "-", lowered)
-    return lowered.strip("-") or "geo-tracking-plan"
+    return lowered.strip("-") or "yao-geo-tracking"
 
 
 def render_html(data: dict[str, Any]) -> str:
@@ -47,7 +47,7 @@ def render_html(data: dict[str, Any]) -> str:
     subtitle = html.escape(data.get("subtitle", ""))
     company = html.escape(data["company_name"])
     analysis_date = html.escape(data["analysis_date"])
-    prepared_by = html.escape(data.get("prepared_by", "geo-tracking-plan"))
+    prepared_by = html.escape(data.get("prepared_by", "yao-geo-tracking"))
 
     cards_html = []
     for card in data["summary_cards"]:
@@ -654,7 +654,7 @@ def render_html(data: dict[str, Any]) -> str:
 <body>
   <main class="page">
     <header class="hero">
-      <p class="eyebrow">GEO Tracking Plan</p>
+      <p class="eyebrow">Yao GEO Tracking</p>
       <h1>{title}</h1>
       <p class="subtitle">{subtitle}</p>
       <div class="meta">
@@ -767,7 +767,7 @@ def render_docx(data: dict[str, Any], output_path: Path) -> None:
         body.append(paragraph_xml(data["subtitle"], size=22, color="666666", align="center"))
     meta = (
         f"公司：{data['company_name']}    分析日期：{data['analysis_date']}    "
-        f"生成方式：{data.get('prepared_by', 'geo-tracking-plan')}"
+        f"生成方式：{data.get('prepared_by', 'yao-geo-tracking')}"
     )
     body.append(paragraph_xml(meta, size=18, color="666666", align="center", after=220))
 
@@ -896,8 +896,8 @@ def render_docx(data: dict[str, Any], output_path: Path) -> None:
  xmlns:dcmitype="http://purl.org/dc/dcmitype/"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <dc:title>{xml_escape(data["title"])}</dc:title>
-  <dc:creator>{xml_escape(data.get("prepared_by", "geo-tracking-plan"))}</dc:creator>
-  <cp:lastModifiedBy>{xml_escape(data.get("prepared_by", "geo-tracking-plan"))}</cp:lastModifiedBy>
+  <dc:creator>{xml_escape(data.get("prepared_by", "yao-geo-tracking"))}</dc:creator>
+  <cp:lastModifiedBy>{xml_escape(data.get("prepared_by", "yao-geo-tracking"))}</cp:lastModifiedBy>
   <dcterms:created xsi:type="dcterms:W3CDTF">{now}</dcterms:created>
   <dcterms:modified xsi:type="dcterms:W3CDTF">{now}</dcterms:modified>
 </cp:coreProperties>

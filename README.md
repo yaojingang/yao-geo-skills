@@ -95,7 +95,7 @@ cd yao-geo-skills
 git clone --filter=blob:none --no-checkout https://github.com/yaojingang/yao-geo-skills.git
 cd yao-geo-skills
 git sparse-checkout init --cone
-git sparse-checkout set skills/geo-tracking-plan docs/skills/geo-tracking-plan.md
+git sparse-checkout set skills/yao-geo-tracking docs/skills/yao-geo-tracking.md
 git checkout main
 ```
 
@@ -103,7 +103,7 @@ git checkout main
 
 直接打开对应 skill 目录，在 GitHub 页面按需下载文件：
 
-- [skills/geo-tracking-plan](skills/geo-tracking-plan)
+- [skills/yao-geo-tracking](skills/yao-geo-tracking)
 - [skills/geoflow-cli-ops](skills/geoflow-cli-ops)
 - [skills/geoflow-template](skills/geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
@@ -157,21 +157,21 @@ git checkout main
 <table>
   <tr>
     <td valign="top" width="100%">
-      <strong><code>geo-tracking-plan</code></strong><br>
+      <strong><code>yao-geo-tracking</code></strong><br>
       作用：输入公司名称和辅助信息，基于官网与官方资产生成 GEO 后端效果追踪方案，显式区分国内 / 海外 / 混合 GEO 的不同监测逻辑。<br><br>
       适合：官网优先检索、业务识别、直接与间接效果设计、可视化 HTML 报告、DOCX 交付。<br><br>
       公开示例：<br>
-      海外示例：<a href="skills/geo-tracking-plan/examples/hubspot-demo/report_input.json">HubSpot 输入</a> ·
-      <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html">HTML</a> ·
-      <a href="skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx">DOCX</a><br>
-      国内合成示例：<a href="skills/geo-tracking-plan/examples/lingxu-demo/report_input.json">岭序商机云输入</a> ·
-      <a href="skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html">HTML</a> ·
-      <a href="skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx">DOCX</a><br><br>
+      海外示例：<a href="skills/yao-geo-tracking/examples/hubspot-demo/report_input.json">HubSpot 输入</a> ·
+      <a href="skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.html">HTML</a> ·
+      <a href="skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.docx">DOCX</a><br>
+      国内合成示例：<a href="skills/yao-geo-tracking/examples/lingxu-demo/report_input.json">岭序商机云输入</a> ·
+      <a href="skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.html">HTML</a> ·
+      <a href="skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.docx">DOCX</a><br><br>
       相关入口：<br>
-      <a href="docs/skills/geo-tracking-plan.md">说明页</a> ·
-      <a href="skills/geo-tracking-plan">Skill 包</a> ·
-      <a href="skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png">海外截图</a> ·
-      <a href="skills/geo-tracking-plan/assets/screenshots/lingxu-cn-geo-tracking-plan.png">国内截图</a>
+      <a href="docs/skills/yao-geo-tracking.md">说明页</a> ·
+      <a href="skills/yao-geo-tracking">Skill 包</a> ·
+      <a href="skills/yao-geo-tracking/assets/screenshots/hubspot-yao-geo-tracking.png">海外截图</a> ·
+      <a href="skills/yao-geo-tracking/assets/screenshots/lingxu-cn-yao-geo-tracking.png">国内截图</a>
     </td>
   </tr>
 </table>
@@ -197,7 +197,7 @@ git checkout main
 
 ## 相关示例
 
-目前仓库里最完整的公开示例来自 `geo-tracking-plan`：
+目前仓库里最完整的公开示例来自 `yao-geo-tracking`：
 
 - 海外公开公司示例：HubSpot
 - 国内公开合成示例：岭序商机云

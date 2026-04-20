@@ -2,9 +2,9 @@
   "title": "HubSpot GEO 后端归因框架与效果跟踪体系示例",
   "subtitle": "公开公司示例，内容为方法演示用的合成样本；仅展示开源 skill 的结构与交付形式，不代表对 HubSpot 的真实经营审计结论。",
   "company_name": "HubSpot",
-  "analysis_date": "2026-04-16",
-  "prepared_by": "geo-tracking-plan demo",
-  "slug": "hubspot-geo-tracking-plan",
+  "analysis_date": "2026-04-20",
+  "prepared_by": "yao-geo-tracking demo",
+  "slug": "hubspot-yao-geo-tracking",
   "summary_cards": [
     {
       "label": "业务形态",

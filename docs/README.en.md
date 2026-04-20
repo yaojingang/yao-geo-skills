@@ -96,7 +96,7 @@ On GitHub, click:
 git clone --filter=blob:none --no-checkout https://github.com/yaojingang/yao-geo-skills.git
 cd yao-geo-skills
 git sparse-checkout init --cone
-git sparse-checkout set skills/geo-tracking-plan docs/skills/geo-tracking-plan.md
+git sparse-checkout set skills/yao-geo-tracking docs/skills/yao-geo-tracking.md
 git checkout main
 ```
 
@@ -104,7 +104,7 @@ git checkout main
 
 Open the skill folder in GitHub and download the files you need:
 
-- [skills/geo-tracking-plan](../skills/geo-tracking-plan)
+- [skills/yao-geo-tracking](../skills/yao-geo-tracking)
 - [skills/geoflow-cli-ops](../skills/geoflow-cli-ops)
 - [skills/geoflow-template](../skills/geoflow-template)
 - [skills/yao-geoflow-design](../skills/yao-geoflow-design)
@@ -143,23 +143,23 @@ The current catalog is grouped into `operations / measurement / research`.
 
 ### `measurement`
 
-- `geo-tracking-plan`
+- `yao-geo-tracking`
   - Purpose: generate a company-specific GEO backend tracking plan from a company name and supporting context.
   - Best for: official-site-first retrieval, business recognition, direct-vs-indirect measurement design, HTML and DOCX deliverables.
   - Public demos:
     - Overseas demo:
-      - [HubSpot input](../skills/geo-tracking-plan/examples/hubspot-demo/report_input.json)
-      - [HTML](../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html)
-      - [DOCX](../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx)
+      - [HubSpot input](../skills/yao-geo-tracking/examples/hubspot-demo/report_input.json)
+      - [HTML](../skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.html)
+      - [DOCX](../skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.docx)
     - China synthetic demo:
-      - [Lingxu input](../skills/geo-tracking-plan/examples/lingxu-demo/report_input.json)
-      - [HTML](../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html)
-      - [DOCX](../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx)
+      - [Lingxu input](../skills/yao-geo-tracking/examples/lingxu-demo/report_input.json)
+      - [HTML](../skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.html)
+      - [DOCX](../skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.docx)
   - Links:
-    - [Guide](skills/geo-tracking-plan.md)
-    - [Package](../skills/geo-tracking-plan)
-    - [Overseas screenshot](../skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png)
-    - [China screenshot](../skills/geo-tracking-plan/assets/screenshots/lingxu-cn-geo-tracking-plan.png)
+    - [Guide](skills/yao-geo-tracking.md)
+    - [Package](../skills/yao-geo-tracking)
+    - [Overseas screenshot](../skills/yao-geo-tracking/assets/screenshots/hubspot-yao-geo-tracking.png)
+    - [China screenshot](../skills/yao-geo-tracking/assets/screenshots/lingxu-cn-yao-geo-tracking.png)
 
 ### `research`
 
@@ -168,7 +168,7 @@ The current catalog is grouped into `operations / measurement / research`.
 
 ## Example Outputs
 
-The most complete public examples in the repository currently come from `geo-tracking-plan`:
+The most complete public examples in the repository currently come from `yao-geo-tracking`:
 
 - public-company overseas demo: HubSpot
 - public synthetic China demo: Lingxu

@@ -1,10 +1,10 @@
-# geo-tracking-plan
+# yao-geo-tracking
 
-`geo-tracking-plan` is a public GEO skill for generating a company-specific backend tracking and attribution plan from a company name plus optional supporting context. It is designed for open-source use: official-site-first, evidence-traceable, market-aware, and safe to reuse without private systems.
+`yao-geo-tracking` is a public GEO skill for generating a company-specific backend tracking and attribution plan from a company name plus optional supporting context. It is designed for open-source use: official-site-first, evidence-traceable, market-aware, and safe to reuse without private systems.
 
 ## 中文概述
 
-`geo-tracking-plan` 用来做一件事：输入公司名称和少量辅助信息，先以官网和其他官方资产为核心完成权威检索，再识别业务特征、市场范围与转化链路，最后输出一套适合这家公司的 GEO 后端效果追踪方案。
+`yao-geo-tracking` 用来做一件事：输入公司名称和少量辅助信息，先以官网和其他官方资产为核心完成权威检索，再识别业务特征、市场范围与转化链路，最后输出一套适合这家公司的 GEO 后端效果追踪方案。
 
 它不是内容策略 skill，也不是 CRM / BI 实施 skill。它的定位是：
 
@@ -15,7 +15,7 @@
 
 ## English Overview
 
-`geo-tracking-plan` owns one clear job: start from a company name, retrieve authoritative public evidence anchored on the official site, identify business and market characteristics, and produce a company-specific GEO backend tracking plan.
+`yao-geo-tracking` owns one clear job: start from a company name, retrieve authoritative public evidence anchored on the official site, identify business and market characteristics, and produce a company-specific GEO backend tracking plan.
 
 It is not a content strategy skill and not a CRM or BI implementation skill. It is built to:
 
@@ -121,9 +121,9 @@ It is not a content strategy skill and not a CRM or BI implementation skill. It 
 
 Artifacts:
 
-- Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/hubspot-demo/report_input.json)
-- HTML report: [hubspot-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.html)
-- DOCX report: [hubspot-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/hubspot-demo/hubspot-geo-tracking-plan.docx)
+- Input brief: [report_input.json](../../skills/yao-geo-tracking/examples/hubspot-demo/report_input.json)
+- HTML report: [hubspot-yao-geo-tracking.html](../../skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.html)
+- DOCX report: [hubspot-yao-geo-tracking.docx](../../skills/yao-geo-tracking/examples/hubspot-demo/hubspot-yao-geo-tracking.docx)
 
 ### 国内路径 / China Path
 
@@ -140,9 +140,9 @@ Artifacts:
 
 Artifacts:
 
-- Input brief: [report_input.json](../../skills/geo-tracking-plan/examples/lingxu-demo/report_input.json)
-- HTML report: [lingxu-cn-geo-tracking-plan.html](../../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html)
-- DOCX report: [lingxu-cn-geo-tracking-plan.docx](../../skills/geo-tracking-plan/examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx)
+- Input brief: [report_input.json](../../skills/yao-geo-tracking/examples/lingxu-demo/report_input.json)
+- HTML report: [lingxu-cn-yao-geo-tracking.html](../../skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.html)
+- DOCX report: [lingxu-cn-yao-geo-tracking.docx](../../skills/yao-geo-tracking/examples/lingxu-demo/lingxu-cn-yao-geo-tracking.docx)
 
 ### 对比重点 / What The Two Demos Show
 
@@ -158,15 +158,15 @@ Artifacts:
 
 HubSpot HTML demo preview:
 
-![HubSpot GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/hubspot-geo-tracking-plan.png)
+![HubSpot GEO tracking plan screenshot](../../skills/yao-geo-tracking/assets/screenshots/hubspot-yao-geo-tracking.png)
 
 China synthetic HTML demo preview:
 
-![China GEO tracking plan screenshot](../../skills/geo-tracking-plan/assets/screenshots/lingxu-cn-geo-tracking-plan.png)
+![China GEO tracking plan screenshot](../../skills/yao-geo-tracking/assets/screenshots/lingxu-cn-yao-geo-tracking.png)
 
 ## Package Links
 
-- Skill package: [skills/geo-tracking-plan](../../skills/geo-tracking-plan)
+- Skill package: [skills/yao-geo-tracking](../../skills/yao-geo-tracking)
 
 ## 适用边界 / Scope Boundaries
 
@@ -204,6 +204,6 @@ Not for:
 
 ## Repository Notes
 
-- Package path: `skills/geo-tracking-plan`
+- Package path: `skills/yao-geo-tracking`
 - Registry entry: `registry/skills.json`
-- Required deliverable renderer: `skills/geo-tracking-plan/scripts/render_geo_tracking_plan.py`
+- Required deliverable renderer: `skills/yao-geo-tracking/scripts/render_yao_geo_tracking.py`

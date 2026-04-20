@@ -1,22 +1,22 @@
 {
-  "skill_id": "geo-tracking-plan",
+  "skill_id": "yao-geo-tracking",
   "required_files": [
     "SKILL.md",
     "agents/interface.yaml",
     "evals/trigger_cases.json",
     "evals/expected_artifacts.json",
     "templates/brief-template.md",
-    "scripts/render_geo_tracking_plan.py"
+    "scripts/render_yao_geo_tracking.py"
   ],
   "public_examples": [
     "examples/hubspot-demo/report_input.json",
-    "examples/hubspot-demo/hubspot-geo-tracking-plan.html",
-    "examples/hubspot-demo/hubspot-geo-tracking-plan.docx",
+    "examples/hubspot-demo/hubspot-yao-geo-tracking.html",
+    "examples/hubspot-demo/hubspot-yao-geo-tracking.docx",
     "examples/lingxu-demo/report_input.json",
-    "examples/lingxu-demo/lingxu-cn-geo-tracking-plan.html",
-    "examples/lingxu-demo/lingxu-cn-geo-tracking-plan.docx",
-    "assets/screenshots/hubspot-geo-tracking-plan.png",
-    "assets/screenshots/lingxu-cn-geo-tracking-plan.png"
+    "examples/lingxu-demo/lingxu-cn-yao-geo-tracking.html",
+    "examples/lingxu-demo/lingxu-cn-yao-geo-tracking.docx",
+    "assets/screenshots/hubspot-yao-geo-tracking.png",
+    "assets/screenshots/lingxu-cn-yao-geo-tracking.png"
   ],
   "primary_outputs": [
     "tracking-plan-summary",

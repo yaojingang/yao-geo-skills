@@ -1,9 +1,9 @@
 ---
-name: geo-tracking-plan
+name: yao-geo-tracking
 description: Build a company-specific GEO backend tracking plan from a company name plus optional supporting information, using authoritative retrieval anchored on the official website, business-feature recognition, and market-aware GEO monitoring methods, then deliver a direct-vs-indirect attribution design, data model, roadmap, and optional openable HTML and Word reports. Use when asked to 设计 GEO 后端效果归因框架、GEO 效果跟踪体系、AI 搜索效果监测方案、GEO 转化追踪方案、GEO attribution plan、GEO tracking plan、GEO 后端分析 HTML 或 Word 交付件. Do not use for generic GEO education, content planning, pure brand research, or CRM/BI implementation work without GEO attribution design.
 ---
 
-# GEO Tracking Plan
+# Yao GEO Tracking
 
 ## When To Use
 
@@ -94,7 +94,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 11. 若用户要求交付文件。
    - 先把结论整理成 `report_input.json`。
    - 再运行：
-   - `python3 scripts/render_geo_tracking_plan.py --input <report_input.json> --output-dir <输出目录>`
+   - `python3 scripts/render_yao_geo_tracking.py --input <report_input.json> --output-dir <输出目录>`
    - 默认生成 `.html` 与 `.docx`。
 12. 公开版 skill 必须保持隐私干净。
    - 不要要求任何私有 CLI、内网地址、私有表、公司内部文档。
@@ -148,7 +148,7 @@ description: Build a company-specific GEO backend tracking plan from a company n
 - `references/output-file-workflow.md`：报告输入结构与文件生成流程
 - `references/open-source-sanitization.md`：去隐私、去内网依赖、公开样例替换规则
 - `references/observability-estimation-framework.md`：三层可观测性估算框架与区间规则
-- `scripts/render_geo_tracking_plan.py`：生成 HTML / Word 交付件
+- `scripts/render_yao_geo_tracking.py`：生成 HTML / Word 交付件
 - `examples/hubspot-demo/report_input.json`：公开演示输入样例
 - `evals/trigger_cases.json`：触发边界
 - `evals/quality_cases.json`：质量与隐私门样例
