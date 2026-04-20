@@ -1,12 +1,12 @@
 {
   "name": "yao-geoflow-design",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": "Yao Team",
   "updated_at": "2026-04-20",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "active",
-  "context_budget_tier": "production",
+  "context_budget_tier": "library",
   "review_cadence": "monthly",
   "skill_archetype": "production",
   "target_platforms": [

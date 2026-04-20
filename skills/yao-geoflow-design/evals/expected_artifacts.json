@@ -3,6 +3,7 @@
   "required_files": [
     "SKILL.md",
     "agents/interface.yaml",
+    "agents/openai.yaml",
     "evals/trigger_cases.json",
     "evals/trigger_cases.en.json",
     "evals/semantic_config.json",
@@ -10,21 +11,30 @@
     "references/geoflow-frontend-map.md",
     "references/template-boundary.md",
     "references/theme-package-contract.md",
-    "references/design-optimization-playbook.md"
+    "references/design-optimization-playbook.md",
+    "references/theme-edit-workflow.md",
+    "scripts/discover_themes.py",
+    "scripts/prepare_theme_edit_session.py",
+    "scripts/finalize_theme_edit_session.py"
   ],
   "primary_outputs": [
+    "theme-discovery",
+    "preview-theme-session",
     "theme-package-plan",
     "design-audit",
     "optimization-plan",
     "tokens-json",
     "mapping-json",
-    "preview-plan"
+    "preview-plan",
+    "finalize-plan"
   ],
   "quality_expectations": [
-    "must begin from GEOFlow's existing frontend contract",
-    "must choose clone, optimize, or hybrid mode before proposing package output",
+    "must begin from GEOFlow's existing frontend contract and current theme system",
+    "must discover available themes and keep target_theme_id explicit before editing",
+    "must choose edit_theme, clone, or hybrid mode before proposing outputs",
     "must preserve routing, SEO, and data-query boundaries unless explicitly expanded",
-    "must prefer preview-first template packages over direct production replacement",
-    "must map reference styles or optimization goals onto GEOFlow modules instead of copying raw pages verbatim"
+    "must prefer preview-first theme forks or preview-safe packages over direct live replacement",
+    "must map reference styles or optimization goals onto GEOFlow modules instead of copying raw pages verbatim",
+    "must present finalize choices as publish_as_new_theme or replace_base_theme only after preview review"
   ]
 }

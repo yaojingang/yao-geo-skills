@@ -123,21 +123,25 @@
         "theme",
         "template-optimization",
         "design-system",
-        "preview"
+        "preview",
+        "theme-edit"
       ],
       "requires_web": true,
       "primary_outputs": [
+        "theme-discovery",
+        "preview-theme-session",
         "design-audit",
         "theme-package-plan",
         "optimization-plan",
         "mapping-json",
-        "preview-plan"
+        "preview-plan",
+        "finalize-plan"
       ],
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-design",
-      "summary": "Clone, optimize, and refine GEOFlow-compatible frontends by mapping reference sites or improving the current template with preview-first design packages.",
+      "summary": "Discover current GEOFlow themes, preview-edit a selected template safely, and then clone, optimize, publish as new, or replace the base theme after review.",
       "public_repo_path": "skills/yao-geoflow-design",
       "last_updated": "2026-04-20"
     }

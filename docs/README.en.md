@@ -133,8 +133,8 @@ The current catalog is grouped into `operations / measurement / research`.
     - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
 
 - `yao-geoflow-design`
-  - Purpose: clone, optimize, and refine GEOFlow-compatible frontends through design audits, token deltas, module mappings, and preview-first packages.
-  - Best for: current-template optimization, hybrid reference-plus-optimization jobs, incremental GEOFlow theme iteration, and safe frontend design adjustments.
+  - Purpose: discover current GEOFlow themes, fork a selected target theme into a preview edit session, and then clone, optimize, or refine the frontend safely.
+  - Best for: target-theme editing, current-template optimization, hybrid reference-plus-optimization jobs, preview-first GEOFlow theme iteration, and publish-as-new or replace-base review flows.
   - Links:
     - [Guide (CN)](skills/yao-geoflow-design.md)
     - [Guide (EN)](skills/yao-geoflow-design.en.md)

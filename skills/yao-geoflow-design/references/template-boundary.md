@@ -1,11 +1,13 @@
 # Template Boundary
 
-This skill is for GEOFlow frontend template cloning, optimization, and controlled design adjustments, not for replacing GEOFlow's rendering contract with arbitrary copied pages.
+This skill is for GEOFlow frontend template cloning, theme discovery, preview-first theme editing, and controlled design adjustments, not for replacing GEOFlow's rendering contract with arbitrary copied pages.
 
 ## Allowed Actions
 
 - inventory existing frontend page modules
 - inventory variables and helper functions used by the frontend pages
+- discover existing themes and their editable files in the current workspace
+- select a target theme and fork it into a preview edit session
 - inspect a reference URL for design tokens and layout direction
 - design a GEOFlow-compatible theme package
 - audit the current template for hierarchy, spacing, typography, density, and responsive issues
@@ -21,6 +23,7 @@ This skill is for GEOFlow frontend template cloning, optimization, and controlle
 - changing routing rules such as `/article/{slug}`, `/category/{slug}`, or `/archive/...`
 - removing SEO or structured-data generation
 - direct production activation without preview and confirmation
+- editing the live target theme first when a preview fork has not yet been reviewed
 - copying an external site's full HTML as the runtime template contract
 
 ## Non-Negotiable GEOFlow Contracts
@@ -41,6 +44,7 @@ This skill is for GEOFlow frontend template cloning, optimization, and controlle
 - consistency cleanup across repeated cards, section headers, and metadata rows
 - ad-block visual presentation
 - header / footer presentation
+- theme manifest metadata, preview routes, and non-runtime notes
 
 ## Unsafe Replacement Surface
 
@@ -48,3 +52,4 @@ This skill is for GEOFlow frontend template cloning, optimization, and controlle
 - inventing modules that require backend data GEOFlow does not provide yet
 - replacing canonical URLs or schema data contracts
 - changing article content rendering away from the markdown-rendered article body unless the system is explicitly updated
+- storing preview-session backups under `/themes` in a way that makes them look like live templates without clear preview labeling

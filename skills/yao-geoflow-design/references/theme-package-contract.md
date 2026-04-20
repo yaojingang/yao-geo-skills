@@ -1,8 +1,8 @@
-# Theme and Optimization Package Contract
+# Theme Edit and Package Contract
 
-The output of a GEOFlow design run should be a preview-first package rather than a direct production overwrite.
+The output of a GEOFlow design run should be a preview-first session or package rather than a direct production overwrite.
 
-## Mode A: Full Theme Package
+## Mode A: Full New Theme Package
 
 ```text
 themes/
@@ -26,19 +26,28 @@ themes/
         ad-sticky.php
 ```
 
-## Mode B: Optimization Patch Package
+## Mode B: Preview Theme Edit Session
 
 ```text
-design-passes/
-  design-pass-YYYYMMDD-XXX/
+themes/
+  target-theme-edit-YYYYMMDD-XXX/
     manifest.json
+    edit-session.json
     design-audit.md
     tokens.delta.json
     mapping.delta.json
     change-plan.md
     preview-notes.md
     assets/
+      theme.css
       preview.css
+    templates/
+      header.php
+      footer.php
+      home.php
+      category.php
+      article.php
+      archive.php
 ```
 
 ## Minimum Manifest Fields
@@ -54,8 +63,19 @@ design-passes/
 - Optional:
   - `source_reference_url`
   - `base_template_id`
+  - `target_theme_id`
   - `optimization_goals`
   - `change_scope`
+  - `session_state`
+
+## Minimum Edit-Session Fields
+
+- `base_theme_id`
+- `preview_theme_id`
+- `created_at`
+- `change_request`
+- `preview_routes`
+- `finalize_options`
 
 ## Minimum Mapping Output
 
@@ -71,10 +91,17 @@ design-passes/
 - `article.sticky_ad`
 - `archive.overview_row`
 - `archive.article_card`
-- When `mode = optimize`:
+- When `mode = edit_theme` or `mode = optimize`:
   - `change_scope`
   - `unchanged_contracts`
   - `delta_strategy`
+  - `edited_files`
+
+## Finalize Paths
+
+- `publish_as_new_theme`: keep or rename the preview fork so admin theme discovery can list it as a new template
+- `replace_base_theme`: back up the original target theme and then replace it from the confirmed preview fork
+- `activate_after_confirmation`: activate only after the operator confirms the reviewed preview session
 
 ## Preview Contract
 
@@ -85,6 +112,8 @@ The package should be previewed on at least:
 - article detail preview
 - archive overview preview
 
+Preview theme edit sessions should surface real GEOFlow preview URLs inside the current workspace.
+
 Optimization runs should also include a short before/after rationale for each touched module.
 
-Preview must be isolated from the active public template until the operator confirms activation or patch application.
+Preview must be isolated from the active public template until the operator confirms replacement, publish-as-new, or activation.

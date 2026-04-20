@@ -1,5 +1,5 @@
 {
-  "recommended_threshold": 0.38,
+  "recommended_threshold": 0.3,
   "negative_patterns": [
     "generic frontend redesign",
     "rewrite the backend",
@@ -8,6 +8,18 @@
     "direct production activation"
   ],
   "should_trigger": [
+    {
+      "text": "Inspect the current GEOFlow system, list the existing themes, and tell me which template is the right base to edit.",
+      "family": "theme_discovery"
+    },
+    {
+      "text": "List the themes in this GEOFlow workspace, then take qiaomu-editorial-20260418 and make it wider with bolder headings, but keep the first pass in preview only.",
+      "family": "target_theme_preview_edit"
+    },
+    {
+      "text": "Add a new display module to the existing theme only if it can use current GEOFlow article data, and give me a preview URL before any finalization.",
+      "family": "preview_module_addition"
+    },
     {
       "text": "Given a reference URL, clone it into a preview-first GEOFlow template package that preserves existing frontend modules.",
       "family": "reference_url_clone"
@@ -35,6 +47,10 @@
     {
       "text": "Use a reference site as direction, but mainly optimize the current GEOFlow template with a preview-first redesign pass.",
       "family": "hybrid_reference_plus_optimization"
+    },
+    {
+      "text": "Create a preview-first edit session for the current GEOFlow theme, then let me choose between replacing the base theme or publishing a new one after review.",
+      "family": "preview_finalize_workflow"
     }
   ],
   "should_not_trigger": [
@@ -57,6 +73,10 @@
     {
       "text": "Push the new template live right now without preview or confirmation.",
       "family": "direct_activation"
+    },
+    {
+      "text": "Edit the active theme in place and make the live site change immediately. I do not need a preview fork.",
+      "family": "direct_live_edit"
     }
   ],
   "near_neighbor": [
@@ -73,8 +93,12 @@
       "family": "system_implementation_vs_template_planning"
     },
     {
-      "text": "Adjust CSS and card hierarchy in the current template, but keep the existing data structure.",
-      "family": "optimization_mode_vs_generic_css_edit"
+      "text": "Change the backend discovery logic so preview themes are hidden from the admin theme list.",
+      "family": "system_implementation_vs_theme_usage"
+    },
+    {
+      "text": "Hard-code a new module into the active theme now and we will worry about the missing data fields later.",
+      "family": "unsupported_module_data_vs_safe_theme_edit"
     }
   ]
 }

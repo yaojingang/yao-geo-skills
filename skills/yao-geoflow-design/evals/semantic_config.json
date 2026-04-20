@@ -1,55 +1,122 @@
 {
   "optimizer_hints": {
-    "capability": "Clone, optimize, and refine GEOFlow-compatible frontends",
+    "capability": "Discover, preview, clone, and edit GEOFlow themes safely",
     "inputs": [
       "reference URL",
-      "current template",
+      "existing themes",
+      "target theme",
       "GEOFlow frontend modules",
       "design tokens",
       "optimization goals"
     ],
     "trigger_actions": [
+      "discover themes in a GEOFlow workspace",
+      "select a target theme and create a preview edit session",
       "clone a GEOFlow frontend template",
-      "optimize the current GEOFlow template",
+      "optimize the current GEOFlow theme",
       "adjust GEOFlow modules without changing backend logic",
-      "map a reference site onto GEOFlow modules"
+      "map a reference site onto GEOFlow modules",
+      "finalize a reviewed preview theme as publish-as-new or replace-base"
     ],
     "exclusions": [
       "generic frontend redesign detached from GEOFlow",
       "raw HTML copying",
       "backend refactors",
-      "direct production activation without preview"
+      "direct live theme mutation without preview"
     ],
     "artifacts": [
+      "theme-discovery.json",
+      "edit-session.json",
       "tokens.json",
       "mapping.json",
       "design-audit.md",
       "tokens.delta.json",
       "mapping.delta.json",
-      "preview plan"
+      "change-plan.md",
+      "preview plan",
+      "finalize plan"
     ]
   },
   "fallback_positive_concepts": [
-    "geoflow_contract",
-    "clone_reference",
-    "optimize_current",
-    "preview_safe"
+    "geoflow_theme_system",
+    "theme_discovery",
+    "target_theme_edit",
+    "preview_session"
   ],
   "positive_concepts": {
-    "geoflow_contract": {
-      "weight": 0.3,
+    "geoflow_theme_system": {
+      "weight": 0.18,
       "phrases": [
         "geoflow",
+        "geoflow system",
+        "geoflow themes",
+        "geoflow theme",
         "geoflow frontend",
+        "current geoflow theme",
         "current geoflow template",
         "geoflow-compatible",
         "homepage category article archive",
-        "current template"
+        "current template",
+        "current theme"
+      ]
+    },
+    "theme_discovery": {
+      "weight": 0.18,
+      "phrases": [
+        "discover",
+        "theme discovery",
+        "discover themes",
+        "existing themes",
+        "list existing themes",
+        "list the existing themes",
+        "which templates exist",
+        "identify current templates",
+        "看看有哪些模板",
+        "识别现在都有哪些模板",
+        "现有主题列表",
+        "template discovery"
+      ]
+    },
+    "target_theme_edit": {
+      "weight": 0.22,
+      "phrases": [
+        "edit geoflow themes",
+        "edit a selected theme",
+        "target theme",
+        "specified theme",
+        "selected template",
+        "selecting an existing template",
+        "target theme editing",
+        "theme editing",
+        "wider layout",
+        "bolder headings",
+        "display module",
+        "变宽",
+        "加粗",
+        "样式调整",
+        "增加显示模块",
+        "current theme edit",
+        "template adjustment"
+      ]
+    },
+    "preview_session": {
+      "weight": 0.2,
+      "phrases": [
+        "preview",
+        "preview-first",
+        "preview theme",
+        "preview address",
+        "preview template",
+        "预览模板地址",
+        "先预览再确认",
+        "preview edit session",
+        "do not change live first"
       ]
     },
     "clone_reference": {
-      "weight": 0.24,
+      "weight": 0.14,
       "phrases": [
+        "cloning",
         "reference url",
         "reference site",
         "template cloning",
@@ -62,8 +129,9 @@
       ]
     },
     "optimize_current": {
-      "weight": 0.24,
+      "weight": 0.1,
       "phrases": [
+        "optimization",
         "improving the current template",
         "current-template optimization",
         "theme iteration",
@@ -76,25 +144,14 @@
         "token refinement"
       ]
     },
-    "preview_safe": {
-      "weight": 0.16,
+    "finalize_safely": {
+      "weight": 0.02,
       "phrases": [
-        "preview-first",
-        "without changing business logic",
-        "without changing data contracts",
-        "preview plan",
-        "preview-safe"
-      ]
-    },
-    "design_artifacts": {
-      "weight": 0.06,
-      "phrases": [
-        "tokens json",
-        "mapping json",
-        "design audit",
-        "change plan",
-        "tokens.delta.json",
-        "mapping.delta.json"
+        "publish as new theme",
+        "replace base theme",
+        "新增模板",
+        "替换当前模板",
+        "confirm before activation"
       ]
     }
   },
@@ -105,7 +162,9 @@
       "phrases": [
         "generic frontend redesign",
         "marketing website",
-        "new website from scratch"
+        "new website from scratch",
+        "marketing website from scratch",
+        "without geoflow module constraints"
       ]
     },
     "raw_html_copy": {
@@ -123,19 +182,34 @@
       "weight": 0.32,
       "exclusive": true,
       "phrases": [
+        "implement backend support",
         "rewrite the backend",
         "database schema",
+        "database fields",
         "route rewrite",
-        "seo contract change"
+        "seo contract change",
+        "templates can be switched"
+      ]
+    },
+    "cli_ops": {
+      "weight": 0.32,
+      "exclusive": true,
+      "phrases": [
+        "geoflow cli",
+        "through the cli",
+        "create tasks",
+        "publish articles"
       ]
     },
     "read_only": {
-      "weight": 0.18,
-      "exclusive": false,
+      "weight": 0.24,
+      "exclusive": true,
       "phrases": [
         "just explain the pages",
         "summarize the repo",
+        "explain the geoflow homepage",
         "explain homepage code structure",
+        "code structure",
         "read-only explanation"
       ]
     },
@@ -144,7 +218,23 @@
       "exclusive": true,
       "phrases": [
         "direct production activation",
-        "ship it live without preview"
+        "ship it live without preview",
+        "edit the live theme directly",
+        "直接改线上模板",
+        "不用预览直接替换",
+        "without preview or confirmation",
+        "live site change immediately"
+      ]
+    },
+    "system_implementation": {
+      "weight": 0.3,
+      "exclusive": true,
+      "phrases": [
+        "implement backend support",
+        "geoflow settings",
+        "admin can switch templates",
+        "backend discovery logic",
+        "admin theme list"
       ]
     }
   }

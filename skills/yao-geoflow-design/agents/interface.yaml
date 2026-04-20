@@ -1,7 +1,7 @@
 interface:
   display_name: "Yao GEOFlow Design"
-  short_description: "Clone or optimize GEOFlow frontends in preview-first mode"
-  default_prompt: "Use $yao-geoflow-design to clone or optimize a GEOFlow frontend in preview-first mode."
+  short_description: "Discover, preview, and edit GEOFlow themes safely"
+  default_prompt: "Use $yao-geoflow-design to discover GEOFlow themes, create a preview edit session for a selected theme, or clone a reference style into a GEOFlow-compatible theme."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

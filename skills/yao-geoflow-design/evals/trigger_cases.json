@@ -1,5 +1,5 @@
 {
-  "recommended_threshold": 0.38,
+  "recommended_threshold": 0.34,
   "negative_patterns": [
     "just redesign the frontend",
     "rewrite the backend",
@@ -8,6 +8,18 @@
     "just summarize the repo"
   ],
   "should_trigger": [
+    {
+      "text": "先识别当前 GEOFlow 系统里都有哪些模板，再告诉我现在适合改哪个主题。",
+      "family": "theme_discovery"
+    },
+    {
+      "text": "列一下当前系统的主题，然后选 qiaomu-editorial-20260418 做预览改版，页面变宽、标题加粗，但先别替换线上。",
+      "family": "target_theme_preview_edit"
+    },
+    {
+      "text": "基于现有主题加一个利用当前文章数据的展示模块，先生成预览模板地址，再继续调整。",
+      "family": "preview_module_addition"
+    },
     {
       "text": "给你一个网址，按 GEOFlow 现有前台模块复刻成一个可预览的模板包。",
       "family": "reference_url_clone"
@@ -35,6 +47,10 @@
     {
       "text": "参考一个站点的风格，但主要是优化我们现在的 GEOFlow 模板，给我一个 preview-first 的改版方案。",
       "family": "hybrid_reference_plus_optimization"
+    },
+    {
+      "text": "为当前 GEOFlow 主题生成一个 preview-first 的编辑会话，确认后再决定替换原模板还是新增模板。",
+      "family": "preview_finalize_workflow"
     }
   ],
   "should_not_trigger": [
@@ -57,6 +73,10 @@
     {
       "text": "直接上线新模板，不用预览和确认。",
       "family": "direct_activation"
+    },
+    {
+      "text": "直接在当前活跃主题里原地改 CSS 并立刻生效，不需要预览态。",
+      "family": "direct_live_edit"
     }
   ],
   "near_neighbor": [
@@ -73,8 +93,12 @@
       "family": "system_implementation_vs_template_planning"
     },
     {
-      "text": "顺着现有模板直接改 CSS 和卡片层级，但别改数据结构。",
-      "family": "optimization_mode_vs_generic_css_edit"
+      "text": "把后台模板发现逻辑改成忽略 preview 目录，别让预览模板在管理页出现。",
+      "family": "system_implementation_vs_theme_usage"
+    },
+    {
+      "text": "直接在活跃模板里写死一个新模块，数据字段后面再说。",
+      "family": "unsupported_module_data_vs_safe_theme_edit"
     }
   ]
 }

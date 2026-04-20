@@ -1,17 +1,22 @@
 # Yao GEOFlow Design Brief
 
 - `skill_id`: `yao-geoflow-design`
-- `work_mode`: `clone` | `optimize` | `hybrid`
+- `work_mode`: `edit_theme` | `clone` | `hybrid`
+- `discover_existing_themes`: `true` | `false`
 - `reference_url`:
 - `target_geoflow_workspace`:
-- `template_id`:
+- `target_theme_id`:
+- `preview_theme_id`:
 - `base_template_id`:
 - `primary_pages`: `home` | `category` | `article` | `archive`
 - `style_direction`:
 - `current_template_context`:
 - `priority_modules`:
+- `editable_files_scope`: `templates/*.php` | `assets/theme.css` | `manifest.json` | `tokens.json` | `mapping.json`
 - `optimization_goals`:
+- `change_request_examples`: `wider layout` | `bolder titles` | `metadata cleanup` | `new module using existing data`
 - `must_preserve_contracts`:
 - `preview_required`: `true` | `false`
-- `expected_outputs`: `tokens.json` | `mapping.json` | `manifest.json` | `design-audit.md` | `tokens.delta.json` | `mapping.delta.json` | `preview-plan`
+- `finalize_mode`: `publish_as_new_theme` | `replace_base_theme` | `activate_after_confirmation`
+- `expected_outputs`: `theme-discovery.json` | `edit-session.json` | `tokens.json` | `mapping.json` | `manifest.json` | `design-audit.md` | `tokens.delta.json` | `mapping.delta.json` | `preview-plan`
 - `notes`:

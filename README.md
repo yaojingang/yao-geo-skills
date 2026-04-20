@@ -141,8 +141,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-design</code></strong><br>
-      作用：为 GEOFlow 做前台模板复刻、现有模板优化与局部样式调整，输出设计审计、token 差异、模块映射和 preview-first 设计方案。<br><br>
-      适合：GEOFlow 当前主题迭代、参考站风格映射后落地、已有模板改版前的结构梳理、细节微调和增量优化。<br><br>
+      作用：识别 GEOFlow 当前已有模板，指定目标主题进入 preview-first 编辑会话，并完成模板复刻、现有模板优化与局部样式调整。<br><br>
+      适合：GEOFlow 当前主题迭代、指定模板改版、预览态样式优化、参考站风格映射后落地，以及确认后替换原模板或新增模板。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-design.md">说明页</a> ·
       <a href="docs/skills/yao-geoflow-design.en.md">English Guide</a> ·
