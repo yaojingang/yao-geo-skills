@@ -39,10 +39,10 @@ def recursive_replace(value, old: str, new: str):
 
 def build_preview_routes(theme_id: str) -> list[str]:
     return [
-        f"/preview/{theme_id}/",
-        f"/preview/{theme_id}/category",
-        f"/preview/{theme_id}/article",
-        f"/preview/{theme_id}/archive",
+        "/",
+        "/category/{slug}",
+        "/article/{slug}",
+        "/archive",
     ]
 
 
@@ -56,7 +56,9 @@ def main() -> None:
     args = parser.parse_args()
 
     workspace = Path(args.workspace).resolve()
-    themes_root = workspace / "themes"
+    laravel_themes_root = workspace / "resources" / "views" / "theme"
+    themes_root = laravel_themes_root if laravel_themes_root.is_dir() else workspace / "themes"
+    framework = "laravel" if themes_root == laravel_themes_root else "legacy_php"
     base_theme_id = args.base_theme.strip()
     base_dir = themes_root / base_theme_id
     if not base_dir.is_dir():
@@ -95,8 +97,12 @@ def main() -> None:
     write_json(manifest_path, manifest)
 
     editable_files = []
-    for path in sorted((preview_dir / "templates").glob("*.php")):
-        editable_files.append(path.relative_to(preview_dir).as_posix())
+    if framework == "laravel":
+        for path in sorted(preview_dir.rglob("*.blade.php")):
+            editable_files.append(path.relative_to(preview_dir).as_posix())
+    else:
+        for path in sorted((preview_dir / "templates").glob("*.php")):
+            editable_files.append(path.relative_to(preview_dir).as_posix())
     for relative in ("assets/theme.css", "manifest.json", "tokens.json", "mapping.json"):
         if (preview_dir / relative).is_file():
             editable_files.append(relative)
@@ -104,10 +110,12 @@ def main() -> None:
     session_payload = {
         "base_theme_id": base_theme_id,
         "preview_theme_id": preview_theme_id,
+        "framework": framework,
         "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "session_state": "preview",
         "change_request": args.change_request.strip(),
         "preview_routes": build_preview_routes(preview_theme_id),
+        "preview_note": "Laravel GEOFlow does not expose isolated /preview/{theme} routes by default; use static previews or activate the preview theme only after operator confirmation.",
         "editable_files": editable_files,
         "finalize_options": [
             "publish_as_new_theme",
@@ -128,12 +136,14 @@ def main() -> None:
             "",
             f"- Base theme: `{base_theme_id}`",
             f"- Preview theme: `{preview_theme_id}`",
+            f"- Framework: `{framework}`",
             f"- Requested changes: {args.change_request.strip() or 'TBD'}",
             "- Finalize options: `publish_as_new_theme` | `replace_base_theme` | `activate_after_confirmation`",
             "",
             "## Preview Checklist",
             "",
             "- check home/category/article/archive preview routes",
+            "- for Laravel GEOFlow, confirm whether preview is static or temporarily activated through Site Settings",
             "- verify layout, typography, spacing, and module hierarchy",
             "- confirm GEOFlow data placeholders still render correctly",
         ]) + "\n",
@@ -148,8 +158,10 @@ def main() -> None:
         "workspace": str(workspace),
         "base_theme_id": base_theme_id,
         "preview_theme_id": preview_theme_id,
+        "framework": framework,
         "preview_theme_path": str(preview_dir),
         "preview_routes": build_preview_routes(preview_theme_id),
+        "preview_support": "admin_activation_or_static_preview" if framework == "laravel" else "legacy_preview_routes",
         "editable_files": editable_files,
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))

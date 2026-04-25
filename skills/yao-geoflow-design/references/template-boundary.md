@@ -6,7 +6,7 @@ This skill is for GEOFlow frontend template cloning, theme discovery, preview-fi
 
 - inventory existing frontend page modules
 - inventory variables and helper functions used by the frontend pages
-- discover existing themes and their editable files in the current workspace
+- discover existing themes and their editable files in the current workspace, preferring `resources/views/theme` for Laravel GEOFlow
 - select a target theme and fork it into a preview edit session
 - inspect a reference URL for design tokens and layout direction
 - design a GEOFlow-compatible theme package
@@ -25,6 +25,7 @@ This skill is for GEOFlow frontend template cloning, theme discovery, preview-fi
 - direct production activation without preview and confirmation
 - editing the live target theme first when a preview fork has not yet been reviewed
 - copying an external site's full HTML as the runtime template contract
+- editing Laravel controllers, models, migrations, or routes during a design-only request
 
 ## Non-Negotiable GEOFlow Contracts
 
@@ -52,4 +53,5 @@ This skill is for GEOFlow frontend template cloning, theme discovery, preview-fi
 - inventing modules that require backend data GEOFlow does not provide yet
 - replacing canonical URLs or schema data contracts
 - changing article content rendering away from the markdown-rendered article body unless the system is explicitly updated
-- storing preview-session backups under `/themes` in a way that makes them look like live templates without clear preview labeling
+- storing preview-session backups under `resources/views/theme` or `/themes` in a way that makes them look like live templates without clear preview labeling
+- claiming isolated preview URLs exist in Laravel GEOFlow unless `routes/web.php` provides them

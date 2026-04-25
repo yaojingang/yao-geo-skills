@@ -5,7 +5,7 @@ The output of a GEOFlow design run should be a preview-first session or package 
 ## Mode A: Full New Theme Package
 
 ```text
-themes/
+resources/views/theme/
   template-YYYYMMDD-XXX/
     manifest.json
     tokens.json
@@ -13,23 +13,22 @@ themes/
     assets/
       theme.css
       preview.css
-    templates/
-      header.php
-      footer.php
-      home.php
-      category.php
-      article.php
-      archive.php
-      blocks/
-        article-card.php
-        related-articles.php
-        ad-sticky.php
+    layout.blade.php
+    home.blade.php
+    category.blade.php
+    article.blade.php
+    archive-index.blade.php
+    archive-month.blade.php
+    partials/
+      header.blade.php
+      footer.blade.php
+      article-card.blade.php
 ```
 
 ## Mode B: Preview Theme Edit Session
 
 ```text
-themes/
+resources/views/theme/
   target-theme-edit-YYYYMMDD-XXX/
     manifest.json
     edit-session.json
@@ -41,13 +40,15 @@ themes/
     assets/
       theme.css
       preview.css
-    templates/
-      header.php
-      footer.php
-      home.php
-      category.php
-      article.php
-      archive.php
+    home.blade.php
+    category.blade.php
+    article.blade.php
+    archive-index.blade.php
+    archive-month.blade.php
+    partials/
+      header.blade.php
+      footer.blade.php
+      article-card.blade.php
 ```
 
 ## Minimum Manifest Fields
@@ -112,7 +113,7 @@ The package should be previewed on at least:
 - article detail preview
 - archive overview preview
 
-Preview theme edit sessions should surface real GEOFlow preview URLs inside the current workspace.
+Current Laravel GEOFlow may not provide isolated `/preview/{theme}` URLs. Preview theme edit sessions should clearly say whether review uses static preview artifacts, temporary admin activation, or a real preview route discovered in `routes/web.php`.
 
 Optimization runs should also include a short before/after rationale for each touched module.
 

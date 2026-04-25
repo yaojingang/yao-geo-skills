@@ -4,7 +4,8 @@ This skill is for operating a running GEOFlow system, not for developing the sys
 
 ## Allowed Actions
 
-- Run `bin/geoflow` commands
+- Run `bin/geoflow` commands when the CLI exists
+- Use Laravel `/api/v1` fallback when the current GEOFlow rewrite has no CLI wrapper
 - Read command output
 - Build JSON payload files when needed for `task create`, `task update`, or `article create`
 - Inspect resulting task, job, and article state through the CLI
@@ -13,19 +14,19 @@ This skill is for operating a running GEOFlow system, not for developing the sys
 
 - Direct SQL against the project database
 - Editing backend PHP just to complete an operations request
-- Replacing the CLI with raw `curl` when the CLI already supports the action
+- Replacing the CLI with raw `curl` when the CLI exists and already supports the action
 - Exposing a full bearer token in user-facing summaries
 
 ## Required Checks
 
 Before the first mutating command in a workspace:
 
-1. Verify `bin/geoflow` exists.
-2. If configuration is missing, run `geoflow login` first.
-3. If configuration exists but authenticated reads return `401`, `403`, or token-invalid output, rerun `geoflow login --force`.
+1. Verify whether `bin/geoflow` exists. If it does not, verify the workspace is a Laravel GEOFlow app with `artisan` and `routes/api.php`.
+2. If CLI configuration is missing, run `geoflow login` first. If using API fallback, obtain a bearer token through `/api/v1/auth/login` or the provided token source.
+3. If configuration exists but authenticated reads return `401`, `403`, or token-invalid output, refresh login/token.
 4. If authenticated reads fail for another reason, report that failure instead of assuming login is the fix.
-5. Verify the CLI resolves configuration.
-6. Verify an authenticated read such as `catalog` succeeds. `config show` by itself is not sufficient because it only validates local config parsing.
+5. Verify the CLI resolves configuration, or verify the API base URL responds.
+6. Verify an authenticated read such as `catalog` succeeds. `config show` or a public homepage check by itself is not sufficient.
 
 After any mutating command:
 
@@ -40,6 +41,7 @@ After any mutating command:
 Keep these failure classes separate:
 
 - CLI/runtime failure: command missing, config missing, permission problem, malformed args
+- API fallback setup failure: missing `GEOFLOW_BASE_URL`, missing bearer token, wrong `/api/v1` base path
 - API failure: 401, 403, 404, 409, 422, 500
 - Business-data failure: task inactive, missing titles, invalid category, review state conflict
 

@@ -6,6 +6,11 @@
 scripts/geoflow_preflight.sh "<workspace>" [config]
 ```
 
+The preflight supports two modes:
+
+- CLI mode when `<workspace>/bin/geoflow` exists.
+- API fallback mode when the CLI is absent and `GEOFLOW_BASE_URL` plus `GEOFLOW_API_TOKEN` are available.
+
 ## First Login
 
 Interactive password prompt:
@@ -34,6 +39,15 @@ When config exists but the token is invalid or expired, refresh it in place:
 
 Use this as the authoritative authenticated-read check before mutating commands. Only jump to `login --force` when the failure is clearly `401`, `403`, or token-invalid.
 
+API fallback:
+
+```bash
+curl -sS \
+  -H "Authorization: Bearer $GEOFLOW_API_TOKEN" \
+  -H "Accept: application/json" \
+  "$GEOFLOW_BASE_URL/api/v1/catalog"
+```
+
 ## Task Operations
 
 List tasks:
@@ -46,6 +60,18 @@ Create task:
 
 ```bash
 "/path/to/workspace/bin/geoflow" --config /path/to/config task create --json ./task.json --idempotency-key task-create-001
+```
+
+API fallback:
+
+```bash
+curl -sS -X POST \
+  -H "Authorization: Bearer $GEOFLOW_API_TOKEN" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "X-Idempotency-Key: task-create-001" \
+  --data @./task.json \
+  "$GEOFLOW_BASE_URL/api/v1/tasks"
 ```
 
 Get task:
@@ -64,6 +90,18 @@ Start task:
 
 ```bash
 "/path/to/workspace/bin/geoflow" --config /path/to/config task start 12 --idempotency-key task-start-12
+```
+
+API fallback:
+
+```bash
+curl -sS -X POST \
+  -H "Authorization: Bearer $GEOFLOW_API_TOKEN" \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "X-Idempotency-Key: task-start-12" \
+  --data '{"enqueue_now":true}' \
+  "$GEOFLOW_BASE_URL/api/v1/tasks/12/start"
 ```
 
 Start and enqueue immediately:
@@ -102,6 +140,15 @@ List articles:
 
 ```bash
 "/path/to/workspace/bin/geoflow" --config /path/to/config article list --task-id 12 --per-page 20
+```
+
+API fallback:
+
+```bash
+curl -sS \
+  -H "Authorization: Bearer $GEOFLOW_API_TOKEN" \
+  -H "Accept: application/json" \
+  "$GEOFLOW_BASE_URL/api/v1/articles?task_id=12&per_page=20"
 ```
 
 Create article from markdown:

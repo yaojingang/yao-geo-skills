@@ -136,7 +136,8 @@ def main() -> None:
     args = parser.parse_args()
 
     workspace = Path(args.workspace).resolve()
-    themes_root = workspace / "themes"
+    laravel_themes_root = workspace / "resources" / "views" / "theme"
+    themes_root = laravel_themes_root if laravel_themes_root.is_dir() else workspace / "themes"
     preview_dir = themes_root / args.preview_theme
     if not preview_dir.is_dir():
         raise SystemExit(f"Preview theme not found: {preview_dir}")

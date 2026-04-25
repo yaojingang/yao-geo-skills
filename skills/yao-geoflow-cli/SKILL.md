@@ -1,15 +1,15 @@
 ---
 name: yao-geoflow-cli
-description: Operate an existing GEOFlow system through the local geoflow CLI to inspect catalog data, create or update tasks, enqueue generation jobs, upload article drafts, review content, and publish articles. Use when the user wants CLI-based GEOFlow operations instead of the web admin, especially for task automation, article upload, bulk publish flows, or skill-driven local control. Do not use for backend implementation, schema changes, or direct database edits.
+description: Operate an existing GEOFlow system through the local geoflow CLI or Laravel API v1 fallback to inspect catalog data, create or update tasks, enqueue generation jobs, upload article drafts, review content, and publish articles. Use when the user wants scriptable GEOFlow operations instead of the web admin, especially for task automation, article upload, bulk publish flows, or skill-driven local control. Do not use for backend implementation, schema changes, or direct database edits.
 ---
 
 # Yao GEOFlow CLI
 
-Use this skill when the system already has the GEOFlow API and `bin/geoflow` CLI available, and the job is to operate that system from local commands.
+Use this skill when the system already has the GEOFlow API available and the job is to operate that system from local commands. Prefer `bin/geoflow` when present; use Laravel API v1 fallback when the current rewrite has not shipped a CLI wrapper yet.
 
 ## What This Skill Owns
 
-- GEOFlow CLI preflight checks
+- GEOFlow CLI or API v1 preflight checks
 - Catalog lookup for model, prompt, title library, author, category, and knowledge-base IDs
 - Task creation, update, start, stop, enqueue, and status inspection
 - Job inspection after enqueue or worker execution
@@ -20,29 +20,29 @@ Use this skill when the system already has the GEOFlow API and `bin/geoflow` CLI
 
 - Implementing or refactoring GEOFlow backend code
 - Direct database writes or bypassing `/api/v1`
-- Web-admin-only flows that do not exist in `geoflow`
+- Web-admin-only flows that do not exist in `geoflow` or `/api/v1`
 - URL import, title async generation, or image upload orchestration outside the current CLI surface
 - Debugging worker internals beyond reporting what the CLI and API return
 
 ## Required Preconditions
 
-1. Confirm the target workspace contains `bin/geoflow`.
-2. Confirm the CLI can resolve config via `--config`, env vars, or the default config path.
-3. If no config exists yet, ask the user for the GEOFlow address and administrator username, then run `geoflow login`. Let the CLI prompt for the password instead of echoing it in plain text.
-4. If config exists but any authenticated read returns `401`/`403` or token-invalid errors, rerun `geoflow login --force` instead of treating the workspace as already logged in.
+1. Confirm the target workspace is a GEOFlow Laravel workspace or contains `bin/geoflow`.
+2. If `bin/geoflow` exists, confirm the CLI can resolve config via `--config`, env vars, or the default config path.
+3. If `bin/geoflow` is missing, use API v1 fallback with `GEOFLOW_BASE_URL` and `GEOFLOW_API_TOKEN`, or login through `/api/v1/auth/login` without printing the password.
+4. If authenticated reads return `401`/`403` or token-invalid errors, refresh login/token instead of treating the workspace as already authenticated.
 5. Run the bundled preflight script before the first mutating action in a new workspace.
-6. Treat preflight as successful only when an authenticated read succeeds. `config show` alone is not enough because it only proves local config parsing, not API reachability or token validity.
+6. Treat preflight as successful only when an authenticated read succeeds. Local config parsing alone is not enough because it does not prove API reachability or token validity.
 7. If preflight fails, stop and report the exact missing prerequisite instead of guessing.
 
 Use [references/operation-boundary.md](references/operation-boundary.md) for the enforced boundary and [references/command-map.md](references/command-map.md) for the supported commands.
 
 ## Default Workflow
 
-1. Identify the target GEOFlow workspace. If the user did not specify one, prefer the current workspace when it contains `bin/geoflow`.
-2. If config is missing, run `bin/geoflow login --base-url ... --username ...` and let the CLI prompt for the password.
-3. If config exists, run an authenticated read such as `catalog` immediately. If it returns `401`, `403`, or token-invalid output, run `bin/geoflow login --base-url ... --username ... --force`.
+1. Identify the target GEOFlow workspace. If the user did not specify one, prefer the current workspace when it has `artisan` or `bin/geoflow`.
+2. If `bin/geoflow` exists and config is missing, run `bin/geoflow login --base-url ... --username ...` and let the CLI prompt for the password.
+3. If `bin/geoflow` is missing, use API v1 fallback and first verify `GET /api/v1/catalog` with a bearer token.
 4. Run `scripts/geoflow_preflight.sh "<workspace>" [config]` to verify the CLI entrypoint, authenticated API access, and current token.
-5. For lookup work, call `geoflow catalog` first so IDs come from the system instead of memory.
+5. For lookup work, call `geoflow catalog` or `GET /api/v1/catalog` first so IDs come from the system instead of memory.
 6. For write operations, use an explicit `--idempotency-key`.
 7. After any write, immediately run the corresponding read command to verify the actual persisted state.
 8. After `article publish`, verify the final user-facing frontend URL using the system's slug route, not an `article.php?id=...` compatibility link. Treat `/article/{slug}` as the publish URL and prefer the canonical URL when the page exposes one.
@@ -53,7 +53,7 @@ Use [references/operation-boundary.md](references/operation-boundary.md) for the
 
 ## Command Discipline
 
-- Prefer direct executable invocation:
+- Prefer direct executable invocation when `bin/geoflow` exists:
 
 ```bash
 "/path/to/workspace/bin/geoflow" --config /path/to/config ...
@@ -65,7 +65,8 @@ Use [references/operation-boundary.md](references/operation-boundary.md) for the
 php "/path/to/workspace/bin/geoflow" --config /path/to/config ...
 ```
 
-- Never synthesize API requests directly when the CLI already supports the action.
+- Never synthesize API requests directly when the CLI exists and already supports the action.
+- When the CLI is absent, use `/api/v1` with explicit bearer auth and `X-Idempotency-Key` for mutating requests.
 - Never store or print a full token in the final user-facing summary unless the user explicitly asked for it.
 
 ## Typical Flows

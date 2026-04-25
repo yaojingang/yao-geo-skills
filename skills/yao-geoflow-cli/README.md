@@ -1,6 +1,6 @@
 # Yao GEOFlow CLI
 
-`yao-geoflow-cli` is a local operations skill for controlling an existing GEOFlow system through the project CLI instead of the web admin.
+`yao-geoflow-cli` is a local operations skill for controlling an existing GEOFlow system through the project CLI or Laravel API v1 fallback instead of the web admin.
 
 Public project repository:
 
@@ -17,7 +17,7 @@ Public project repository:
 
 ## Boundary
 
-This skill does not implement GEOFlow backend code and does not write directly to the database. It operates through `bin/geoflow`, which in turn calls `/api/v1`. First-time access should use `geoflow login` with the GEOFlow administrator username and password.
+This skill does not implement GEOFlow backend code and does not write directly to the database. It prefers `bin/geoflow` when present. If the current Laravel rewrite has no CLI wrapper, it may operate through `/api/v1` with bearer auth and idempotency keys. First-time access should use `geoflow login` when the CLI exists, or `/api/v1/auth/login` when using API fallback.
 
 ## Package Map
 
@@ -26,5 +26,5 @@ This skill does not implement GEOFlow backend code and does not write directly t
 - `agents/openai.yaml`: OpenAI-friendly interface metadata
 - `references/operation-boundary.md`: safety and scope rules
 - `references/command-map.md`: capability-to-command mapping
-- `scripts/geoflow_preflight.sh`: deterministic CLI/config preflight
+- `scripts/geoflow_preflight.sh`: deterministic CLI/config or API fallback preflight
 - `evals/trigger_cases.json`: trigger boundary checks

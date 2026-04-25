@@ -6,24 +6,29 @@ Use this workflow when the request is to adjust a theme that already exists in a
 
 The current GEOFlow theme system is considered present when the workspace contains:
 
-- `/themes/<theme-id>/...`
-- `includes/theme_preview.php`
-- `theme-preview.php`
-- theme selection in `admin/site-settings.php`
+- `artisan`
+- `routes/web.php`
+- `resources/views/site`
+- `resources/views/theme/<theme-id>/...`
+- `app/Support/Site/SiteThemeViewResolver.php`
+- theme selection in `resources/views/admin/site-settings/index.blade.php`
+
+Legacy PHP workspaces may still use `/themes`, `includes/theme_preview.php`, and `theme-preview.php`; treat those as fallback only.
 
 ## Workflow States
 
 ### 1. Discover
 
-- inspect `/themes`
+- inspect `resources/views/theme` first, then legacy `/themes` only when Laravel signals are absent
 - read each `manifest.json`
 - collect editable files:
-  - `templates/header.php`
-  - `templates/footer.php`
-  - `templates/home.php`
-  - `templates/category.php`
-  - `templates/article.php`
-  - `templates/archive.php`
+  - `home.blade.php`
+  - `category.blade.php`
+  - `article.blade.php`
+  - `archive-index.blade.php`
+  - `archive-month.blade.php`
+  - `layout.blade.php`
+  - `partials/*.blade.php`
   - `assets/theme.css`
   - optional `tokens.json`
   - optional `mapping.json`
@@ -41,9 +46,9 @@ Recommended helper:
 ### 3. Fork Preview Session
 
 - do not edit the target theme live on the first pass
-- create a preview fork under `/themes/<preview-theme-id>`
+- create a preview fork under `resources/views/theme/<preview-theme-id>` for Laravel GEOFlow
 - mark the fork clearly as preview or edit-session in `manifest.json`
-- emit preview URLs that the operator can open inside the current GEOFlow system
+- emit public route samples and clearly note whether the current app has isolated preview routes
 
 Recommended helper:
 - `scripts/prepare_theme_edit_session.py`
@@ -52,7 +57,7 @@ Recommended helper:
 
 Safe edit surface:
 
-- template PHP files inside the selected theme
+- Blade files inside the selected theme
 - `assets/theme.css`
 - `manifest.json`
 - optional tokens and mapping files
@@ -92,6 +97,6 @@ Recommended helper:
 ## Safety Rules
 
 - preview first, live later
-- keep backups outside `/themes` so admin discovery does not treat them as selectable templates
+- keep backups outside `resources/views/theme` so admin discovery does not treat them as selectable templates
 - do not add modules that require backend fields GEOFlow does not already expose
 - do not touch routing, search, SEO generation, or schema generation unless the user explicitly expands scope

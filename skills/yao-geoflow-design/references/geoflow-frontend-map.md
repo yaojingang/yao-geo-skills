@@ -1,459 +1,242 @@
-# GEOFlow 前台模块与变量地图
+# GEOFlow Frontend Module And Variable Map
 
-本文档是 `yao-geoflow-design` 的核心参考。目标不是解释业务，而是定义：当前 GEOFlow 前台页面由哪些稳定模块组成、依赖哪些变量和函数、哪些位置可以替换样式、哪些契约必须保留。
+This document is the current GEOFlow frontend contract for `yao-geoflow-design`. It is based on the Laravel rewrite, not the older root-level PHP frontend.
 
-工作区基线：
-- 代码库：标准 GEOFlow PHP 工作区（根目录包含 `index.php`、`article.php`、`category.php`、`archive.php`、`includes/header.php`）
-- 正式前台入口：
-  - `index.php`
-  - `article.php`
-  - `category.php`
-  - `archive.php`
-  - `includes/header.php`
-  - `includes/footer.php`
+## 1. Current Workspace Baseline
 
-## 1. 全站稳定契约
+Current GEOFlow signals:
 
-### 1.1 正式页面
+- Laravel entry: `artisan`
+- Public routes: `routes/web.php`
+- Site controllers: `app/Http/Controllers/Site/*`
+- Theme resolver: `app/Support/Site/SiteThemeViewResolver.php`
+- Built-in frontend views: `resources/views/site`
+- Selectable themes: `resources/views/theme/{theme_id}`
+- Admin theme selection: `resources/views/admin/site-settings/index.blade.php`
 
-- 首页：`index.php`
-- 文章详情页：`article.php`
-- 分类页：`category.php`
-- 归档页：`archive.php`
-- 公共头部：`includes/header.php`
-- 公共底部：`includes/footer.php`
+Legacy PHP signals such as root `index.php`, `article.php`, `category.php`, `archive.php`, and `/themes` are fallback-only.
 
-### 1.2 样式与资源
+## 2. Route Contract
 
-- 全局样式：
-  - `assets/css/style.css`
-  - `assets/css/custom.css`
-- 图标：Lucide
-- 页面层仍依赖 Tailwind CDN
-
-### 1.3 路由契约
-
-由 `router.php` 负责，当前正式前台路由必须保留：
+Do not change these public routes during a design-only run:
 
 - `/`
 - `/article/{slug}`
-- `/category/{slug|id}`
+- `/category/{slug}`
 - `/archive`
 - `/archive/{year}/{month}`
-- `/search/{term}` 或首页搜索模式
 
-### 1.4 必须保留的核心函数
+Admin route base may be customized through `config/geoflow.php`; never hard-code `/geo_admin` in theme output.
 
-来自 `includes/functions.php` 与 `includes/seo_functions.php`：
+## 3. Theme Resolution Contract
 
-- `get_categories()`
-- `get_featured_articles($limit = 6)`
-- `search_articles($search, $page = 1, $per_page = 12)`
-- `get_search_count($search)`
-- `get_category_by_id($id)`
-- `get_articles_by_category($category_id, $page = 1, $per_page = 12)`
-- `get_category_article_count($category_id)`
-- `get_article_by_slug($slug)`
-- `get_public_article_by_id($id)`
-- `get_article_tags($article_id)`
-- `get_related_articles($article_id, $category_id, $limit = 4)`
-- `get_site_stats()`
-- `get_active_article_detail_ad()`
-- `markdown_to_html($text)`
-- `generate_pagination($current_page, $total_pages, $base_url)`
-- `site_setting_value($key, $default = '')`
-- `output_site_head_extras()`
-- `generate_page_title(...)`
-- `generate_page_description(...)`
-- `generate_page_keywords(...)`
-- `geo_absolute_url($path = '/')`
-- `generate_article_structured_data(...)`
-- `generate_category_structured_data(...)`
-- `generate_website_structured_data()`
-- `generate_collection_structured_data(...)`
-- `generate_breadcrumb_structured_data(...)`
-- `build_article_geo_summary(...)`
-- `build_collection_geo_summary(...)`
+`SiteThemeViewResolver::first($template, $data)` resolves:
 
-## 2. 全站公共变量
+```text
+theme.{active_theme}.{template}
+site.{template}
+```
 
-这些变量跨页面重复出现，是模板系统必须兼容的输入：
+If a theme does not provide a Blade view, GEOFlow falls back to `resources/views/site`.
 
-- `site_title`
-- `site_subtitle`
-- `site_description`
-- `site_keywords`
-- `site_logo`
-- `categories`
-- `app_locale()`
-- `app_html_lang()`
-- `admin_url()`
+Allowed theme ID pattern:
 
-页面级公共输出：
+```text
+^[a-zA-Z0-9_-]+$
+```
 
-- `page_title`
-- `page_description`
-- `page_keywords`
-- `canonical_url`
-- `structured_data_blocks`
+## 4. Theme Package Files
 
-## 3. 公共头部模块
+Current theme root:
 
-文件：
-- `includes/header.php`
+```text
+resources/views/theme/{theme_id}/
+```
 
-### 3.1 模块组成
+Recommended files:
 
-- Logo / 站点名称
-- 桌面导航
-- 分类下拉菜单
-- 移动端菜单
-- 后台入口按钮
+```text
+manifest.json
+tokens.json
+mapping.json
+home.blade.php
+article.blade.php
+category.blade.php
+archive-index.blade.php
+archive-month.blade.php
+layout.blade.php
+partials/header.blade.php
+partials/footer.blade.php
+partials/article-card.blade.php
+assets/theme.css
+```
 
-### 3.2 依赖变量
+Only `manifest.json` is required for discovery. Missing Blade views fall back to built-in `site.*`.
 
-- `site_title`
-- `site_logo`
-- `categories`
-- `request_path`
-- `is_home`
-- `is_archive`
+## 5. Built-In Frontend Views
 
-### 3.3 模板可替换范围
+Stable built-in views:
 
-- Logo 容器样式
-- 顶部导航布局
-- 下拉菜单视觉
-- 移动端菜单样式
-- 分类项视觉
+- `resources/views/site/layout.blade.php`
+- `resources/views/site/home.blade.php`
+- `resources/views/site/article.blade.php`
+- `resources/views/site/category.blade.php`
+- `resources/views/site/archive-index.blade.php`
+- `resources/views/site/archive-month.blade.php`
+- `resources/views/site/partials/header.blade.php`
+- `resources/views/site/partials/footer.blade.php`
+- `resources/views/site/partials/article-card.blade.php`
 
-### 3.4 不可破坏点
+## 6. Shared Layout Modules
 
-- 分类列表仍来自 `get_categories()`
-- 后台入口仍保留 `admin_url()`
-- 导航仍要能覆盖首页、分类、归档、后台入口
+### `layout`
 
-## 4. 公共底部模块
+Owns:
 
-文件：
-- `includes/footer.php`
+- HTML shell
+- page title and meta description
+- canonical URL when provided
+- JSON-LD / schema blocks when provided
+- header / content / footer slots
 
-### 4.1 模块组成
+Do not remove SEO, canonical, or schema output.
 
-- 版权信息块
+### `partials.header`
 
-### 4.2 依赖变量
+Owns:
 
-- `footer_copyright_text`
-- `app_locale()`
-- `site_setting_value('copyright_info' / 'copyright_text')`
+- site name / logo
+- Home link
+- category navigation
+- archive link when present
+- responsive navigation
 
-### 4.3 模板可替换范围
+Inputs are controller-provided site settings and category collections. Do not query the database directly in a theme.
 
-- 布局、对齐、配色、边框、间距
+### `partials.footer`
 
-## 5. 首页模块地图
+Owns:
 
-文件：
-- `index.php`
+- public copyright line
+- footer links and minimal public metadata
 
-### 5.1 页面模式
+Keep it public-facing. Admin copyright/version UI is separate.
 
-首页并不总是同一种 UI，而是三种模式：
+## 7. Home Page Modules
 
-- 默认首页聚合模式
-- 搜索结果模式
-- 分类过滤模式（兼容 query 参数）
+View: `home`
 
-### 5.2 关键变量
-
-- `category_id`
-- `search`
-- `page`
-- `per_page`
-- `site_title`
-- `site_subtitle`
-- `site_description`
-- `site_keywords`
-- `featured_limit`
-- `site_stats`
-- `category`
-- `categories`
-- `featured_articles`
-- `articles`
-- `total_count`
-- `total_pages`
-- `view_title`
-
-### 5.3 模块组成
+Stable modules:
 
 - `home.hero`
-  - 站点主标题
-  - 站点副标题 / 描述
-- `home.featured_list`
-  - 精选文章 section label
-  - 精选文章卡片列表
-- `home.latest_list`
-  - 最新文章 section label
-  - 文章卡片列表
-- `home.search_breadcrumb`
-  - 搜索状态面包屑
-- `home.category_intro`
-  - 分类标题和描述
+- `home.featured_articles`
+- `home.latest_articles`
 - `home.article_card`
-  - 日期
-  - 分类 chip
-  - 推荐 badge
-  - 标题
-  - 摘要
-  - 标签
-  - 阅读全文按钮
 - `home.empty_state`
 - `home.pagination`
 
-### 5.4 首页文章卡片依赖字段
+Typical data:
 
-每张文章卡片至少依赖：
+- site settings
+- categories
+- featured articles
+- paginated latest articles
+- pagination metadata
 
-- `article.id`
-- `article.slug`
-- `article.title`
-- `article.excerpt`
-- `article.content`
-- `article.category_id`
-- `article.category_name`
-- `article.published_at`
-- `article.created_at`
-- `article.is_featured`
-- `article_tags[]`
+## 8. Category Page Modules
 
-### 5.5 可模板化结论
+View: `category`
 
-首页最适合模板化的稳定模块：
+Stable modules:
 
-- Hero
-- Section header
-- Featured article card
-- Standard article card
-- Empty state
-- Pagination shell
-
-## 6. 文章详情页模块地图
-
-文件：
-- `article.php`
-
-### 6.1 关键变量
-
-- `slug`
-- `article_id`
-- `article`
-- `article_tags`
-- `related_articles`
-- `article_detail_ad`
-- `article_content`
-- `article_excerpt`
-- `article_content_summary`
-- `page_title`
-- `page_description`
-- `page_keywords`
-- `canonical_url`
-
-### 6.2 模块组成
-
-- `article.breadcrumb`
-- `article.category_chip`
-- `article.hero`
-  - 标题
-  - 发布时间
-  - 摘要框
-- `article.prose_shell`
-  - Markdown 转 HTML 的正文容器
-- `article.tags`
-- `article.related_articles`
-  - 标题
-  - 排名数字
-  - 相关文章列表
-- `article.sticky_ad`
-  - 关闭按钮
-  - badge
-  - title
-  - copy
-  - CTA button
-
-### 6.3 文章详情广告位字段
-
-来自 `get_active_article_detail_ad()`：
-
-- `id`
-- `name`
-- `badge`
-- `title`
-- `copy`
-- `button_text`
-- `button_url`
-- `enabled`
-
-### 6.4 不可破坏点
-
-- 正文必须继续来自 `markdown_to_html($article_content)`
-- 相关文章必须继续来自 `get_related_articles(...)`
-- 广告位数据结构不能丢字段
-- slug 路由必须保持 `/article/{slug}`
-
-## 7. 分类页模块地图
-
-文件：
-- `category.php`
-
-### 7.1 关键变量
-
-- `category_slug`
-- `category_id`
-- `page`
-- `per_page`
-- `category`
-- `categories`
-- `articles`
-- `total_count`
-- `total_pages`
-- `page_title`
-- `page_description`
-- `canonical_url`
-
-### 7.2 模块组成
-
-- `category.breadcrumb`
-- `category.page_intro`
-  - 分类名称
-  - 分类描述
+- `category.header`
+- `category.description`
 - `category.article_list`
 - `category.article_card`
-- `category.empty_state`
 - `category.pagination`
+- `category.empty_state`
 
-### 7.3 分类页文章卡片依赖字段
+Typical data:
 
-- `article.slug`
-- `article.title`
-- `article.excerpt`
-- `article.content`
-- `article.published_at`
-- `article.is_featured`
-- `article_tags[]`
-- `category.name`
+- category
+- articles
+- pagination metadata
 
-## 8. 归档页模块地图
+## 9. Article Page Modules
 
-文件：
-- `archive.php`
+View: `article`
 
-### 8.1 页面模式
+Stable modules:
+
+- `article.header`
+- `article.cover_image`
+- `article.meta`
+- `article.prose`
+- `article.tags`
+- `article.related_articles`
+- `article.ad_slot`
+
+Typical data:
+
+- article
+- author
+- category
+- tags
+- related articles
+- rendered article HTML
+- article images
+- article detail ad
+- canonical URL and structured data
+
+Important rendering rule: do not show image captions that are only filenames such as `333.png`; keep article images visual unless the system provides meaningful captions.
+
+## 10. Archive Modules
+
+Views: `archive-index`, `archive-month`
+
+Stable modules:
 
 - `archive.overview`
-- `archive.month_detail`
-
-### 8.2 关键变量
-
-- `year`
-- `month`
-- `page`
-- `per_page`
-- `archives`
-- `articles`
-- `total_count`
-- `total_pages`
-- `archive_title`
-- `canonical_url`
-
-### 8.3 模块组成
-
-- `archive.breadcrumb`
-- `archive.page_intro`
-- `archive.overview_year_group`
-- `archive.overview_row`
-  - 年
-  - 月
-  - 文章数
-- `archive.month_article_list`
-- `archive.month_article_card`
-- `archive.empty_state`
+- `archive.month_group`
+- `archive.article_list`
+- `archive.article_card`
 - `archive.pagination`
 
-## 9. SEO / Head 注入模块
+Typical data:
 
-页面统一依赖：
+- archive months
+- selected year/month
+- articles
+- pagination metadata
 
-- `output_site_head_extras()`
-- `output_structured_data_blocks(...)`
+## 11. Safe Editing Surface
 
-站点级设置影响前台 head：
+Safe in theme packages:
 
-- `site_name`
-- `site_description`
-- `site_keywords`
-- `site_favicon`
-- `analytics_code`
-- `seo_title_template`
-- `seo_description_template`
+- Blade markup inside existing page/module boundaries
+- CSS tokens, spacing, shadows, colors, borders, typography, responsive behavior
+- card layouts and metadata presentation
+- header/footer presentation
+- ad slot presentation
+- `manifest.json`, `tokens.json`, `mapping.json`
 
-这些属于模板系统必须兼容的 head 层配置，不适合在模板克隆中删除。
+Unsafe without explicit system-change approval:
 
-## 10. 当前可安全模板化的模块清单
+- controllers
+- models
+- migrations
+- routing
+- markdown renderer
+- SEO/schema generation
+- database queries
+- admin theme activation
 
-这是最适合做“参考站点复刻映射”的单元：
+## 12. Preview Notes
 
-- `header`
-- `footer`
-- `home.hero`
-- `home.section_header`
-- `home.article_card`
-- `category.article_card`
-- `archive.overview_row`
-- `archive.month_article_card`
-- `article.hero`
-- `article.prose_shell`
-- `article.related_articles`
-- `article.sticky_ad`
-- `empty_state`
-- `pagination_shell`
+Current Laravel GEOFlow does not guarantee an isolated `/preview/{theme}` route. A design run should either:
 
-## 11. 当前不应直接模板化替换的部分
+- generate static preview artifacts for review, or
+- create a preview theme under `resources/views/theme` and ask the operator to activate it only after review, or
+- use a dedicated preview route only when the current app actually provides one.
 
-- 文章、分类、作者、标签等业务数据查询逻辑
-- slug 路由规则
-- SEO / structured data 生成逻辑
-- Markdown 正文渲染入口
-- 广告位字段结构
-- GEO summary 生成逻辑
-
-## 12. 主题包生成的最小映射目标
-
-如果要从外部 URL 复刻成 GEOFlow 模板，最低要生成这些映射：
-
-- `header`
-- `footer`
-- `home.hero`
-- `home.featured_list`
-- `home.article_card`
-- `category.article_card`
-- `article.hero`
-- `article.prose_shell`
-- `article.related_articles`
-- `article.sticky_ad`
-- `archive.overview_row`
-- `archive.article_card`
-
-## 13. 对后续系统实现的约束
-
-后台“网站模板”功能如果后续要做，建议只做：
-
-- 模板注册
-- 模板预览
-- 模板启用
-
-不建议让后台直接编辑任意模板源码。更稳的方式是：
-
-- skill 生成模板包
-- 系统识别模板包
-- 后台只负责选择、预览、启用
+Never invent preview URLs from the legacy PHP system.

@@ -1,11 +1,11 @@
 ---
 name: yao-geoflow-design
-description: Discover, preview, clone, and edit GEOFlow themes by selecting an existing template or mapping a reference site, then applying safe frontend changes without changing business logic or data contracts. Use for theme discovery, target-theme editing, cloning, optimization, and theme iteration. Not for raw HTML copying, backend refactors, or direct live activation.
+description: Discover, preview, clone, and edit GEOFlow Laravel Blade themes by selecting an existing template or mapping a reference site, then applying safe frontend changes without changing business logic or data contracts. Use for theme discovery, target-theme editing, cloning, optimization, and theme iteration. Not for raw HTML copying, backend refactors, or direct live activation.
 ---
 
 # Yao GEOFlow Design
 
-Use this skill to discover, preview, clone, or improve a GEOFlow frontend without breaking its rendering contract.
+Use this skill to discover, preview, clone, or improve a GEOFlow frontend without breaking its Laravel Blade rendering contract.
 
 ## What This Skill Owns
 
@@ -23,9 +23,9 @@ Use this skill to discover, preview, clone, or improve a GEOFlow frontend withou
 
 ## Required Preconditions
 
-1. Confirm the target workspace is a GEOFlow codebase with `index.php`, `article.php`, `category.php`, `archive.php`, and `includes/header.php`.
+1. Confirm the target workspace is a GEOFlow Laravel codebase with `artisan`, `routes/web.php`, `resources/views/site`, and `resources/views/theme`.
 2. Read [references/geoflow-frontend-map.md](references/geoflow-frontend-map.md) and [references/template-boundary.md](references/template-boundary.md) before proposing changes.
-3. Discover available themes in `/themes` before editing. Default to the user-selected theme, otherwise use the active theme if known.
+3. Discover available themes in `resources/views/theme` before editing. Default to the user-selected theme, otherwise use the active theme if known.
 4. Preserve the existing module/data contract unless the user explicitly asks for a system change.
 5. Choose a work mode:
    - `edit_theme`: adjust a specified existing theme
@@ -40,7 +40,7 @@ Use this skill to discover, preview, clone, or improve a GEOFlow frontend withou
 3. Resolve a `target_theme_id` or decide to create a brand-new theme from a reference site.
 4. For `edit_theme` or `hybrid`, create a preview fork with `scripts/prepare_theme_edit_session.py` instead of editing the target live.
 5. For `clone` or `hybrid`, inspect the reference URL for tokens and layout rhythm. For `edit_theme` or `hybrid`, audit the target theme for hierarchy, spacing, density, responsiveness, and module consistency.
-6. Edit only the allowed theme files: `templates/*.php`, `assets/theme.css`, `manifest.json`, and optional `tokens.json` / `mapping.json`.
+6. Edit only the allowed theme files: `*.blade.php`, `partials/*.blade.php`, `assets/theme.css`, `manifest.json`, and optional `tokens.json` / `mapping.json`.
 7. Keep the work in preview status until the operator reviews the generated preview URLs.
 8. After confirmation, choose one finalize path:
    - `publish_as_new_theme`: keep or rename the preview fork so it becomes a selectable admin theme
@@ -51,6 +51,7 @@ Use this skill to discover, preview, clone, or improve a GEOFlow frontend withou
 ## Reference Map
 
 - [references/geoflow-frontend-map.md](references/geoflow-frontend-map.md): authoritative frontend module and variable map
+- [references/laravel-theme-contract.md](references/laravel-theme-contract.md): current Laravel Blade theme contract
 - [references/template-boundary.md](references/template-boundary.md): safe and unsafe modification boundaries
 - [references/theme-package-contract.md](references/theme-package-contract.md): expected output shape for theme edit sessions and clone flows
 - [references/design-optimization-playbook.md](references/design-optimization-playbook.md): optimization heuristics and preferred outputs
