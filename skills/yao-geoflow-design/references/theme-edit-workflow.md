@@ -12,6 +12,7 @@ The current GEOFlow theme system is considered present when the workspace contai
 - `resources/views/theme/<theme-id>/...`
 - `app/Support/Site/SiteThemeViewResolver.php`
 - theme selection in `resources/views/admin/site-settings/index.blade.php`
+- `site_settings.active_theme` storing the active theme ID
 
 Legacy PHP workspaces may still use `/themes`, `includes/theme_preview.php`, and `theme-preview.php`; treat those as fallback only.
 
@@ -61,6 +62,14 @@ Safe edit surface:
 - `assets/theme.css`
 - `manifest.json`
 - optional tokens and mapping files
+
+Fixed contracts during the edit loop:
+
+- do not hard-code `/geo_admin`
+- preserve SEO, canonical, and schema output
+- preserve article rendered-HTML behavior and style tables/headings/lists/code blocks through CSS
+- do not show filename-only image captions
+- keep preview/activation separate
 
 Typical requests:
 

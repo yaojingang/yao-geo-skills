@@ -2,6 +2,8 @@
 
 `yao-geoflow-design` 用来识别当前 GEOFlow 系统里已有的模板，指定一个目标主题进入 **preview-first 的编辑会话**，并对这个主题做样式调整、模块增减和参考站风格映射。它不直接替换生产前台，而是先在当前 GEOFlow 系统里形成可预览的主题分支，确认后再决定替换原主题还是新增一个模板。
 
+当前版本已对 GEOFlow Laravel Blade 主题系统做适配：主题目录为 `resources/views/theme/{theme_id}`，缺失模板会回退到 `resources/views/site`，后台地址可自定义，设计 skill 不应硬编码 `/geo_admin` 或改动后端业务逻辑。
+
 ## 中文概述
 
 适合：
@@ -12,6 +14,7 @@
 - 输入一个参考网址，抽取主色调、卡片风格、版式层级和模块结构
 - 把参考站点风格映射到 GEOFlow 的首页、分类页、文章详情页、归档页和广告位
 - 对当前模板做层级、间距、卡片一致性、响应式和广告位语气的优化
+- 检查文章详情页图片、Markdown 渲染、SEO/schema、footer 和语言行为是否仍遵循系统契约
 - 在现有数据契约允许的前提下，增加新的展示模块或信息块
 - 输出 `theme-discovery.json`、`edit-session.json`、`design-audit.md`、`tokens.delta.json`、`mapping.delta.json`、`change-plan.md` 等产物
 - 为系统后续的模板预览、模板启用、替换原模板和新增模板提供基础工作流
@@ -22,6 +25,7 @@
 - 跳过 GEOFlow 当前函数和数据契约，直接写死内容
 - 不经过 preview 直接覆盖正式前台
 - 顺手去改后台业务逻辑、SEO 契约、路由或文章查询规则
+- 在主题里硬编码后台地址、数据库查询或独立语言切换逻辑
 
 ## English Overview
 
@@ -51,6 +55,7 @@ Not for:
 - Trigger boundary: [trigger_cases.json](../../skills/yao-geoflow-design/evals/trigger_cases.json)
 - Frontend map: [geoflow-frontend-map.md](../../skills/yao-geoflow-design/references/geoflow-frontend-map.md)
 - Theme contract: [theme-package-contract.md](../../skills/yao-geoflow-design/references/theme-package-contract.md)
+- Laravel Blade contract: [laravel-theme-contract.md](../../skills/yao-geoflow-design/references/laravel-theme-contract.md)
 - Optimization playbook: [design-optimization-playbook.md](../../skills/yao-geoflow-design/references/design-optimization-playbook.md)
 - Theme edit workflow: [theme-edit-workflow.md](../../skills/yao-geoflow-design/references/theme-edit-workflow.md)
 - Example mapping report: [qiaomu-blog-mapping-2026-04-18.md](../../skills/yao-geoflow-design/reports/qiaomu-blog-mapping-2026-04-18.md)

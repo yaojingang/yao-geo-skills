@@ -51,6 +51,14 @@
     {
       "text": "为当前 GEOFlow 主题生成一个 preview-first 的编辑会话，确认后再决定替换原模板还是新增模板。",
       "family": "preview_finalize_workflow"
+    },
+    {
+      "text": "检查 Laravel Blade 主题有没有破坏 SEO、schema、Markdown 渲染和图片 caption 规则，然后出预览改版方案。",
+      "family": "laravel_blade_contract_audit"
+    },
+    {
+      "text": "优化 GEOFlow 主题，但不能硬编码 geo_admin，因为后台地址现在可以自定义。",
+      "family": "admin_base_path_safe_theme_edit"
     }
   ],
   "should_not_trigger": [

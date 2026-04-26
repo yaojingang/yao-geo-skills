@@ -69,6 +69,14 @@ resources/views/theme/
   - `change_scope`
   - `session_state`
 
+Recommended Laravel fields:
+
+- `framework`: `laravel`
+- `geoflow_contract`: `site-theme-view-resolver`
+- `requires_admin_activation`: `true` when no isolated preview route exists
+- `blade_templates`: list of provided Blade templates
+- `fallback_templates`: list of templates expected to fall back to `resources/views/site`
+
 ## Minimum Edit-Session Fields
 
 - `base_theme_id`
@@ -118,3 +126,11 @@ Current Laravel GEOFlow may not provide isolated `/preview/{theme}` URLs. Previe
 Optimization runs should also include a short before/after rationale for each touched module.
 
 Preview must be isolated from the active public template until the operator confirms replacement, publish-as-new, or activation.
+
+## Non-Negotiable Rendering Rules
+
+- keep layout-level title, description, keyword, canonical, and schema slots intact
+- do not render raw markdown markers in list excerpts or article bodies
+- do not display image captions when the caption is only a filename
+- do not hard-code admin URLs
+- do not change controllers, database queries, route definitions, or markdown rendering services in a design-only package

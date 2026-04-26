@@ -116,8 +116,8 @@ The current catalog is grouped into `operations / measurement / research`.
 ### `operations`
 
 - `yao-geoflow-cli`
-  - Purpose: operate an existing GEOFlow system through the local CLI.
-  - Best for: catalog lookup, task operations, article upload, review, and publishing.
+  - Purpose: operate an existing GEOFlow system through the local CLI or Laravel `/api/v1` fallback.
+  - Best for: catalog lookup, task operations, article upload, review, publishing, Docker preflight, and API fallback diagnostics.
   - Links:
     - [Guide](skills/yao-geoflow-cli.md)
     - [Package](../skills/yao-geoflow-cli)
@@ -133,8 +133,8 @@ The current catalog is grouped into `operations / measurement / research`.
     - [GEOFlow project](https://github.com/yaojingang/GEOFlow)
 
 - `yao-geoflow-design`
-  - Purpose: discover current GEOFlow themes, fork a selected target theme into a preview edit session, and then clone, optimize, or refine the frontend safely.
-  - Best for: target-theme editing, current-template optimization, hybrid reference-plus-optimization jobs, preview-first GEOFlow theme iteration, and publish-as-new or replace-base review flows.
+  - Purpose: discover current GEOFlow Laravel Blade themes, fork a selected target theme into a preview edit session, and then clone, optimize, or refine the frontend safely.
+  - Best for: target-theme editing, current-template optimization, hybrid reference-plus-optimization jobs, preview-first GEOFlow theme iteration, and publish-as-new or replace-base review flows without breaking SEO/schema, markdown rendering, or fallback contracts.
   - Links:
     - [Guide (CN)](skills/yao-geoflow-design.md)
     - [Guide (EN)](skills/yao-geoflow-design.en.md)

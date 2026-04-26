@@ -42,6 +42,7 @@ Keep these failure classes separate:
 
 - CLI/runtime failure: command missing, config missing, permission problem, malformed args
 - API fallback setup failure: missing `GEOFLOW_BASE_URL`, missing bearer token, wrong `/api/v1` base path
+- API fallback routing failure: `/api/v1/catalog` returns HTML, proxy errors, login pages, or Laravel web pages instead of JSON
 - API failure: 401, 403, 404, 409, 422, 500
 - Business-data failure: task inactive, missing titles, invalid category, review state conflict
 

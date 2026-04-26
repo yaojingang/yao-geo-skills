@@ -27,11 +27,12 @@ Use this skill to discover, preview, clone, or improve a GEOFlow frontend withou
 2. Read [references/geoflow-frontend-map.md](references/geoflow-frontend-map.md) and [references/template-boundary.md](references/template-boundary.md) before proposing changes.
 3. Discover available themes in `resources/views/theme` before editing. Default to the user-selected theme, otherwise use the active theme if known.
 4. Preserve the existing module/data contract unless the user explicitly asks for a system change.
-5. Choose a work mode:
+5. Never hard-code the admin base path. Current GEOFlow can customize the admin URL path; frontend themes should use public routes and route helpers only.
+6. Choose a work mode:
    - `edit_theme`: adjust a specified existing theme
    - `clone`: map a reference site into a new GEOFlow theme
    - `hybrid`: use a reference site to guide edits on a specified existing theme
-6. Treat preview and activation as separate steps. Never edit the live target first when a preview fork can be created.
+7. Treat preview and activation as separate steps. Never edit the live target first when a preview fork can be created.
 
 ## Default Workflow
 
@@ -41,8 +42,9 @@ Use this skill to discover, preview, clone, or improve a GEOFlow frontend withou
 4. For `edit_theme` or `hybrid`, create a preview fork with `scripts/prepare_theme_edit_session.py` instead of editing the target live.
 5. For `clone` or `hybrid`, inspect the reference URL for tokens and layout rhythm. For `edit_theme` or `hybrid`, audit the target theme for hierarchy, spacing, density, responsiveness, and module consistency.
 6. Edit only the allowed theme files: `*.blade.php`, `partials/*.blade.php`, `assets/theme.css`, `manifest.json`, and optional `tokens.json` / `mapping.json`.
-7. Keep the work in preview status until the operator reviews the generated preview URLs.
-8. After confirmation, choose one finalize path:
+7. Preserve SEO/meta/schema output, markdown-rendered article HTML, image rendering rules, footer copyright, and public language behavior unless the user explicitly asks to change them.
+8. Keep the work in preview status until the operator reviews the generated preview URLs.
+9. After confirmation, choose one finalize path:
    - `publish_as_new_theme`: keep or rename the preview fork so it becomes a selectable admin theme
    - `replace_base_theme`: back up the target theme, then replace it from the confirmed preview fork
    - `activate_after_confirmation`: perform activation only after preview approval

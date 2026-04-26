@@ -2,6 +2,24 @@
 
 该文档记录公开 skill 仓库的发布更新。后续每次向 GitHub 推送新 skill 或调整仓库入口时，同步更新本文件和英文版 `CHANGELOG.en.md`。
 
+## 2026-04-26
+
+### `yao-geoflow-cli` Laravel API v1 / Docker 适配收尾
+
+- 新增 `references/laravel-api-v1-docker.md`，明确 Laravel `/api/v1` fallback、Docker 部署检查、API scope 和 Token 使用规则
+- 强化 `geoflow_preflight.sh`：
+  - 缺少 CLI 时给出 Docker Compose 检查提示
+  - 校验 `/api/v1/catalog` 是否返回 JSON
+  - 对 `<!doctype html>` 这类 HTML 响应给出明确的 base URL / proxy / route 诊断
+- 更新 CLI 文档，避免把非 JSON 响应误判为 AI 模型响应格式错误
+
+### `yao-geoflow-design` Laravel Blade 主题契约补强
+
+- 补充当前 GEOFlow Laravel Blade 主题目录、fallback 规则与 `active_theme` 约束
+- 明确主题编辑不得硬编码 `/geo_admin`，不得修改后台路由、控制器、数据库查询或独立语言逻辑
+- 补充文章详情页图片 caption、Markdown HTML 渲染、SEO/schema、footer 与语言行为的固定契约
+- 更新中英文说明页，方便后续基于重构后的 GEOFlow 系统继续迭代模板能力
+
 ## 2026-04-20
 
 ### `geoflow-template` 更名为 `yao-geoflow-template`

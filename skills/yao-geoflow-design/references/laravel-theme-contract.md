@@ -42,6 +42,10 @@ Theme IDs must match:
 ^[a-zA-Z0-9_-]+$
 ```
 
+The active theme is stored in site settings as `active_theme`; when empty, GEOFlow renders the built-in `resources/views/site` views.
+
+The admin base path is configurable. Do not hard-code `/geo_admin` in theme packages, previews, docs, or generated links.
+
 ## Theme Package Shape
 
 Minimal package:
@@ -73,6 +77,7 @@ resources/views/theme/{theme_id}/
 ```
 
 Any missing Blade template automatically falls back to `resources/views/site`.
+Admin theme discovery can list a directory when it has a valid `manifest.json` or at least a `home.blade.php`, but a real theme package should include `manifest.json`.
 
 ## Editable Files
 
@@ -109,6 +114,14 @@ Stable public routes:
 - `/category/{slug}`
 - `/archive`
 - `/archive/{year}/{month}`
+
+Stable public data/rendering expectations:
+
+- page title, meta description, keywords, canonical URL, and JSON-LD/schema blocks must remain in the layout flow
+- article body content is already rendered HTML; do not re-escape it as plain markdown
+- image captions that are only filenames such as `333.png` should not be displayed
+- frontend language follows system/site behavior; do not add an independent public language selector unless the system contract changes
+- footer copyright should remain public-facing and centered/minimal unless a theme explicitly owns footer layout
 
 ## Preview Reality
 

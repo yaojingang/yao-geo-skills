@@ -12,10 +12,13 @@
 - audit the target theme for hierarchy, spacing, responsive, and module-consistency issues
 - generate either a full theme package, a preview edit session, or an incremental optimization patch plan
 - prepare the system-facing integration plan for preview, confirmation, replacement, or publish-as-new flows
+- preserve SEO/schema slots, markdown-rendered HTML, image-caption behavior, footer rules, and configurable admin base paths while editing themes
 
 ## Boundary
 
 This skill does not directly deploy a template to production, rewrite GEOFlow backend business logic, or replace current data contracts with arbitrary copied HTML. It works by preserving GEOFlow's Laravel Blade frontend modules and variables while changing presentation-layer structure and styles in a controlled preview session or theme package.
+
+It also does not hard-code `/geo_admin`, add independent public language switching, or change controllers/routes/database queries during a design-only run.
 
 ## Package Map
 

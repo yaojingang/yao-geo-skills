@@ -2,6 +2,24 @@
 
 This document tracks public repository releases for the skill catalog. Update this file together with the Chinese version in `CHANGELOG.md` whenever a new skill or a significant repository-level change is pushed.
 
+## 2026-04-26
+
+### `yao-geoflow-cli` Laravel API v1 / Docker alignment
+
+- Added `references/laravel-api-v1-docker.md` to document Laravel `/api/v1` fallback, Docker checks, API scopes, and token handling
+- Hardened `geoflow_preflight.sh`:
+  - prints Docker Compose guidance when the CLI is absent
+  - verifies that `/api/v1/catalog` returns JSON
+  - diagnoses HTML responses such as `<!doctype html>` as base URL / proxy / route problems
+- Updated CLI documentation so non-JSON API responses are not confused with AI model response-format errors
+
+### `yao-geoflow-design` Laravel Blade theme contract update
+
+- Added stronger coverage for GEOFlow Laravel Blade theme roots, fallback behavior, and `active_theme`
+- Clarified that themes must not hard-code `/geo_admin` or change backend routes, controllers, database queries, or independent language logic
+- Added fixed rendering expectations for article image captions, markdown-rendered HTML, SEO/schema slots, footer behavior, and public language behavior
+- Updated Chinese and English guides for the current GEOFlow rewrite
+
 ## 2026-04-20
 
 ### Renamed `geoflow-template` to `yao-geoflow-template`

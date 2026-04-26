@@ -14,6 +14,8 @@ Public project repository:
 - inspect jobs
 - upload article drafts
 - review and publish articles
+- run Laravel `/api/v1` fallback preflight when the CLI wrapper is absent
+- diagnose Docker/base-URL problems when API fallback returns HTML instead of JSON
 
 ## Boundary
 
@@ -26,5 +28,6 @@ This skill does not implement GEOFlow backend code and does not write directly t
 - `agents/openai.yaml`: OpenAI-friendly interface metadata
 - `references/operation-boundary.md`: safety and scope rules
 - `references/command-map.md`: capability-to-command mapping
+- `references/laravel-api-v1-docker.md`: Laravel API v1 fallback, Docker checks, scopes, and non-JSON diagnostics
 - `scripts/geoflow_preflight.sh`: deterministic CLI/config or API fallback preflight
 - `evals/trigger_cases.json`: trigger boundary checks

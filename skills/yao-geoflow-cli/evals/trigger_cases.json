@@ -39,6 +39,14 @@
     {
       "text": "这个任务提示没有可用的标题，先停掉任务，再直接发一篇测试文章验证发布链路。",
       "family": "missing_titles_fallback_cleanup"
+    },
+    {
+      "text": "Laravel 版 GEOFlow 没有 bin/geoflow，用 /api/v1 和 Docker 环境变量帮我先做 preflight。",
+      "family": "laravel_api_v1_docker_preflight"
+    },
+    {
+      "text": "调用 GEOFlow API 返回 <!doctype html>，帮我判断是不是 base url 或代理路由配置错了。",
+      "family": "non_json_api_response_diagnosis"
     }
   ],
   "should_not_trigger": [

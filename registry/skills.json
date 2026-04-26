@@ -56,9 +56,9 @@
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-cli",
-      "summary": "Operate an existing GEOFlow system through the local geoflow CLI for catalog lookup, task execution, article upload, review, and publish flows.",
+      "summary": "Operate an existing GEOFlow system through the local geoflow CLI or Laravel API v1 fallback for catalog lookup, task execution, article upload, review, publish flows, and Docker preflight diagnostics.",
       "public_repo_path": "skills/yao-geoflow-cli",
-      "last_updated": "2026-04-20"
+      "last_updated": "2026-04-26"
     },
     {
       "id": "yao-geo-tracking",
@@ -141,9 +141,9 @@
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-design",
-      "summary": "Discover current GEOFlow themes, preview-edit a selected template safely, and then clone, optimize, publish as new, or replace the base theme after review.",
+      "summary": "Discover current GEOFlow Laravel Blade themes, preview-edit a selected template safely, and then clone, optimize, publish as new, or replace the base theme after review without breaking rendering contracts.",
       "public_repo_path": "skills/yao-geoflow-design",
-      "last_updated": "2026-04-20"
+      "last_updated": "2026-04-26"
     }
   ],
   "planned_families": [

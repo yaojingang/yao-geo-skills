@@ -118,8 +118,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-cli</code></strong><br>
-      作用：通过本地 <code>geoflow</code> CLI 操作已有的 GEOFlow 系统，用于目录查询、任务管理、文章上传、审核与发布。<br><br>
-      适合：已经有 GEOFlow 系统，需要通过 CLI 做运营动作、批量处理或自动化编排。<br><br>
+      作用：通过本地 <code>geoflow</code> CLI 或 Laravel <code>/api/v1</code> fallback 操作已有的 GEOFlow 系统，用于目录查询、任务管理、文章上传、审核与发布。<br><br>
+      适合：已经有 GEOFlow 系统，需要通过 CLI/API 做运营动作、批量处理、Docker 部署预检或自动化编排。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-cli.md">说明页</a> ·
       <a href="skills/yao-geoflow-cli">Skill 包</a> ·
@@ -141,8 +141,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-design</code></strong><br>
-      作用：识别 GEOFlow 当前已有模板，指定目标主题进入 preview-first 编辑会话，并完成模板复刻、现有模板优化与局部样式调整。<br><br>
-      适合：GEOFlow 当前主题迭代、指定模板改版、预览态样式优化、参考站风格映射后落地，以及确认后替换原模板或新增模板。<br><br>
+      作用：识别 GEOFlow 当前 Laravel Blade 主题，指定目标主题进入 preview-first 编辑会话，并完成模板复刻、现有模板优化与局部样式调整。<br><br>
+      适合：GEOFlow 当前主题迭代、指定模板改版、预览态样式优化、参考站风格映射后落地，以及在不破坏 SEO/schema、Markdown 渲染和主题 fallback 契约的前提下新增或替换模板。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-design.md">说明页</a> ·
       <a href="docs/skills/yao-geoflow-design.en.md">English Guide</a> ·

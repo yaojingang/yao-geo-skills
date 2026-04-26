@@ -35,6 +35,7 @@ Use this skill when the system already has the GEOFlow API available and the job
 7. If preflight fails, stop and report the exact missing prerequisite instead of guessing.
 
 Use [references/operation-boundary.md](references/operation-boundary.md) for the enforced boundary and [references/command-map.md](references/command-map.md) for the supported commands.
+Use [references/laravel-api-v1-docker.md](references/laravel-api-v1-docker.md) when the target GEOFlow system is the Laravel rewrite, runs through Docker Compose, or has no `bin/geoflow` wrapper yet.
 
 ## Default Workflow
 
@@ -131,6 +132,7 @@ If `task jobs` or `job get` shows a business-data failure such as `没有可用�
 
 - Read [references/operation-boundary.md](references/operation-boundary.md) for safety and scope.
 - Read [references/command-map.md](references/command-map.md) for CLI-to-capability mapping.
+- Read [references/laravel-api-v1-docker.md](references/laravel-api-v1-docker.md) for Laravel API v1 fallback, Docker deployment checks, API scopes, and non-JSON response diagnosis.
 - Use [scripts/geoflow_preflight.sh](scripts/geoflow_preflight.sh) before mutating a new workspace.
 - Inspect [evals/trigger_cases.json](evals/trigger_cases.json) when tightening or reviewing the trigger boundary.
 - If you need the underlying CLI semantics, read the public project doc:

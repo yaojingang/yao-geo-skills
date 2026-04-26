@@ -9,23 +9,71 @@ if [[ -z "$workspace" ]]; then
   exit 1
 fi
 
+if [[ ! -d "$workspace" ]]; then
+  echo "Workspace not found: $workspace" >&2
+  exit 1
+fi
+
 cli_path="$workspace/bin/geoflow"
 
 api_base_url="${GEOFLOW_BASE_URL:-}"
 api_token="${GEOFLOW_API_TOKEN:-}"
+
+docker_hint() {
+  if [[ -f "$workspace/docker-compose.yml" || -f "$workspace/compose.yml" ]]; then
+    cat >&2 <<'EOF'
+Docker Compose workspace detected. For Laravel API fallback:
+  1. confirm containers are running: docker compose ps
+  2. confirm API routes: docker compose exec app php artisan route:list --path=api/v1
+  3. set GEOFLOW_BASE_URL to the exposed web root, e.g. http://127.0.0.1:18080
+  4. set GEOFLOW_API_TOKEN to a token with catalog/tasks/articles/jobs scopes
+EOF
+  fi
+}
+
+is_jsonish() {
+  python3 - "$1" <<'PY'
+import pathlib
+import sys
+
+text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace").lstrip()
+sys.exit(0 if text.startswith("{") or text.startswith("[") else 1)
+PY
+}
+
+print_body_excerpt() {
+  python3 - "$1" <<'PY'
+import pathlib
+import sys
+
+text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+print(text[:800])
+PY
+}
 
 if [[ ! -f "$cli_path" ]]; then
   if [[ -f "$workspace/artisan" && -f "$workspace/routes/api.php" ]]; then
     if [[ -z "$api_base_url" || -z "$api_token" ]]; then
       echo "Missing CLI: $cli_path" >&2
       echo "Laravel GEOFlow detected. Set GEOFLOW_BASE_URL and GEOFLOW_API_TOKEN to use API v1 fallback." >&2
+      docker_hint
       exit 1
     fi
 
     catalog_url="${api_base_url%/}/api/v1/catalog"
-    if ! catalog_output="$(curl -sS --max-time 15 -H "Authorization: Bearer $api_token" -H "Accept: application/json" "$catalog_url" 2>&1)"; then
-      printf '%s\n' "$catalog_output" >&2
+    catalog_tmp="$(mktemp)"
+    trap 'rm -f "$catalog_tmp"' EXIT
+    if ! curl -sS --max-time 20 -H "Authorization: Bearer $api_token" -H "Accept: application/json" "$catalog_url" -o "$catalog_tmp"; then
+      cat "$catalog_tmp" >&2 || true
       echo "Preflight failed. Could not reach API fallback catalog: $catalog_url" >&2
+      exit 3
+    fi
+    catalog_output="$(cat "$catalog_tmp")"
+
+    if ! is_jsonish "$catalog_tmp"; then
+      print_body_excerpt "$catalog_tmp" >&2
+      echo "Preflight failed. API fallback returned non-JSON. Check that GEOFLOW_BASE_URL points to the GEOFlow public web root and that /api/v1/catalog is routed to Laravel API, not a proxy/login/HTML page." >&2
+      docker_hint
       exit 3
     fi
 

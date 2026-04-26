@@ -27,6 +27,7 @@ Do not change these public routes during a design-only run:
 - `/archive/{year}/{month}`
 
 Admin route base may be customized through `config/geoflow.php`; never hard-code `/geo_admin` in theme output.
+Themes should not add admin links unless the current application passes such links explicitly.
 
 ## 3. Theme Resolution Contract
 
@@ -189,6 +190,7 @@ Typical data:
 - canonical URL and structured data
 
 Important rendering rule: do not show image captions that are only filenames such as `333.png`; keep article images visual unless the system provides meaningful captions.
+Important markdown rule: article content is passed to the theme as rendered HTML. The theme should style standard HTML nodes such as `h2`, `h3`, `p`, `ul`, `ol`, `blockquote`, `table`, `pre`, and `code`; it should not expose raw markdown markers in list cards or article detail views.
 
 ## 10. Archive Modules
 
@@ -230,6 +232,8 @@ Unsafe without explicit system-change approval:
 - SEO/schema generation
 - database queries
 - admin theme activation
+- admin base path behavior
+- multilingual persistence behavior
 
 ## 12. Preview Notes
 

@@ -11,6 +11,8 @@ The preflight supports two modes:
 - CLI mode when `<workspace>/bin/geoflow` exists.
 - API fallback mode when the CLI is absent and `GEOFLOW_BASE_URL` plus `GEOFLOW_API_TOKEN` are available.
 
+For the Laravel rewrite without a CLI wrapper, the API fallback expects `GEOFLOW_BASE_URL` to point to the public web root, for example `http://127.0.0.1:18080`, not `/geo_admin`, not `/api/v1`, and not a proxy error page.
+
 ## First Login
 
 Interactive password prompt:
@@ -47,6 +49,8 @@ curl -sS \
   -H "Accept: application/json" \
   "$GEOFLOW_BASE_URL/api/v1/catalog"
 ```
+
+If this returns HTML such as `<!doctype html>`, treat it as a base URL/proxy/routing problem, not an AI response-format problem. See [laravel-api-v1-docker.md](laravel-api-v1-docker.md).
 
 ## Task Operations
 
