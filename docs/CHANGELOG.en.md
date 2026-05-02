@@ -2,6 +2,16 @@
 
 This document tracks public repository releases for the skill catalog. Update this file together with the Chinese version in `CHANGELOG.md` whenever a new skill or a significant repository-level change is pushed.
 
+## 2026-05-02
+
+### `yao-geoflow-template` package standardization
+
+- Standardized the public preview package contract for `yao-geoflow-template`.
+- Made the Qiaomu editorial preview self-contained with committed `package/tokens.json` and `package/mapping.json`.
+- Documented the separation between preview readiness and production activation readiness.
+- Added failure cases, a rubric, and a package smoke check for committed preview metadata and ignored runtime output references.
+- Wired the package smoke check into repository CI.
+
 ## 2026-04-26
 
 ### `yao-geoflow-cli` Laravel API v1 / Docker alignment

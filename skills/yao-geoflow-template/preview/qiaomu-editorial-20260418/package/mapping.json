@@ -1,0 +1,62 @@
+{
+  "id": "qiaomu-editorial-20260418",
+  "name": "Qiaomu Editorial Mapping",
+  "mvp_order": [
+    "header",
+    "home",
+    "category",
+    "article",
+    "archive"
+  ],
+  "compatible_pages": [
+    "homepage",
+    "category",
+    "article",
+    "archive"
+  ],
+  "coverage_status": "complete",
+  "omitted_routes": [],
+  "activation_status": "preview-only",
+  "module_mapping": {
+    "header": [
+      "header.logo",
+      "header.primary_nav",
+      "header.category_dropdown",
+      "header.mobile_menu"
+    ],
+    "home": [
+      "home.hero",
+      "home.featured_list",
+      "home.latest_list",
+      "home.article_card",
+      "home.pagination"
+    ],
+    "category": [
+      "category.hero",
+      "category.article_card",
+      "category.pagination"
+    ],
+    "article": [
+      "article.hero",
+      "article.prose_shell",
+      "article.related_articles",
+      "article.sticky_ad"
+    ],
+    "archive": [
+      "archive.overview_row",
+      "archive.article_card"
+    ]
+  },
+  "safe_boundaries": [
+    "Preserve GEOFlow routing and canonical URLs.",
+    "Preserve article, category, archive, and pagination data sources.",
+    "Restyle modules through theme assets rather than replacing backend queries.",
+    "Keep preview separate from production activation."
+  ],
+  "preview_routes": [
+    "preview/qiaomu-editorial-20260418/index.html",
+    "preview/qiaomu-editorial-20260418/category.html",
+    "preview/qiaomu-editorial-20260418/article.html",
+    "preview/qiaomu-editorial-20260418/archive.html"
+  ]
+}

@@ -21,6 +21,9 @@ Before pushing, confirm:
 - skill-level eval files exist for any new skill
 - `registry/skills.json` is updated for any new or renamed public skill
 - a human-facing guide exists under `docs/skills/` for any new public skill
+- committed `yao-geoflow-template` theme packages include self-contained
+  metadata, preview routes, an example README, and `activation_status=preview-only`
+  unless a separate activation spec is linked
 
 ## Commit Rules
 
@@ -91,4 +94,9 @@ The repository should keep a GitHub Actions workflow that checks:
 - `registry/skills.json` is valid JSON and follows the repository contract
 - public skill packages contain required files
 - committed `outputs/` directories are rejected
+- committed `outputs-demo/` directories are rejected unless moved into sanitized
+  `examples/`
+- `yao-geoflow-template` public preview packages are smoke-tested for package
+  metadata, preview routes, safe activation boundaries, and ignored runtime
+  output references
 - public skills are synchronized with the registry

@@ -21,3 +21,6 @@ jobs:
 
       - name: Validate repository contract
         run: python3 scripts/validate_repository.py
+
+      - name: Smoke validate Yao GEOFlow template package
+        run: python3 scripts/smoke_yao_geoflow_template_package.py

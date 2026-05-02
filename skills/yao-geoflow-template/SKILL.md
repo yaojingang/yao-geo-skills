@@ -50,9 +50,13 @@ Use this skill when the job is to turn a visual reference into a GEOFlow-compati
    - `outputs/<template-id>/mapping.json`
    - `outputs/<template-id>/manifest.json`
    - `preview/<template-id>/...` preview pages
-8. Prefer a preview URL over prose-only output when the user wants to inspect the mapped style.
-9. Keep output preview-first. Activation should only happen after review and explicit confirmation.
-10. If the user asks for system implementation later, use the generated package and contract as the source of truth for the GEOFlow-side template feature.
+8. For committed public examples, move sanitized package metadata into:
+   - `preview/<template-id>/package/tokens.json`
+   - `preview/<template-id>/package/mapping.json`
+   - `examples/<example-id>/README.md`
+9. Prefer a preview URL over prose-only output when the user wants to inspect the mapped style.
+10. Keep output preview-first. Activation should only happen after review and explicit confirmation.
+11. If the user asks for system implementation later, use the generated package and contract as the source of truth for the GEOFlow-side template feature.
 
 ## Response Rules
 
@@ -60,6 +64,8 @@ Use this skill when the job is to turn a visual reference into a GEOFlow-compati
 - Always state which modules can be restyled safely and which contracts must remain fixed.
 - Prefer module mapping, design tokens, and theme package structure over raw HTML replacement.
 - If a requested reference site pattern conflicts with GEOFlow's data contract, say so and offer the closest compatible mapping.
+- Public examples must be self-contained and must not rely on ignored `outputs/` or `outputs-demo/` runtime metadata.
+- Treat preview readiness and production activation readiness as separate states.
 
 ## Reference Map
 

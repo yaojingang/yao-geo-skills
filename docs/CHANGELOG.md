@@ -2,6 +2,16 @@
 
 该文档记录公开 skill 仓库的发布更新。后续每次向 GitHub 推送新 skill 或调整仓库入口时，同步更新本文件和英文版 `CHANGELOG.en.md`。
 
+## 2026-05-02
+
+### `yao-geoflow-template` 主题包标准化
+
+- 标准化 `yao-geoflow-template` 的公开 preview package 合同。
+- 将 Qiaomu editorial preview 调整为自包含的 `package/tokens.json` 和 `package/mapping.json`。
+- 明确 preview readiness 与 production activation readiness 分离。
+- 新增 failure cases、rubric 和 package smoke check，用于检查提交的 preview metadata 与 ignored runtime output 引用。
+- 将 package smoke check 接入仓库 CI。
+
 ## 2026-04-26
 
 ### `yao-geoflow-cli` Laravel API v1 / Docker 适配收尾

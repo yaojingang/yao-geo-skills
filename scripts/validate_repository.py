@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -15,13 +16,15 @@ TOP_LEVEL_REQUIRED_FILES = [
 ]
 
 SKILL_REQUIRED_FILES = [
+    "manifest.json",
     "SKILL.md",
+    "agents/interface.yaml",
     "evals/trigger_cases.json",
     "evals/expected_artifacts.json",
     "templates/brief-template.md",
 ]
 
-TRACKED_OUTPUT_PATH_PARTS = {"outputs"}
+TRACKED_OUTPUT_PATH_PARTS = {"outputs", "outputs-demo"}
 
 
 def fail(message: str) -> None:
@@ -32,7 +35,7 @@ def fail(message: str) -> None:
 def load_registry() -> dict:
     registry_path = ROOT / "registry" / "skills.json"
     try:
-        return json.loads(registry_path.read_text())
+        return json.loads(registry_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         fail(f"registry/skills.json is invalid JSON: {exc}")
 
@@ -118,6 +121,27 @@ def validate_skill_directories(registry_by_id: dict) -> None:
         if registered_path != expected_path:
             fail(f"Skill {skill_id} registry path mismatch: expected {expected_path}, got {registered_path}")
 
+        validate_skill_manifest(skill_id, skill_dir, registry_by_id[skill_id])
+
+
+def validate_skill_manifest(skill_id: str, skill_dir: Path, registry_entry: dict) -> None:
+    manifest_path = skill_dir / "manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"Skill {skill_id} manifest.json is invalid JSON: {exc}")
+
+    if manifest.get("name") != skill_id:
+        fail(f"Skill {skill_id} manifest name mismatch: expected {skill_id}, got {manifest.get('name')}")
+
+    updated_at = manifest.get("updated_at")
+    last_updated = registry_entry.get("last_updated")
+    if updated_at != last_updated:
+        fail(
+            f"Skill {skill_id} update date mismatch: "
+            f"manifest updated_at={updated_at}, registry last_updated={last_updated}"
+        )
+
 
 def validate_registry_paths_exist(registry_by_id: dict) -> None:
     for skill_id, metadata in registry_by_id.items():
@@ -129,12 +153,39 @@ def validate_registry_paths_exist(registry_by_id: dict) -> None:
             fail(f"Registry entry {skill_id} points to an outputs path, which is not allowed")
 
 
+def validate_no_tracked_runtime_outputs() -> None:
+    if not (ROOT / ".git").exists():
+        return
+
+    result = subprocess.run(
+        ["git", "ls-files"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    if result.returncode != 0:
+        fail(f"Unable to inspect tracked files with git ls-files: {result.stderr.strip()}")
+
+    tracked_output_files = [
+        path
+        for path in result.stdout.splitlines()
+        if any(part in TRACKED_OUTPUT_PATH_PARTS for part in Path(path).parts)
+    ]
+    if tracked_output_files:
+        fail(
+            "Runtime output files must not be tracked: "
+            + ", ".join(sorted(tracked_output_files))
+        )
+
+
 def main() -> None:
     validate_top_level_files()
     registry = load_registry()
     registry_by_id = validate_registry(registry)
     validate_skill_directories(registry_by_id)
     validate_registry_paths_exist(registry_by_id)
+    validate_no_tracked_runtime_outputs()
     print("Repository validation passed.")
 
 

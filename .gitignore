@@ -18,6 +18,8 @@ build/
 
 outputs/
 **/outputs/
+outputs-demo/
+**/outputs-demo/
 tmp/
 temp/
 
