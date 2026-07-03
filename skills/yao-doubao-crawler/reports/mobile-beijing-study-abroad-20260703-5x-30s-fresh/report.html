@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Kami">
+  <title>Doubao AI 搜索概率分析报告</title>
+  <style>
+:root {
+  --parchment:#f5f4ed; --ivory:#faf9f5; --brand:#1B365D; --brand-light:#2D5A8A;
+	  --near-black:#141413; --dark-warm:#3d3d3a; --olive:#504e49; --stone:#6b6a64;
+	  --border:#e8e6dc; --border-soft:#e5e3d8; --tag:#EEF2F7; --ok:#E9F3EA; --warn:#F5EFE3;
+  --serif:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC","STSong",Charter,Georgia,serif;
+  --mono:"JetBrains Mono","SF Mono",Consolas,Monaco,"Source Han Serif SC",monospace;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior:smooth; scroll-padding-top:92px; }
+body { margin:0; color:var(--near-black); background:var(--parchment); font-family:var(--serif); line-height:1.55; letter-spacing:0; }
+body.lang-zh .lang-en { display:none !important; }
+body.lang-en .lang-zh { display:none !important; }
+main { max-width:1180px; margin:0 auto; padding:104px 28px 80px; }
+.report-nav { position:fixed; top:0; left:0; right:0; z-index:40; background:var(--parchment); border-bottom:1px solid var(--border); box-shadow:0 10px 28px #e4e1d4; }
+.report-nav-shell { max-width:1180px; min-height:64px; margin:0 auto; padding:0 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.report-brand { min-width:0; display:flex; align-items:baseline; gap:10px; color:var(--near-black); text-decoration:none; }
+.report-brand-mark { flex:0 0 auto; color:var(--brand); font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:0; line-height:1; text-transform:uppercase; }
+.report-brand-title { min-width:0; max-width:360px; color:var(--stone); font-size:13px; line-height:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-actions { min-width:0; display:flex; align-items:center; justify-content:flex-end; gap:10px; flex:1; }
+.report-nav-inner { min-width:0; display:flex; align-items:center; justify-content:flex-end; gap:2px; overflow-x:auto; padding:4px 0; }
+.report-nav-inner a { flex:0 0 auto; color:var(--dark-warm); text-decoration:none; font-family:var(--mono); font-size:11px; line-height:1; letter-spacing:0; padding:10px 8px; border-radius:6px; white-space:nowrap; }
+.report-nav-inner a:hover, .report-nav-inner a:focus-visible { color:var(--brand); background:var(--tag); outline:none; }
+.language-toggle { flex:0 0 auto; display:flex; align-items:center; gap:2px; padding:2px; border:1px solid var(--border); border-radius:6px; background:var(--ivory); }
+.language-toggle button { appearance:none; border:0; background:transparent; color:var(--stone); font-family:var(--mono); font-size:11px; line-height:1; padding:7px 8px; border-radius:4px; cursor:pointer; }
+.language-toggle button.is-active { color:var(--brand); background:var(--tag); }
+.cover { padding:32px 0 42px; border-bottom:1px solid var(--border); }
+.eyebrow { font-family:var(--mono); color:var(--brand); font-size:12px; letter-spacing:0; text-transform:uppercase; margin-bottom:18px; }
+h1 { font-size:48px; line-height:1.12; font-weight:500; margin:0 0 18px; max-width:920px; }
+h2 { font-size:24px; line-height:1.25; font-weight:500; margin:42px 0 14px; display:flex; align-items:center; gap:12px; }
+h2::before { content:""; width:5px; height:28px; background:var(--brand); border-radius:2px; flex:0 0 auto; }
+h3 { font-size:17px; line-height:1.3; font-weight:500; margin:24px 0 10px; color:var(--dark-warm); }
+p { margin:0 0 12px; color:var(--olive); }
+.lede { font-size:18px; max-width:1120px; color:var(--dark-warm); text-wrap:pretty; }
+.tag { display:inline-block; background:var(--tag); color:var(--brand); border-radius:4px; padding:2px 8px; font-family:var(--mono); font-size:12px; letter-spacing:0; white-space:nowrap; }
+.overview-card { background:var(--ivory); border:1px solid var(--border); border-radius:8px; padding:18px; margin:18px 0; }
+.overview-text { color:var(--dark-warm); font-size:16px; max-width:none; text-wrap:pretty; }
+.toc-links { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 2px; }
+.toc-links a { color:var(--brand); background:var(--tag); border-radius:6px; padding:7px 10px; text-decoration:none; font-family:var(--mono); font-size:12px; }
+.definition-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; margin-top:10px; }
+.definition { background:var(--parchment); border:1px solid var(--border-soft); border-radius:6px; padding:11px 12px; }
+.definition strong { display:block; color:var(--brand); font-size:13px; margin-bottom:4px; }
+.definition span { color:var(--olive); font-size:13px; }
+.metric-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin:28px 0; }
+.metric-card { background:var(--ivory); border:1px solid var(--border); border-radius:8px; padding:18px 18px 16px; min-height:118px; }
+.metric-value { font-size:30px; line-height:1.1; color:var(--brand); font-weight:500; font-variant-numeric:tabular-nums; }
+.metric-label { margin-top:8px; color:var(--dark-warm); font-size:14px; }
+.metric-note { margin-top:6px; color:var(--stone); font-size:12px; }
+.section { margin-top:32px; }
+.section-summary { width:100%; max-width:none; color:var(--dark-warm); background:var(--ivory); border:1px solid var(--border-soft); border-radius:6px; padding:12px 14px; margin:0 0 14px; text-wrap:pretty; }
+.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
+.chart-grid.three { grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
+.coverage-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr); gap:18px; align-items:start; }
+.chart-grid > *, .coverage-layout > * { min-width:0; }
+.chart { min-width:0; background:var(--ivory); border:1px solid var(--border); border-radius:8px; padding:18px; }
+.bar-row { display:grid; grid-template-columns:minmax(120px,170px) minmax(120px,1fr) minmax(118px,max-content); align-items:center; gap:12px; margin:9px 0; font-size:13px; }
+.chart-grid.three .bar-row { grid-template-columns:minmax(108px,150px) minmax(64px,1fr) minmax(96px,max-content); gap:8px; }
+.bar-name { color:var(--dark-warm); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.inline-link { color:var(--brand); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--brand) 36%, transparent); }
+.inline-link:hover, .inline-link:focus-visible { color:var(--brand-light); border-bottom-color:var(--brand-light); outline:none; }
+.bar-track { height:14px; background:var(--border-soft); border-radius:3px; overflow:hidden; }
+.bar-fill { height:100%; background:var(--brand); border-radius:3px; }
+.bar-value { color:var(--stone); text-align:right; font-variant-numeric:tabular-nums; font-family:var(--mono); font-size:12px; white-space:nowrap; min-width:118px; }
+.chart-grid.three .bar-value { min-width:96px; font-size:11px; }
+.source-row { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(76px,.9fr) 36px; align-items:center; gap:10px; margin:10px 0; }
+.source-label { min-width:0; display:grid; gap:2px; }
+.source-label strong, .source-label span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.source-label strong { color:var(--dark-warm); font-size:13px; font-weight:500; line-height:1.25; }
+.source-label span { color:var(--stone); font-family:var(--mono); font-size:10px; line-height:1.2; }
+.source-label a { color:var(--brand); text-decoration:none; border-bottom:1px solid color-mix(in srgb, var(--brand) 28%, transparent); }
+.source-label strong a, .source-label span a { display:block; min-width:0; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.source-track { min-width:0; height:14px; background:var(--border-soft); border-radius:3px; overflow:hidden; }
+.source-fill { height:100%; background:var(--brand); border-radius:3px; }
+.source-count { color:var(--stone); text-align:right; font-family:var(--mono); font-size:12px; line-height:1; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.insights { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:18px 0; }
+.insight { background:var(--ivory); border-radius:6px; padding:14px 16px; color:var(--dark-warm); }
+.kami-table { width:100%; border-collapse:collapse; margin:14px 0 24px; font-size:13px; background:var(--ivory); border:1px solid var(--border); }
+.kami-table th { text-align:left; color:var(--dark-warm); font-weight:500; padding:9px 10px; border-bottom:1px solid var(--border); }
+.kami-table td { padding:8px 10px; border-bottom:1px solid var(--border-soft); vertical-align:top; color:var(--olive); }
+.kami-table th:not(:first-child), .kami-table td:not(:first-child) { font-variant-numeric:tabular-nums; }
+.kami-table tr:last-child td { border-bottom:0; }
+.target-detail-table { table-layout:auto; }
+.target-detail-table th:first-child,
+.target-detail-table td:first-child { width:112px; min-width:112px; white-space:nowrap; }
+.target-detail-table th:nth-child(n+2):nth-child(-n+7),
+.target-detail-table td:nth-child(n+2):nth-child(-n+7) { width:82px; min-width:70px; white-space:nowrap; }
+.target-detail-table th:last-child,
+.target-detail-table td:last-child { min-width:420px; white-space:normal; line-height:1.5; word-break:break-word; overflow-wrap:anywhere; }
+.question-cell { max-width:360px; }
+.heatmap td, .heatmap th { text-align:center; }
+.heatmap .question-cell { text-align:left; }
+.heat { color:var(--brand); font-family:var(--mono); font-variant-numeric:tabular-nums; }
+.h0 { background:#faf9f5; } .h1 { background:#EEF2F7; } .h2 { background:#E4ECF5; }
+.h3 { background:#D6E1EE; } .h4 { background:#D0DCE9; } .h5 { background:#b8cadf; }
+.kpi-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin:14px 0; }
+.kpi-mini { background:var(--parchment); border:1px solid var(--border-soft); border-radius:6px; padding:10px 12px; }
+.kpi-mini span { display:block; color:var(--stone); font-size:12px; }
+.kpi-mini strong { display:block; color:var(--brand); font-size:18px; font-variant-numeric:tabular-nums; white-space:nowrap; margin-top:3px; }
+.viz-svg { width:100%; height:auto; display:block; }
+.benchmark-chart { display:grid; gap:8px; }
+.benchmark-radar .radar-grid polygon { fill:none; stroke:var(--border); stroke-width:.75; }
+.benchmark-radar .radar-grid line { stroke:var(--border-soft); stroke-width:.7; }
+.benchmark-radar .radar-grid text { fill:#a09d93; font-family:var(--mono); font-size:8px; }
+.benchmark-radar .radar-series polygon { stroke-width:1.45; stroke-linejoin:round; }
+.benchmark-radar .target-series polygon { stroke-width:1.9; }
+.benchmark-radar text, .bubble-plot text { fill:var(--stone); font-family:var(--mono); font-size:10px; letter-spacing:0; }
+.radar-labels text { font-size:11px; fill:var(--dark-warm); }
+.chart-legend { display:flex; flex-wrap:wrap; gap:8px 12px; color:var(--stone); font-family:var(--mono); font-size:11px; }
+.chart-legend span { display:inline-flex; align-items:center; gap:5px; min-width:0; }
+.chart-legend i { width:9px; height:9px; border-radius:50%; display:inline-block; flex:0 0 auto; }
+.bubble-zone { fill:#fbfaf6; stroke:var(--border-soft); }
+.bubble-plot .grid-line { stroke:var(--border-soft); stroke-width:1; stroke-dasharray:2 4; }
+.bubble-plot .axis { stroke:var(--border); stroke-width:1.2; }
+.bubble-plot .bubble-node { cursor:pointer; outline:none; }
+.bubble-plot .bubble-point { stroke:none; }
+.bubble-plot .bubble-node:focus-visible .bubble-point { stroke:none; filter:drop-shadow(0 0 4px color-mix(in srgb, var(--brand) 34%, transparent)); }
+.bubble-plot .bubble-name { display:none; fill:var(--dark-warm); font-size:9px; paint-order:stroke; stroke:var(--ivory); stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
+.bubble-plot .bubble-node.is-active .bubble-name, .bubble-plot .bubble-node:focus .bubble-name { display:block; }
+.bubble-legend { margin-top:2px; }
+.tick-label, .axis-label, .quadrant-label { fill:var(--stone); }
+.quadrant-label { font-size:10px; }
+.stacked-bar { display:flex; height:18px; overflow:hidden; border-radius:4px; background:var(--border-soft); margin:10px 0; }
+.stacked-bar span { display:block; min-width:2px; }
+.seg-positive { background:#CFE5D4; }
+.seg-neutral { background:#D9DEE7; }
+.seg-negative { background:#E8C9C2; }
+.stacked-legend { display:flex; flex-wrap:wrap; gap:10px; color:var(--stone); font-size:12px; font-family:var(--mono); }
+.stacked-legend span { white-space:nowrap; }
+.stacked-legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; vertical-align:-1px; }
+.sentiment-donut-wrap { display:grid; grid-template-columns:1fr; gap:16px; align-items:center; justify-items:center; min-height:260px; }
+.sentiment-donut-stage { width:100%; display:flex; justify-content:center; }
+.sentiment-donut-svg { width:min(190px, 68%); max-width:190px; min-width:150px; margin:0 auto; overflow:visible; }
+.sentiment-donut-base { fill:none; stroke:var(--border-soft); stroke-width:22; }
+.sentiment-donut-segment { fill:none; stroke-width:22; stroke-linecap:butt; }
+.sentiment-donut-main { fill:var(--dark-warm); font-size:16px; font-weight:500; }
+.sentiment-donut-value { fill:var(--brand); font-family:var(--mono); font-size:18px; font-weight:600; font-variant-numeric:tabular-nums; }
+.sentiment-donut-legend { width:100%; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+.sentiment-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:9px 8px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:12px; font-family:var(--mono); background:var(--ivory); }
+.sentiment-donut-row span { min-width:0; max-width:100%; display:flex; align-items:center; justify-content:center; gap:6px; color:var(--dark-warm); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sentiment-donut-row i { width:11px; height:11px; border-radius:50%; flex:0 0 auto; }
+.sentiment-donut-row strong { max-width:100%; color:var(--brand); text-align:center; font-size:14px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sentiment-donut-row em { max-width:100%; color:var(--stone); font-style:normal; text-align:center; font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.share-chart { display:grid; align-content:start; }
+.share-donut-wrap { display:grid; grid-template-columns:1fr; gap:15px; align-items:center; justify-items:center; min-height:282px; }
+.share-donut-stage { width:100%; display:flex; justify-content:center; }
+.share-donut-svg { width:min(178px, 66%); max-width:178px; min-width:144px; margin:0 auto; overflow:visible; }
+.share-donut-base { fill:none; stroke:var(--border-soft); stroke-width:24; }
+.share-donut-segment { fill:none; stroke-width:24; stroke-linecap:butt; }
+.share-donut-main { fill:var(--dark-warm); font-size:15px; font-weight:500; }
+.share-donut-value { fill:var(--brand); font-family:var(--mono); font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; }
+.share-donut-legend { width:100%; display:grid; grid-template-columns:repeat(auto-fit, minmax(68px, 1fr)); gap:7px; }
+.share-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:8px 6px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:11px; font-family:var(--mono); background:var(--ivory); }
+.share-donut-row span { min-width:0; max-width:100%; display:flex; align-items:center; justify-content:center; gap:5px; color:var(--dark-warm); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.share-donut-row i { width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
+.share-donut-row strong { max-width:100%; color:var(--brand); text-align:center; font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.share-donut-row em { max-width:100%; color:var(--stone); font-style:normal; text-align:center; font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lollipop { display:grid; gap:11px; }
+.lollipop-row { display:grid; grid-template-columns:minmax(110px,160px) minmax(120px,1fr) 70px; align-items:center; gap:10px; font-size:13px; }
+.lollipop-row span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--dark-warm); }
+.lollipop-row div { position:relative; height:16px; }
+.lollipop-row i { position:absolute; top:7px; left:0; height:2px; background:var(--brand); display:block; }
+.lollipop-row b { position:absolute; top:2px; width:12px; height:12px; border-radius:50%; background:var(--brand); }
+.lollipop-row strong { text-align:right; color:var(--stone); font-family:var(--mono); font-size:12px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.coverage-snapshot h3 { margin-top:0; }
+.coverage-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+.coverage-cards div { background:var(--parchment); border:1px solid var(--border-soft); border-radius:6px; padding:10px; }
+.coverage-cards span { display:block; color:var(--stone); font-size:12px; }
+.coverage-cards strong { display:block; color:var(--brand); font-size:18px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.matrix-table td, .matrix-table th { text-align:center; white-space:nowrap; }
+.matrix-table th:first-child { text-align:left; }
+.treemap { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; min-height:0; }
+.treemap-cell { min-width:0; min-height:72px; background:var(--tag); border:1px solid var(--border-soft); border-radius:6px; padding:9px 10px; color:var(--brand); display:grid; grid-template-rows:auto 1fr auto; gap:5px; }
+.treemap-cell-head { min-width:0; display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.treemap-cell strong { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; line-height:1.25; }
+.treemap-count { flex:0 0 auto; color:var(--brand); font-family:var(--mono); font-size:11px; line-height:1.25; font-variant-numeric:tabular-nums; }
+.treemap-domain { min-width:0; color:var(--stone); font-family:var(--mono); font-size:10px; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; align-self:end; }
+.treemap-share { height:5px; background:var(--border-soft); border-radius:999px; overflow:hidden; }
+.treemap-share i { display:block; height:100%; background:var(--brand); border-radius:999px; }
+.geo-action-overview { display:grid; grid-template-columns:minmax(280px,.68fr) minmax(460px,1.32fr); gap:16px; align-items:start; margin:10px 0 16px; }
+.priority-list { display:grid; gap:10px; }
+.priority-row { display:grid; grid-template-columns:minmax(92px,130px) minmax(120px,1fr) 42px; align-items:center; gap:10px; color:var(--dark-warm); font-size:13px; }
+.priority-row span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.priority-row div { height:12px; background:var(--border-soft); border-radius:999px; overflow:hidden; }
+.priority-row i { display:block; height:100%; background:var(--brand); border-radius:999px; }
+.priority-row strong { color:var(--stone); font-family:var(--mono); font-size:12px; font-variant-numeric:tabular-nums; text-align:right; }
+.geo-method-table { margin:0; font-size:12px; }
+.geo-method-table th, .geo-method-table td { padding:8px 9px; }
+.geo-method-table td:last-child { min-width:260px; white-space:normal; line-height:1.5; }
+.geo-method-card { margin:0 0 12px; }
+.trend-chart-wrap { display:grid; gap:8px; }
+.trend-grid-line { stroke:var(--border-soft); stroke-width:1; stroke-dasharray:2 4; }
+.trend-axis { stroke:var(--border); stroke-width:1; }
+.trend-series polyline { fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.trend-tick, .trend-stage { fill:var(--stone); font-family:var(--mono); font-size:10px; }
+.chart-note { margin:0; color:var(--stone); font-size:12px; line-height:1.45; }
+	.recommendation-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:10px; margin-top:12px; align-items:stretch; }
+	.recommendation-item { background:var(--ivory); border:1px solid var(--border); border-radius:6px; padding:12px 14px; color:var(--dark-warm); font-size:14px; line-height:1.55; }
+	.empty { color:var(--stone); font-size:13px; }
+	.entity-note { background:var(--warn); border:1px solid var(--border); border-radius:6px; padding:12px 14px; color:var(--dark-warm); }
+	footer { margin-top:56px; padding-top:18px; border-top:1px solid var(--border); color:var(--stone); font-size:12px; }
+@media (max-width: 860px) {
+  html { scroll-padding-top:126px; }
+  main { padding:126px 18px 56px; }
+  .report-nav-shell { min-height:96px; padding:10px 18px 9px; flex-direction:column; align-items:flex-start; gap:8px; }
+  .report-brand { width:100%; }
+  .report-brand-title { max-width:none; }
+  .nav-actions { width:100%; flex-direction:column; align-items:stretch; gap:8px; }
+  .report-nav-inner { width:100%; justify-content:flex-start; }
+  .language-toggle { align-self:flex-end; }
+  h1 { font-size:34px; }
+  .metric-grid, .chart-grid, .chart-grid.three, .insights, .coverage-layout { grid-template-columns:1fr; }
+  .bar-row { grid-template-columns:minmax(90px,120px) minmax(90px,1fr) minmax(104px,max-content); }
+  .bar-value { min-width:104px; }
+  .source-row { grid-template-columns:minmax(0,1.15fr) minmax(64px,.85fr) 34px; gap:8px; }
+  .sentiment-donut-wrap { gap:12px; min-height:236px; }
+  .sentiment-donut-svg { width:min(174px, 76%); min-width:136px; }
+  .sentiment-donut-legend { width:100%; grid-template-columns:repeat(3, minmax(0,1fr)); gap:6px; }
+  .sentiment-donut-row { padding:8px 5px; gap:3px; font-size:11px; }
+  .sentiment-donut-row strong { font-size:12px; }
+  .share-donut-wrap { gap:12px; min-height:258px; }
+  .share-donut-svg { width:min(166px, 72%); min-width:132px; }
+  .share-donut-legend { gap:6px; grid-template-columns:repeat(auto-fit, minmax(66px, 1fr)); }
+  .share-donut-row { padding:7px 5px; gap:3px; font-size:10px; }
+  .share-donut-row strong { font-size:12px; }
+  .lollipop-row { grid-template-columns:92px minmax(90px,1fr) 64px; }
+  .treemap { grid-template-columns:1fr; }
+  .geo-action-overview { grid-template-columns:1fr; }
+  .geo-method-table td:last-child { min-width:220px; }
+  .kami-table { display:block; max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .kami-table th, .kami-table td { white-space:nowrap; }
+  .kami-table .question-cell { min-width:260px; white-space:normal; }
+  .target-detail-table th:first-child,
+  .target-detail-table td:first-child { width:104px; min-width:104px; white-space:nowrap; }
+  .target-detail-table th:last-child,
+  .target-detail-table td:last-child { min-width:360px; white-space:normal; }
+}
+</style>
+</head>
+<body class="lang-zh">
+<main>
+  <nav class="report-nav" aria-label="报告目录">
+    <div class="report-nav-shell">
+      <a class="report-brand" href="#top" aria-label="回到报告顶部">
+        <span class="report-brand-mark">Doubao GEO</span>
+        <span class="report-brand-title"><span class="lang-zh">AI 搜索概率报告</span><span class="lang-en">AI Search Probability Report</span></span>
+      </a>
+      <div class="nav-actions">
+        <div class="report-nav-inner"><a href="#overview"><span class="lang-zh">报告概览</span><span class="lang-en">Overview</span></a><a href="#insights"><span class="lang-zh">核心结论</span><span class="lang-en">Key Findings</span></a><a href="#comparison"><span class="lang-zh">竞品分析</span><span class="lang-en">Competitor Analysis</span></a><a href="#sentiment"><span class="lang-zh">情感提及</span><span class="lang-en">Sentiment</span></a><a href="#entities"><span class="lang-zh">实体识别</span><span class="lang-en">Entity Audit</span></a><a href="#coverage"><span class="lang-zh">采集覆盖</span><span class="lang-en">Coverage</span></a><a href="#mobile"><span class="lang-zh">移动证据</span><span class="lang-en">Mobile Evidence</span></a><a href="#probability"><span class="lang-zh">概率排名</span><span class="lang-en">Probability</span></a><a href="#sources"><span class="lang-zh">信源结构</span><span class="lang-en">Sources</span></a><a href="#titles"><span class="lang-zh">标题特征</span><span class="lang-en">Titles</span></a><a href="#recommendations"><span class="lang-zh">总结建议</span><span class="lang-en">Recommendations</span></a></div>
+        <div class="language-toggle" aria-label="Language">
+          <button type="button" class="is-active" data-lang="zh">中文</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <section class="cover" id="top">
+    <div class="eyebrow">DOUBAO GEO CRAWL REPORT</div>
+    <h1>Doubao AI 搜索概率分析报告</h1>
+	    <p class="lede lang-zh">基于重复采样的 Doubao AI 搜索结果，识别真正的目标人物或品牌/机构，再衡量提及、平均提及、Top 1 / Top 3 / Top 5 概率、情感倾向、信源结构和移动端 UI 证据。<br><span class="entity-scope">实体口径：<span class="tag">围绕目标实体识别同类型竞品</span></span></p>
+	    <p class="lede lang-en">Based on repeated Doubao AI search samples, this report identifies the real target person, brand, or organization, then measures mentions, average mentions, Top 1 / Top 3 / Top 5 probability, sentiment, citations, title patterns, and mobile UI evidence.</p>
+  </section>
+
+  <section class="section" id="overview">
+    <h2><span class="lang-zh">报告概览</span><span class="lang-en">Report Overview</span></h2>
+    <div class="overview-card">
+      <h3><span class="lang-zh">概述</span><span class="lang-en">Overview</span></h3>
+      <p class="overview-text lang-zh">本报告基于 3 个关键词、15 次计划采样、15 条有效 Doubao AI 搜索结果，评估公司「新东方前途留学」的提及、推荐排序、竞品对比和信源结构。目标实体 Top 5 概率为 100.0%，Top 3 概率为 100.0%，平均提及 3.00 次，情感倾向为「积极」，本次识别同类型竞品 14 个，引用信源 16 条。移动端补充采集搜索资料 194 行，其中判定被引用 0 行、未引用 194 行，新建对话成功 15/15。</p>
+      <p class="overview-text lang-en">This report is based on 3 keywords, 15 planned samples, and 15 valid Doubao AI search answers. It evaluates the target entity &quot;新东方前途留学&quot; across mentions, recommendation ranking, same-type competitors, and citation structure. The target Top 5 probability is 100.0%, Top 3 probability is 100.0%, average mentions per valid answer are 3.00, and the dominant sentiment is Positive. The run identified 14 same-type competitors and 16 citations. Mobile evidence includes 194 search-material rows, 0 cited rows, 194 uncited rows, and 15/15 fresh-chat confirmations.</p>
+      <h3><span class="lang-zh">目录</span><span class="lang-en">Contents</span></h3>
+	      <div class="toc-links"><a href="#overview"><span class="lang-zh">报告概览</span><span class="lang-en">Overview</span></a><a href="#insights"><span class="lang-zh">核心结论</span><span class="lang-en">Key Findings</span></a><a href="#comparison"><span class="lang-zh">竞品分析</span><span class="lang-en">Competitor Analysis</span></a><a href="#sentiment"><span class="lang-zh">情感提及</span><span class="lang-en">Sentiment</span></a><a href="#entities"><span class="lang-zh">实体识别</span><span class="lang-en">Entity Audit</span></a><a href="#coverage"><span class="lang-zh">采集覆盖</span><span class="lang-en">Coverage</span></a><a href="#mobile"><span class="lang-zh">移动证据</span><span class="lang-en">Mobile Evidence</span></a><a href="#probability"><span class="lang-zh">概率排名</span><span class="lang-en">Probability</span></a><a href="#sources"><span class="lang-zh">信源结构</span><span class="lang-en">Sources</span></a><a href="#titles"><span class="lang-zh">标题特征</span><span class="lang-en">Titles</span></a><a href="#recommendations"><span class="lang-zh">总结建议</span><span class="lang-en">Recommendations</span></a></div>
+	      <h3><span class="lang-zh">指标说明</span><span class="lang-en">Metric Notes</span></h3>
+	      <div class="definition-grid lang-zh"><div class="definition"><strong>提及率</strong><span>实体在有效回答中被提到的比例。</span></div><div class="definition"><strong>平均提及次数</strong><span>实体在每条有效回答中被提到的平均次数。</span></div><div class="definition"><strong>Top 1 概率</strong><span>实体在推荐排序中位列第 1 的比例。</span></div><div class="definition"><strong>Top 3 概率</strong><span>实体进入前 3 个推荐位置的比例。</span></div><div class="definition"><strong>Top 5 概率</strong><span>实体进入前 5 个推荐位置的比例。</span></div><div class="definition"><strong>平均排名</strong><span>实体出现时的平均推荐位置，数值越低越好。</span></div><div class="definition"><strong>情感倾向</strong><span>基于实体附近文本词表的启发式判断，分为积极、中性、负向。</span></div><div class="definition"><strong>信源引用</strong><span>Doubao 回答引用的来源标题、域名、渠道和 URL。</span></div></div>
+	      <div class="definition-grid lang-en"><div class="definition"><strong>Mention Rate</strong><span>Share of valid answers where the entity appears.</span></div><div class="definition"><strong>Average Mentions</strong><span>Average number of entity mentions per valid answer.</span></div><div class="definition"><strong>Top 1 Probability</strong><span>Share of valid answers where the entity ranks first.</span></div><div class="definition"><strong>Top 3 Probability</strong><span>Share of valid answers where the entity enters the top three positions.</span></div><div class="definition"><strong>Top 5 Probability</strong><span>Share of valid answers where the entity enters the top five positions.</span></div><div class="definition"><strong>Average Rank</strong><span>Average recommendation rank when the entity appears. Lower is better.</span></div><div class="definition"><strong>Sentiment</strong><span>Heuristic sentiment around the entity mention: positive, neutral, or negative.</span></div><div class="definition"><strong>Citation</strong><span>Source title, domain, channel, and URL cited by Doubao.</span></div></div>
+
+      <h3><span class="lang-zh">目标实体指标数据</span><span class="lang-en">Target Entity Metrics</span></h3>
+      <div class="kpi-strip lang-zh"><div class="kpi-mini"><span>提及率</span><strong>100.0%</strong></div><div class="kpi-mini"><span>平均提及</span><strong>3.00</strong></div><div class="kpi-mini"><span>Top 1</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Top 3</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Top 5</span><strong>100.0%</strong></div><div class="kpi-mini"><span>平均排名</span><strong>1.0</strong></div><div class="kpi-mini"><span>情感倾向</span><strong>积极</strong></div></div>
+      <div class="kpi-strip lang-en"><div class="kpi-mini"><span>Mention</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Avg Mentions</span><strong>3.00</strong></div><div class="kpi-mini"><span>Top 1</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Top 3</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Top 5</span><strong>100.0%</strong></div><div class="kpi-mini"><span>Avg Rank</span><strong>1.0</strong></div><div class="kpi-mini"><span>Sentiment</span><strong>Positive</strong></div></div>
+
+    </div>
+  </section>
+
+  <section class="metric-grid">
+    <div class="metric-card"><div class="metric-value">3</div><div class="metric-label">问题数</div><div class="metric-note">doubao-crawl.json</div></div>
+    <div class="metric-card"><div class="metric-value">15</div><div class="metric-label">计划样本</div><div class="metric-note">完成 15，未完成 0</div></div>
+    <div class="metric-card"><div class="metric-value">15</div><div class="metric-label">有效样本</div><div class="metric-note">失败 0，有效率 100.0%</div></div>
+    <div class="metric-card"><div class="metric-value">16</div><div class="metric-label">信源引用</div><div class="metric-note">8 个域名 · 0 个 URL</div></div>
+    <div class="metric-card"><div class="metric-value">194</div><div class="metric-label">搜索资料行</div><div class="metric-note">引用 0 · 未引用 194</div></div>
+    <div class="metric-card"><div class="metric-value">15</div><div class="metric-label">新建对话</div><div class="metric-note">15/15 · 0-30 秒随机间隔</div></div>
+    <div class="metric-card"><div class="metric-value">41761</div><div class="metric-label">回答字数</div><div class="metric-note">完成率 100.0%</div></div>
+  </section>
+
+	  <section class="section" id="insights">
+	    <h2><span class="lang-zh">核心结论</span><span class="lang-en">Key Findings</span></h2>
+    <p class="section-summary lang-zh">基于目标实体、同类型竞品、有效样本和引用信源生成最多 10 条高优先级结论，优先呈现目标实体相对竞品的排序与概率差距。</p><p class="section-summary lang-en">Up to 10 priority findings are generated from the target entity, same-type competitors, valid samples, and cited sources, with emphasis on relative ranking and probability gaps.</p>
+    <div class="insights lang-zh">
+      <div class="insight">目标实体「新东方前途留学」提及率 100.0%，Top 5 概率 100.0%，Top 3 概率 100.0%。</div><div class="insight">目标实体平均每条有效回答提及 3.00 次，情感以「积极」为主。</div><div class="insight">Top 3 最强竞品是 启德教育，目标实体相对差距 +6.7pp。</div><div class="insight">竞品识别口径为「公司」，共识别 14 个同类型竞品实体。</div><div class="insight">Top 1 概率最高的是 新东方前途留学，为 100.0%。</div><div class="insight">Top 3 覆盖最稳定的是 新东方前途留学，为 100.0%，提及率 100.0%。</div><div class="insight">Top 5 覆盖最高的是 新东方前途留学，为 100.0%。</div><div class="insight">信源渠道以 other 为主，占 100.0%。</div><div class="insight">最常被引用的域名是 3.5-8w，出现 2 次。</div><div class="insight">标题特征中「含数字」最突出，占 100.0%。</div>
+    </div>
+    <div class="insights lang-en">
+      <div class="insight">Target &quot;新东方前途留学&quot; has a mention rate of 100.0%, Top 5 probability of 100.0%, and Top 3 probability of 100.0%.</div><div class="insight">The target is mentioned 3.00 times per valid answer on average, with dominant sentiment: Positive.</div><div class="insight">The strongest Top 3 competitor is 启德教育; target gap is +6.7pp.</div><div class="insight">The competitor scope identified 14 same-type entities.</div><div class="insight">The leading citation channel is other, accounting for 100.0%.</div><div class="insight">The most cited domain is 3.5-8w, with 2 citations.</div>
+    </div>
+	  </section>
+
+
+  <section class="section" id="comparison">
+    <h2><span class="lang-zh">竞品分析</span><span class="lang-en">Competitor Analysis</span></h2>
+    <p class="section-summary lang-zh">本模块只比较与目标实体类型一致的实体，目标实体「新东方前途留学」作为基准，最多展示 1 个目标实体和 9 个同类型竞品。</p><p class="section-summary lang-en">This section compares only same-type entities. The target entity &quot;新东方前途留学&quot; is the baseline, with up to 9 competitors shown.</p>
+    <div class="chart-grid">
+      <div class="chart"><h3><span class="lang-zh">目标与最佳 3 个竞品 100 分制雷达</span><span class="lang-en">Target vs Best 3 Competitors Radar</span></h3><div class="benchmark-chart"><svg class="viz-svg radar benchmark-radar" viewBox="0 0 420 320" role="img" aria-label="目标与竞品 100 分制雷达对标"><g class="radar-grid"><polygon points="150.0,126.0 170.8,138.0 170.8,162.0 150.0,174.0 129.2,162.0 129.2,138.0" /><text x="155" y="130.0">25</text><polygon points="150.0,102.0 191.6,126.0 191.6,174.0 150.0,198.0 108.4,174.0 108.4,126.0" /><text x="155" y="106.0">50</text><polygon points="150.0,78.0 212.4,114.0 212.4,186.0 150.0,222.0 87.6,186.0 87.6,114.0" /><text x="155" y="82.0">75</text><polygon points="150.0,54.0 233.1,102.0 233.1,198.0 150.0,246.0 66.9,198.0 66.9,102.0" /><text x="155" y="58.0">100</text><line x1="150" y1="150" x2="150.0" y2="54.0" /><line x1="150" y1="150" x2="233.1" y2="102.0" /><line x1="150" y1="150" x2="233.1" y2="198.0" /><line x1="150" y1="150" x2="150.0" y2="246.0" /><line x1="150" y1="150" x2="66.9" y2="198.0" /><line x1="150" y1="150" x2="66.9" y2="102.0" /></g><g class="radar-series target-series"><polygon points="150.0,54.0 233.1,102.0 233.1,198.0 150.0,246.0 66.9,198.0 150.0,150.0" stroke="#1B365D" fill="#1B365D" fill-opacity="0.12" /><circle cx="150.0" cy="54.0" r="3.2" fill="#1B365D" /><circle cx="233.1" cy="102.0" r="3.2" fill="#1B365D" /><circle cx="233.1" cy="198.0" r="3.2" fill="#1B365D" /><circle cx="150.0" cy="246.0" r="3.2" fill="#1B365D" /><circle cx="66.9" cy="198.0" r="3.2" fill="#1B365D" /><circle cx="150.0" cy="150.0" r="3.2" fill="#1B365D" /></g><g class="radar-series"><polygon points="150.0,60.4 175.9,135.1 150.0,150.0 150.0,239.6 72.4,194.8 150.0,150.0" stroke="#7E8C9A" fill="none" stroke-dasharray="5 4" /><circle cx="150.0" cy="60.4" r="3.2" fill="#7E8C9A" /><circle cx="175.9" cy="135.1" r="3.2" fill="#7E8C9A" /><circle cx="150.0" cy="150.0" r="3.2" fill="#7E8C9A" /><circle cx="150.0" cy="239.6" r="3.2" fill="#7E8C9A" /><circle cx="72.4" cy="194.8" r="3.2" fill="#7E8C9A" /><circle cx="150.0" cy="150.0" r="3.2" fill="#7E8C9A" /></g><g class="radar-series"><polygon points="150.0,54.0 177.7,134.0 150.0,150.0 150.0,233.2 66.9,198.0 150.0,150.0" stroke="#9C8C68" fill="none" stroke-dasharray="5 4" /><circle cx="150.0" cy="54.0" r="3.2" fill="#9C8C68" /><circle cx="177.7" cy="134.0" r="3.2" fill="#9C8C68" /><circle cx="150.0" cy="150.0" r="3.2" fill="#9C8C68" /><circle cx="150.0" cy="233.2" r="3.2" fill="#9C8C68" /><circle cx="66.9" cy="198.0" r="3.2" fill="#9C8C68" /><circle cx="150.0" cy="150.0" r="3.2" fill="#9C8C68" /></g><g class="radar-series"><polygon points="150.0,111.6 161.1,143.6 150.0,150.0 150.0,169.2 116.7,169.2 150.0,150.0" stroke="#6E8A78" fill="none" stroke-dasharray="5 4" /><circle cx="150.0" cy="111.6" r="3.2" fill="#6E8A78" /><circle cx="161.1" cy="143.6" r="3.2" fill="#6E8A78" /><circle cx="150.0" cy="150.0" r="3.2" fill="#6E8A78" /><circle cx="150.0" cy="169.2" r="3.2" fill="#6E8A78" /><circle cx="116.7" cy="169.2" r="3.2" fill="#6E8A78" /><circle cx="150.0" cy="150.0" r="3.2" fill="#6E8A78" /></g><g class="radar-labels"><text x="150.0" y="30.0" text-anchor="middle">提及</text><text x="255.7" y="90.0" text-anchor="middle">提及强度</text><text x="255.7" y="210.0" text-anchor="middle">Top 1</text><text x="150.0" y="270.0" text-anchor="middle">Top 3</text><text x="44.3" y="210.0" text-anchor="middle">Top 5</text><text x="44.3" y="90.0" text-anchor="middle">信源</text></g><text class="axis-label" x="300" y="292">行业最优 = 100 分</text></svg><div class="chart-legend"><span><i style="background:#1B365D"></i>新东方前途留学</span><span><i style="background:#7E8C9A"></i>启德教育</span><span><i style="background:#9C8C68"></i>金吉列留学</span><span><i style="background:#6E8A78"></i>新航道前程留学</span></div></div></div>
+      <div class="chart"><h3><span class="lang-zh">Top 5 概率 x 提及率气泡对标</span><span class="lang-en">Top 5 Probability x Mention Rate Bubble Benchmark</span></h3><div class="benchmark-chart bubble-benchmark"><svg class="viz-svg bubble-plot" viewBox="0 0 520 330" role="img" aria-label="Top 5 概率与提及率气泡对标"><rect class="bubble-zone" x="62" y="28" width="424" height="248" /><line class="grid-line" x1="168.0" y1="28" x2="168.0" y2="276" /><line class="grid-line" x1="62" y1="214.0" x2="486" y2="214.0" /><text class="tick-label" x="168.0" y="294" text-anchor="middle">25</text><text class="tick-label" x="52" y="218.0" text-anchor="end">25</text><line class="grid-line" x1="274.0" y1="28" x2="274.0" y2="276" /><line class="grid-line" x1="62" y1="152.0" x2="486" y2="152.0" /><text class="tick-label" x="274.0" y="294" text-anchor="middle">50</text><text class="tick-label" x="52" y="156.0" text-anchor="end">50</text><line class="grid-line" x1="380.0" y1="28" x2="380.0" y2="276" /><line class="grid-line" x1="62" y1="90.0" x2="486" y2="90.0" /><text class="tick-label" x="380.0" y="294" text-anchor="middle">75</text><text class="tick-label" x="52" y="94.0" text-anchor="end">75</text><line class="grid-line" x1="486.0" y1="28" x2="486.0" y2="276" /><line class="grid-line" x1="62" y1="28.0" x2="486" y2="28.0" /><text class="tick-label" x="486.0" y="294" text-anchor="middle">100</text><text class="tick-label" x="52" y="32.0" text-anchor="end">100</text><line class="axis" x1="62" y1="276" x2="486" y2="276" /><line class="axis" x1="62" y1="28" x2="62" y2="276" /><text class="axis-label" x="274" y="320" text-anchor="middle">Top 5 概率</text><text class="axis-label" x="18" y="155" transform="rotate(-90 18 155)" text-anchor="middle">提及率</text><text class="quadrant-label" x="382" y="48">高覆盖 / 高提及</text><g class="bubble-node is-target" tabindex="0" role="button" aria-label="新东方前途留学，Top 5 100.0%，提及率 100.0%，平均提及 3.00"><title>新东方前途留学，Top 5 100.0%，提及率 100.0%，平均提及 3.00</title><circle class="bubble-point" cx="486.0" cy="28.0" r="19.0" fill="#1B365D" fill-opacity="0.96" /><text class="bubble-name" x="459.0" y="62.0" text-anchor="end">新东方前途留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="金吉列留学，Top 5 100.0%，提及率 100.0%，平均提及 1.00"><title>金吉列留学，Top 5 100.0%，提及率 100.0%，平均提及 1.00</title><circle class="bubble-point" cx="486.0" cy="28.0" r="9.7" fill="#2B4668" fill-opacity="0.86" /><text class="bubble-name" x="468.3" y="52.7" text-anchor="end">金吉列留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="启德教育，Top 5 93.3%，提及率 93.3%，平均提及 0.93"><title>启德教育，Top 5 93.3%，提及率 93.3%，平均提及 0.93</title><circle class="bubble-point" cx="457.7" cy="44.5" r="9.4" fill="#365678" fill-opacity="0.86" /><text class="bubble-name" x="440.4" y="68.9" text-anchor="end">启德教育</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="优越留学，Top 5 53.3%，提及率 93.3%，平均提及 2.40"><title>优越留学，Top 5 53.3%，提及率 93.3%，平均提及 2.40</title><circle class="bubble-point" cx="288.1" cy="44.5" r="16.2" fill="#436887" fill-opacity="0.86" /><text class="bubble-name" x="312.3" y="75.7" text-anchor="start">优越留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="新航道前程留学，Top 5 40.0%，提及率 40.0%，平均提及 0.40"><title>新航道前程留学，Top 5 40.0%，提及率 40.0%，平均提及 0.40</title><circle class="bubble-point" cx="231.6" cy="176.8" r="6.9" fill="#567A99" fill-opacity="0.86" /><text class="bubble-name" x="246.5" y="162.9" text-anchor="start">新航道前程留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="托普仕留学，Top 5 33.3%，提及率 86.7%，平均提及 1.07"><title>托普仕留学，Top 5 33.3%，提及率 86.7%，平均提及 1.07</title><circle class="bubble-point" cx="203.3" cy="61.1" r="10.0" fill="#6E8EA9" fill-opacity="0.86" /><text class="bubble-name" x="221.3" y="44.1" text-anchor="start">托普仕留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="指南者留学，Top 5 33.3%，提及率 73.3%，平均提及 1.33"><title>指南者留学，Top 5 33.3%，提及率 73.3%，平均提及 1.33</title><circle class="bubble-point" cx="203.3" cy="94.1" r="11.2" fill="#86A2B8" fill-opacity="0.86" /><text class="bubble-name" x="222.6" y="75.9" text-anchor="start">指南者留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="新航道留学，Top 5 33.3%，提及率 33.3%，平均提及 0.33"><title>新航道留学，Top 5 33.3%，提及率 33.3%，平均提及 0.33</title><circle class="bubble-point" cx="203.3" cy="193.3" r="6.6" fill="#9BAFC0" fill-opacity="0.86" /><text class="bubble-name" x="217.9" y="179.8" text-anchor="start">新航道留学</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="澳际教育，Top 5 13.3%，提及率 53.3%，平均提及 0.67"><title>澳际教育，Top 5 13.3%，提及率 53.3%，平均提及 0.67</title><circle class="bubble-point" cx="118.5" cy="143.7" r="8.1" fill="#6E8A78" fill-opacity="0.86" /><text class="bubble-name" x="134.6" y="128.6" text-anchor="start">澳际教育</text></g><g class="bubble-node" tabindex="0" role="button" aria-label="思睿留学，Top 5 0.0%，提及率 66.7%，平均提及 1.33"><title>思睿留学，Top 5 0.0%，提及率 66.7%，平均提及 1.33</title><circle class="bubble-point" cx="62.0" cy="110.7" r="11.2" fill="#8A9A83" fill-opacity="0.86" /><text class="bubble-name" x="81.2" y="92.4" text-anchor="start">思睿留学</text></g></svg><div class="chart-legend bubble-legend"><span><i style="background:#1B365D"></i>新东方前途留学</span><span><i style="background:#2B4668"></i>金吉列留学</span><span><i style="background:#365678"></i>启德教育</span><span><i style="background:#436887"></i>优越留学</span><span><i style="background:#567A99"></i>新航道前程留学</span><span><i style="background:#6E8EA9"></i>托普仕留学</span><span><i style="background:#86A2B8"></i>指南者留学</span><span><i style="background:#9BAFC0"></i>新航道留学</span><span><i style="background:#6E8A78"></i>澳际教育</span><span><i style="background:#8A9A83"></i>思睿留学</span></div></div></div>
+    </div>
+    <h3><span class="lang-zh">同类型实体多指标矩阵</span><span class="lang-en">Same-Type Entity Metric Matrix</span></h3>
+    <table class="kami-table matrix-table"><thead><tr><th>实体</th><th>提及</th><th>均次</th><th>Top1</th><th>Top3</th><th>Top5</th></tr></thead><tbody><tr><th>新东方前途留学</th><td class="heat h5">100.0%</td><td class="heat h5">3.00</td><td class="heat h5">100.0%</td><td class="heat h5">100.0%</td><td class="heat h5">100.0%</td></tr><tr><th>金吉列留学</th><td class="heat h5">100.0%</td><td class="heat h2">1.00</td><td class="heat h0">0.0%</td><td class="heat h5">86.7%</td><td class="heat h5">100.0%</td></tr><tr><th>启德教育</th><td class="heat h5">93.3%</td><td class="heat h2">0.93</td><td class="heat h0">0.0%</td><td class="heat h5">93.3%</td><td class="heat h5">93.3%</td></tr><tr><th>优越留学</th><td class="heat h5">93.3%</td><td class="heat h4">2.40</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h3">53.3%</td></tr><tr><th>新航道前程留学</th><td class="heat h2">40.0%</td><td class="heat h1">0.40</td><td class="heat h0">0.0%</td><td class="heat h1">20.0%</td><td class="heat h2">40.0%</td></tr><tr><th>托普仕留学</th><td class="heat h5">86.7%</td><td class="heat h2">1.07</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h2">33.3%</td></tr><tr><th>指南者留学</th><td class="heat h4">73.3%</td><td class="heat h3">1.33</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h2">33.3%</td></tr><tr><th>新航道留学</th><td class="heat h2">33.3%</td><td class="heat h1">0.33</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h2">33.3%</td></tr><tr><th>澳际教育</th><td class="heat h3">53.3%</td><td class="heat h2">0.67</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h1">13.3%</td></tr><tr><th>思睿留学</th><td class="heat h4">66.7%</td><td class="heat h3">1.33</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td></tr></tbody></table>
+    <table class="kami-table">
+      <thead><tr><th>角色</th><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>信源命中</th><th>Top 3 差距</th><th>Top 5 差距</th></tr></thead>
+      <tbody><tr><td>目标</td><td>新东方前途留学</td><td>100.0%</td><td>3.00</td><td>100.0%</td><td>100.0%</td><td>100.0%</td><td>1.0</td><td>0</td><td>基准</td><td>基准</td></tr><tr><td>竞品</td><td>启德教育</td><td>93.3%</td><td>0.93</td><td>0.0%</td><td>93.3%</td><td>93.3%</td><td>2.4</td><td>0</td><td>-6.7pp</td><td>-6.7pp</td></tr><tr><td>竞品</td><td>金吉列留学</td><td>100.0%</td><td>1.00</td><td>0.0%</td><td>86.7%</td><td>100.0%</td><td>2.9</td><td>0</td><td>-13.3pp</td><td>0.0pp</td></tr><tr><td>竞品</td><td>新航道前程留学</td><td>40.0%</td><td>0.40</td><td>0.0%</td><td>20.0%</td><td>40.0%</td><td>3.2</td><td>0</td><td>-80.0pp</td><td>-60.0pp</td></tr><tr><td>竞品</td><td>优越留学</td><td>93.3%</td><td>2.40</td><td>0.0%</td><td>0.0%</td><td>53.3%</td><td>5.7</td><td>0</td><td>-100.0pp</td><td>-46.7pp</td></tr><tr><td>竞品</td><td>托普仕留学</td><td>86.7%</td><td>1.07</td><td>0.0%</td><td>0.0%</td><td>33.3%</td><td>5.9</td><td>0</td><td>-100.0pp</td><td>-66.7pp</td></tr><tr><td>竞品</td><td>指南者留学</td><td>73.3%</td><td>1.33</td><td>0.0%</td><td>0.0%</td><td>33.3%</td><td>5.6</td><td>0</td><td>-100.0pp</td><td>-66.7pp</td></tr><tr><td>竞品</td><td>思睿留学</td><td>66.7%</td><td>1.33</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>7.9</td><td>0</td><td>-100.0pp</td><td>-100.0pp</td></tr><tr><td>竞品</td><td>清柚教育</td><td>66.7%</td><td>1.40</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>9.2</td><td>0</td><td>-100.0pp</td><td>-100.0pp</td></tr><tr><td>竞品</td><td>啄木鸟教育</td><td>53.3%</td><td>0.87</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>7.1</td><td>0</td><td>-100.0pp</td><td>-100.0pp</td></tr></tbody>
+    </table>
+  </section>
+
+
+
+  <section class="section" id="sentiment">
+    <h2><span class="lang-zh">情感与提及强度</span><span class="lang-en">Sentiment and Mention Strength</span></h2>
+    <p class="section-summary lang-zh">情感分析基于实体附近文本的启发式词表判断，平均提及次数统计每条有效回答里同一实体被重复提到的强度；图表默认展示前 10 个实体。</p><p class="section-summary lang-en">Sentiment is inferred from text near entity mentions, while average mentions measure how often the same entity appears in each valid answer. Charts show up to 10 entities.</p>
+    <div class="chart-grid three">
+      <div class="chart"><h3><span class="lang-zh">目标实体情感分布</span><span class="lang-en">Target Sentiment Mix</span></h3><div class="sentiment-donut-wrap"><div class="sentiment-donut-stage"><svg class="viz-svg sentiment-donut-svg" viewBox="0 0 180 180" role="img" aria-label="目标实体情感分布圆环图"><circle class="sentiment-donut-base" cx="90" cy="90" r="54" /><circle class="sentiment-donut-segment" cx="90" cy="90" r="54" pathLength="100" stroke="#97B9A1" stroke-dasharray="86.667 13.333" stroke-dashoffset="-0.000" transform="rotate(-90 90 90)" /><circle class="sentiment-donut-segment" cx="90" cy="90" r="54" pathLength="100" stroke="#B8C2CF" stroke-dasharray="13.333 86.667" stroke-dashoffset="-86.667" transform="rotate(-90 90 90)" /><text class="sentiment-donut-main" x="90" y="82" text-anchor="middle">积极</text><text class="sentiment-donut-value" x="90" y="106" text-anchor="middle">86.7%</text></svg></div><div class="sentiment-donut-legend"><div class="sentiment-donut-row"><span><i style="background:#97B9A1"></i>积极</span><strong>86.7%</strong><em>13</em></div><div class="sentiment-donut-row"><span><i style="background:#B8C2CF"></i>中性</span><strong>13.3%</strong><em>2</em></div><div class="sentiment-donut-row"><span><i style="background:#D8A69E"></i>负向</span><strong>0.0%</strong><em>0</em></div></div></div></div><div class="chart"><h3><span class="lang-zh">平均提及次数</span><span class="lang-en">Average Mentions</span></h3><div class="lollipop"><div class="lollipop-row"><span>新东方前途留学</span><div><i style="width:100.00%"></i><b style="left:clamp(0px, calc(100.00% - 6px), calc(100% - 12px))"></b></div><strong>3.00</strong></div><div class="lollipop-row"><span>优越留学</span><div><i style="width:80.00%"></i><b style="left:clamp(0px, calc(80.00% - 6px), calc(100% - 12px))"></b></div><strong>2.40</strong></div><div class="lollipop-row"><span>清柚教育</span><div><i style="width:46.67%"></i><b style="left:clamp(0px, calc(46.67% - 6px), calc(100% - 12px))"></b></div><strong>1.40</strong></div><div class="lollipop-row"><span>指南者留学</span><div><i style="width:44.44%"></i><b style="left:clamp(0px, calc(44.44% - 6px), calc(100% - 12px))"></b></div><strong>1.33</strong></div><div class="lollipop-row"><span>思睿留学</span><div><i style="width:44.44%"></i><b style="left:clamp(0px, calc(44.44% - 6px), calc(100% - 12px))"></b></div><strong>1.33</strong></div><div class="lollipop-row"><span>托普仕留学</span><div><i style="width:35.56%"></i><b style="left:clamp(0px, calc(35.56% - 6px), calc(100% - 12px))"></b></div><strong>1.07</strong></div><div class="lollipop-row"><span>金吉列留学</span><div><i style="width:33.33%"></i><b style="left:clamp(0px, calc(33.33% - 6px), calc(100% - 12px))"></b></div><strong>1.00</strong></div><div class="lollipop-row"><span>启德教育</span><div><i style="width:31.11%"></i><b style="left:clamp(0px, calc(31.11% - 6px), calc(100% - 12px))"></b></div><strong>0.93</strong></div><div class="lollipop-row"><span>啄木鸟教育</span><div><i style="width:28.89%"></i><b style="left:clamp(0px, calc(28.89% - 6px), calc(100% - 12px))"></b></div><strong>0.87</strong></div><div class="lollipop-row"><span>朗汀留学</span><div><i style="width:28.89%"></i><b style="left:clamp(0px, calc(28.89% - 6px), calc(100% - 12px))"></b></div><strong>0.87</strong></div></div></div><div class="chart"><h3><span class="lang-zh">负向占比</span><span class="lang-en">Negative Share</span></h3><div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:12.50%"></div></div><div class="bar-value">12.5% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">清柚教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div>
+<div class="bar-row"><div class="bar-name">澳际教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 积极</div></div></div>
+    </div>
+  </section>
+
+
+	  <section class="section" id="entities">
+	    <h2><span class="lang-zh">目标实体识别</span><span class="lang-en">Entity Identification</span></h2>
+	    <p class="entity-note">目标类型：公司。系统会把人、公司、产品、概念词和噪声词分开；只有同类型候选项会进入目标与竞品概率计算。自动识别是启发式判断，正式报告仍建议提供实体别名表校准。</p>
+	    <table class="kami-table">
+	      <thead><tr><th>候选项</th><th>类型</th><th>角色</th><th>同类型</th><th>置信度</th><th>样本数</th><th>提及率</th><th>Top 3</th><th>Top 5</th><th>判断依据</th></tr></thead>
+	      <tbody><tr><td>新东方前途留学</td><td>company</td><td>目标</td><td>是</td><td>95.0%</td><td>15</td><td>100.0%</td><td>100.0%</td><td>100.0%</td><td>用户提供或进入指标计算的实体；匹配目标类型：company</td></tr><tr><td>启德教育</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>14</td><td>93.3%</td><td>93.3%</td><td>93.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>金吉列留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>15</td><td>100.0%</td><td>86.7%</td><td>100.0%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>新航道前程留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>6</td><td>40.0%</td><td>20.0%</td><td>40.0%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>优越留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>14</td><td>93.3%</td><td>0.0%</td><td>53.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>托普仕留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>13</td><td>86.7%</td><td>0.0%</td><td>33.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>指南者留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>11</td><td>73.3%</td><td>0.0%</td><td>33.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>新航道留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>5</td><td>33.3%</td><td>0.0%</td><td>33.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>澳际教育</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>8</td><td>53.3%</td><td>0.0%</td><td>13.3%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr><tr><td>思睿留学</td><td>company</td><td>竞品</td><td>是</td><td>94.0%</td><td>10</td><td>66.7%</td><td>0.0%</td><td>0.0%</td><td>带机构/公司/平台类后缀；匹配目标类型：company</td></tr></tbody>
+	    </table>
+	  </section>
+
+  <section class="section" id="coverage">
+    <h2><span class="lang-zh">采集覆盖</span><span class="lang-en">Collection Coverage</span></h2>
+    <p class="section-summary lang-zh">本次计划采样 15 次，完成 15 次，有效 15 次；下方最多展示 10 个关键词的采样覆盖情况。</p><p class="section-summary lang-en">This run planned 15 samples, completed 15, and produced 15 valid samples. Up to 10 keyword coverage rows are shown below.</p>
+    <div class="coverage-layout">
+      <div class="chart">
+        <h3>每个问题的有效采样率</h3>
+        <div class="bar-row"><div class="bar-name">q01</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">5/5</div></div>
+<div class="bar-row"><div class="bar-name">q02</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">5/5</div></div>
+<div class="bar-row"><div class="bar-name">q03</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">5/5</div></div>
+      </div>
+      <div class="chart"><div class="coverage-snapshot"><h3>采样状态构成</h3><div class="stacked-bar"><span class="seg-positive" style="width:100.00%"></span></div><div class="stacked-legend"><span><i class="seg-positive"></i>有效 <b>100.0%</b></span><span><i class="seg-negative"></i>失败 <b>0.0%</b></span><span><i class="seg-neutral"></i>未完成 <b>0.0%</b></span></div><div class="coverage-cards"><div><span>完成率</span><strong>100.0%</strong></div><div><span>有效率</span><strong>100.0%</strong></div><div><span>平均信源</span><strong>1.1</strong></div><div><span>平均字数</span><strong>2,784</strong></div></div></div></div>
+    </div>
+    <table class="kami-table">
+      <thead><tr><th>问题</th><th>问句</th><th>完成/计划</th><th>有效</th><th>失败</th><th>未完成</th><th>平均信源</th><th>搜索资料</th><th>新对话</th><th>平均回答字数</th></tr></thead>
+      <tbody><tr><td>q01</td><td>北京留学公司推荐</td><td>5/5</td><td>5</td><td>0</td><td>0</td><td>0.0</td><td>66</td><td>5</td><td>2,629</td></tr><tr><td>q02</td><td>北京留学机构推荐</td><td>5/5</td><td>5</td><td>0</td><td>0</td><td>0.0</td><td>64</td><td>5</td><td>2,459</td></tr><tr><td>q03</td><td>北京留学辅导机构</td><td>5/5</td><td>5</td><td>0</td><td>0</td><td>3.2</td><td>64</td><td>5</td><td>3,264</td></tr></tbody>
+    </table>
+  </section>
+
+  <section class="section" id="mobile">
+    <h2><span class="lang-zh">移动端证据</span><span class="lang-en">Mobile Evidence</span></h2>
+    <p class="section-summary lang-zh">移动端通过 Android/Appium 采集 UI 可见证据。本次 15/15 个样本确认新建对话成功，采集间隔策略为 0-30 秒随机间隔；共采集搜索资料 194 行，其中判定被引用 0 行、未引用 194 行。</p><p class="section-summary lang-en">Mobile evidence is collected from visible Android/Appium UI. Fresh chat was confirmed for 15/15 samples. The delay strategy is 0-30 秒随机间隔; 194 material rows were collected, with 0 cited and 194 uncited.</p>
+    <div class="chart-grid">
+      <div class="chart">
+        <h3>移动端资料按问题</h3>
+        <table class="kami-table">
+          <thead><tr><th>问题</th><th>问句</th><th>新对话</th><th>资料行</th><th>被引用</th><th>未引用</th><th>引用次数</th></tr></thead>
+          <tbody><tr><td>q01</td><td>北京留学公司推荐</td><td>5/5</td><td>66</td><td>0</td><td>66</td><td>0</td></tr><tr><td>q02</td><td>北京留学机构推荐</td><td>5/5</td><td>64</td><td>0</td><td>64</td><td>0</td></tr><tr><td>q03</td><td>北京留学辅导机构</td><td>5/5</td><td>64</td><td>0</td><td>64</td><td>0</td></tr></tbody>
+        </table>
+      </div>
+      <div class="chart">
+        <h3>高频搜索资料标题</h3>
+        <div class="bar-row"><div class="bar-name">2026年留学机构排名:TOP10榜单、费用对比与选择指南</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">14</div></div>
+<div class="bar-row"><div class="bar-name">2026年北京出国留学机构前20强深度测评与选择指南_服务_院校_托普</div><div class="bar-track"><div class="bar-fill" style="width:78.57%"></div></div><div class="bar-value">11</div></div>
+<div class="bar-row"><div class="bar-name">2026北京靠谱留学机构品牌怎么选?这份攻略帮你_飞机佬684</div><div class="bar-track"><div class="bar-fill" style="width:71.43%"></div></div><div class="bar-value">10</div></div>
+<div class="bar-row"><div class="bar-name">2026年推荐哪些专业留学机构?直接看前三名就够 —掌上高考_教育在线</div><div class="bar-track"><div class="bar-fill" style="width:71.43%"></div></div><div class="bar-value">10</div></div>
+<div class="bar-row"><div class="bar-name">揭秘2026北京直营留学中介品牌榜单真相_魔法画板G5FwaC</div><div class="bar-track"><div class="bar-fill" style="width:64.29%"></div></div><div class="bar-value">9</div></div>
+<div class="bar-row"><div class="bar-name">北京本地比较好的留学机构有哪些?2026年留学机构实力测评_本地资讯专区_新航道官网</div><div class="bar-track"><div class="bar-fill" style="width:57.14%"></div></div><div class="bar-value">8</div></div>
+<div class="bar-row"><div class="bar-name">北京正规留学机构品牌哪家好?2026最新指南</div><div class="bar-track"><div class="bar-fill" style="width:57.14%"></div></div><div class="bar-value">8</div></div>
+<div class="bar-row"><div class="bar-name">北京留学中介排名(2026实测版):避坑指南+选择攻略_本地资讯专区_新航道官网</div><div class="bar-track"><div class="bar-fill" style="width:57.14%"></div></div><div class="bar-value">8</div></div>
+<div class="bar-row"><div class="bar-name">北京TOP10 留学机构盘点:留学优势突出谁是真靠谱_服务_学子_院校</div><div class="bar-track"><div class="bar-fill" style="width:57.14%"></div></div><div class="bar-value">8</div></div>
+<div class="bar-row"><div class="bar-name">2026北京靠谱留学中介排名(官方认证版) 新航道，12万学子见证靠谱实力_本地资讯专区_新航道官网</div><div class="bar-track"><div class="bar-fill" style="width:57.14%"></div></div><div class="bar-value">8</div></div>
+      </div>
+    </div>
+    <h3>移动端搜索资料明细 · 前 10 条</h3>
+    <table class="kami-table">
+      <thead><tr><th>样本</th><th>问句</th><th>编号</th><th>标题</th><th>来源</th><th>被引用</th><th>引用次数</th><th>置信度</th></tr></thead>
+      <tbody><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>1</td><td>2026北京靠谱留学机构品牌怎么选?这份攻略帮你_飞机佬684</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>2</td><td>揭秘2026北京直营留学中介品牌榜单真相_魔法画板G5FwaC</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>3</td><td>北京本地比较好的留学机构有哪些?2026年留学机构实力测评_本地资讯专区_新航道官网</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>4</td><td>北京正规留学机构品牌哪家好?2026最新指南</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>5</td><td>北京留学中介排名(2026实测版):避坑指南+选择攻略_本地资讯专区_新航道官网</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>6</td><td>北京TOP10 留学机构盘点:留学优势突出谁是真靠谱_服务_学子_院校</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>7</td><td>出国留学辅导机构有哪些?按国家、费用、服务模式全面盘点</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>8</td><td>2026年北京出国留学机构前20强深度测评与选择指南_服务_院校_托普</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>9</td><td>2026年留学机构排名:TOP10榜单、费用对比与选择指南</td><td></td><td>否</td><td>0</td><td>medium</td></tr><tr><td>q01-r01</td><td>北京留学公司推荐</td><td>10</td><td>中介 别 乱 报 ！ 学姐 带 你 了解 这 八家 机构 新东方 / 新 航道 / 优越 留学 / 雅 咖 留学 / 指南者 / 百利 天下 / 立 思辰 / 澳际 ， 八家 留学 中介 大 测评 ， 给 正在 苦恼 的 宝 们 一个 参考 ~ # 留学 机构 # 留学 中介 # 出国 留学 # 留学 申请 # 留学 机构 推荐</td><td></td><td>否</td><td>0</td><td>medium</td></tr></tbody>
+    </table>
+  </section>
+
+
+  <section class="section" id="probability">
+    <h2><span class="lang-zh">目标实体概率</span><span class="lang-en">Entity Probability</span></h2>
+    <p class="section-summary lang-zh">概率指标来自有效样本中的重复推荐位置估计，图表最多展示 10 个实体；Top 1、Top 3、Top 5 分别观察首位推荐、核心推荐区和扩展推荐区的稳定性。</p><p class="section-summary lang-en">Probability metrics are estimated from repeated valid samples. Charts show up to 10 entities across Top 1, Top 3, Top 5, mentions, and average rank.</p>
+    <div class="chart-grid three">
+      <div class="chart"><h3>Top 1 概率</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">清柚教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">澳际教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div></div>
+      <div class="chart"><h3>Top 3 概率</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:93.33%"></div></div><div class="bar-value">93.3% · 14</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:86.67%"></div></div><div class="bar-value">86.7% · 13</div></div>
+<div class="bar-row"><div class="bar-name">新航道前程留学</div><div class="bar-track"><div class="bar-fill" style="width:20.00%"></div></div><div class="bar-value">20.0% · 3</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">清柚教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div></div>
+      <div class="chart"><h3>Top 5 概率</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:93.33%"></div></div><div class="bar-value">93.3% · 14</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:53.33%"></div></div><div class="bar-value">53.3% · 8</div></div>
+<div class="bar-row"><div class="bar-name">新航道前程留学</div><div class="bar-track"><div class="bar-fill" style="width:40.00%"></div></div><div class="bar-value">40.0% · 6</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:33.33%"></div></div><div class="bar-value">33.3% · 5</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:33.33%"></div></div><div class="bar-value">33.3% · 5</div></div>
+<div class="bar-row"><div class="bar-name">新航道留学</div><div class="bar-track"><div class="bar-fill" style="width:33.33%"></div></div><div class="bar-value">33.3% · 5</div></div>
+<div class="bar-row"><div class="bar-name">澳际教育</div><div class="bar-track"><div class="bar-fill" style="width:13.33%"></div></div><div class="bar-value">13.3% · 2</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div></div>
+      <div class="chart"><h3>提及率</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 15</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:93.33%"></div></div><div class="bar-value">93.3% · 14</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:93.33%"></div></div><div class="bar-value">93.3% · 14</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:86.67%"></div></div><div class="bar-value">86.7% · 13</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:73.33%"></div></div><div class="bar-value">73.3% · 11</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:66.67%"></div></div><div class="bar-value">66.7% · 10</div></div>
+<div class="bar-row"><div class="bar-name">清柚教育</div><div class="bar-track"><div class="bar-fill" style="width:66.67%"></div></div><div class="bar-value">66.7% · 10</div></div>
+<div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:53.33%"></div></div><div class="bar-value">53.3% · 8</div></div>
+<div class="bar-row"><div class="bar-name">澳际教育</div><div class="bar-track"><div class="bar-fill" style="width:53.33%"></div></div><div class="bar-value">53.3% · 8</div></div></div>
+      <div class="chart"><h3>平均提及次数</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">3.00</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:80.00%"></div></div><div class="bar-value">2.40</div></div>
+<div class="bar-row"><div class="bar-name">清柚教育</div><div class="bar-track"><div class="bar-fill" style="width:46.67%"></div></div><div class="bar-value">1.40</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:44.44%"></div></div><div class="bar-value">1.33</div></div>
+<div class="bar-row"><div class="bar-name">思睿留学</div><div class="bar-track"><div class="bar-fill" style="width:44.44%"></div></div><div class="bar-value">1.33</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:35.56%"></div></div><div class="bar-value">1.07</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:33.33%"></div></div><div class="bar-value">1.00</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:31.11%"></div></div><div class="bar-value">0.93</div></div>
+<div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:28.89%"></div></div><div class="bar-value">0.87</div></div>
+<div class="bar-row"><div class="bar-name">朗汀留学</div><div class="bar-track"><div class="bar-fill" style="width:28.89%"></div></div><div class="bar-value">0.87</div></div></div>
+      <div class="chart"><h3>平均排名 · 数值越低越好</h3><div class="bar-row"><div class="bar-name">新东方前途留学</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">1.0</div></div>
+<div class="bar-row"><div class="bar-name">启德教育</div><div class="bar-track"><div class="bar-fill" style="width:42.42%"></div></div><div class="bar-value">2.4</div></div>
+<div class="bar-row"><div class="bar-name">金吉列留学</div><div class="bar-track"><div class="bar-fill" style="width:34.88%"></div></div><div class="bar-value">2.9</div></div>
+<div class="bar-row"><div class="bar-name">新航道前程留学</div><div class="bar-track"><div class="bar-fill" style="width:31.58%"></div></div><div class="bar-value">3.2</div></div>
+<div class="bar-row"><div class="bar-name">新航道留学</div><div class="bar-track"><div class="bar-fill" style="width:25.00%"></div></div><div class="bar-value">4.0</div></div>
+<div class="bar-row"><div class="bar-name">指南者留学</div><div class="bar-track"><div class="bar-fill" style="width:17.74%"></div></div><div class="bar-value">5.6</div></div>
+<div class="bar-row"><div class="bar-name">优越留学</div><div class="bar-track"><div class="bar-fill" style="width:17.50%"></div></div><div class="bar-value">5.7</div></div>
+<div class="bar-row"><div class="bar-name">托普仕留学</div><div class="bar-track"><div class="bar-fill" style="width:16.88%"></div></div><div class="bar-value">5.9</div></div>
+<div class="bar-row"><div class="bar-name">澳际教育</div><div class="bar-track"><div class="bar-fill" style="width:14.29%"></div></div><div class="bar-value">7.0</div></div>
+<div class="bar-row"><div class="bar-name">啄木鸟教育</div><div class="bar-track"><div class="bar-fill" style="width:14.04%"></div></div><div class="bar-value">7.1</div></div></div>
+    </div>
+    <h3>目标实体明细</h3>
+    <table class="kami-table target-detail-table">
+      <thead><tr><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>别名</th></tr></thead>
+      <tbody><tr><td>新东方前途留学</td><td>100.0%</td><td>3.00</td><td>100.0%</td><td>100.0%</td><td>100.0%</td><td>1.0</td><td>新东方前途留学 / 新东方前途出国 / 新东方前途</td></tr><tr><td>启德教育</td><td>93.3%</td><td>0.93</td><td>0.0%</td><td>93.3%</td><td>93.3%</td><td>2.4</td><td>启德教育</td></tr><tr><td>金吉列留学</td><td>100.0%</td><td>1.00</td><td>0.0%</td><td>86.7%</td><td>100.0%</td><td>2.9</td><td>金吉列留学</td></tr><tr><td>新航道前程留学</td><td>40.0%</td><td>0.40</td><td>0.0%</td><td>20.0%</td><td>40.0%</td><td>3.2</td><td>新航道前程留学</td></tr><tr><td>优越留学</td><td>93.3%</td><td>2.40</td><td>0.0%</td><td>0.0%</td><td>53.3%</td><td>5.7</td><td>优越留学</td></tr><tr><td>托普仕留学</td><td>86.7%</td><td>1.07</td><td>0.0%</td><td>0.0%</td><td>33.3%</td><td>5.9</td><td>托普仕留学</td></tr><tr><td>指南者留学</td><td>73.3%</td><td>1.33</td><td>0.0%</td><td>0.0%</td><td>33.3%</td><td>5.6</td><td>指南者留学</td></tr><tr><td>思睿留学</td><td>66.7%</td><td>1.33</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>7.9</td><td>思睿留学</td></tr><tr><td>清柚教育</td><td>66.7%</td><td>1.40</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>9.2</td><td>清柚教育</td></tr><tr><td>啄木鸟教育</td><td>53.3%</td><td>0.87</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>7.1</td><td>啄木鸟教育</td></tr></tbody>
+    </table>
+    <h3>问题 x 目标实体 Top 3 热力图</h3>
+    <table class="kami-table heatmap"><thead><tr><th>Query</th><th>新东方前途留学</th><th>启德教育</th><th>金吉列留学</th><th>新航道前程留学</th><th>优越留学</th><th>托普仕留学</th><th>指南者留学</th><th>思睿留学</th><th>清柚教育</th><th>啄木鸟教育</th><th>Question</th></tr></thead><tbody><tr><th>q01</th><td class="heat h5">100.0%</td><td class="heat h5">100.0%</td><td class="heat h4">80.0%</td><td class="heat h1">20.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="question-cell">北京留学公司推荐</td></tr><tr><th>q02</th><td class="heat h5">100.0%</td><td class="heat h5">100.0%</td><td class="heat h5">100.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="question-cell">北京留学机构推荐</td></tr><tr><th>q03</th><td class="heat h5">100.0%</td><td class="heat h4">80.0%</td><td class="heat h4">80.0%</td><td class="heat h2">40.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="heat h0">0.0%</td><td class="question-cell">北京留学辅导机构</td></tr></tbody></table>
+  </section>
+
+
+
+  <section class="section" id="sources">
+    <h2><span class="lang-zh">信源结构</span><span class="lang-en">Citation Sources</span></h2>
+    <p class="section-summary lang-zh">信源结构用于判断 Doubao 回答更依赖官方、媒体、社区、开发者或其他渠道；域名、URL 和来源明细只在采集到对应字段时展示。</p><p class="section-summary lang-en">Source structure shows whether Doubao relies more on official, media, community, developer, or other channels. Domain and URL modules are shown only when those fields are available.</p>
+    <div class="chart-grid three">
+      <div class="chart share-chart"><h3>渠道分布</h3><div class="share-donut-wrap"><div class="share-donut-stage"><svg class="viz-svg share-donut-svg" viewBox="0 0 180 180" role="img" aria-label="信源渠道分布圆环图"><circle class="share-donut-base" cx="90" cy="90" r="55" /><circle class="share-donut-segment" cx="90" cy="90" r="55" pathLength="100" stroke="#173A63" stroke-dasharray="100.000 0.000" stroke-dashoffset="-0.000" transform="rotate(-90 90 90)" /><text class="share-donut-main" x="90" y="82" text-anchor="middle">其他</text><text class="share-donut-value" x="90" y="106" text-anchor="middle">100.0%</text></svg></div><div class="share-donut-legend"><div class="share-donut-row"><span><i style="background:#173A63"></i>其他</span><strong>100.0%</strong><em>16</em></div></div></div></div><div class="chart share-chart"><h3>来源编号位置</h3><div class="share-donut-wrap"><div class="share-donut-stage"><svg class="viz-svg share-donut-svg" viewBox="0 0 180 180" role="img" aria-label="来源编号位置圆环图"><circle class="share-donut-base" cx="90" cy="90" r="55" /><circle class="share-donut-segment" cx="90" cy="90" r="55" pathLength="100" stroke="#173A63" stroke-dasharray="68.750 31.250" stroke-dashoffset="-0.000" transform="rotate(-90 90 90)" /><circle class="share-donut-segment" cx="90" cy="90" r="55" pathLength="100" stroke="#6F8395" stroke-dasharray="31.250 68.750" stroke-dashoffset="-68.750" transform="rotate(-90 90 90)" /><text class="share-donut-main" x="90" y="82" text-anchor="middle">1-3</text><text class="share-donut-value" x="90" y="106" text-anchor="middle">68.8%</text></svg></div><div class="share-donut-legend"><div class="share-donut-row"><span><i style="background:#173A63"></i>1-3</span><strong>68.8%</strong><em>11</em></div><div class="share-donut-row"><span><i style="background:#6F8395"></i>4-6</span><strong>31.2%</strong><em>5</em></div></div></div></div><div class="chart"><h3>高频来源名</h3><div class="bar-row"><div class="bar-name">3.5-8w</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">2.8-6w</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">3.5-7w</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">1.5w</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">2.5w</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">1.5</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">2.5</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div>
+<div class="bar-row"><div class="bar-name">0.8</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">2</div></div></div><div class="chart"><h3>高频域名</h3><div class="source-row"><div class="source-label"><strong>3.5-8w</strong><span>3.5-8w</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>2.8-6w</strong><span>2.8-6w</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>3.5-7w</strong><span>3.5-7w</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>1.5w</strong><span>1.5w</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>2.5w</strong><span>2.5w</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>1.5</strong><span>1.5</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>2.5</strong><span>2.5</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div>
+<div class="source-row"><div class="source-label"><strong>0.8</strong><span>0.8</span></div><div class="source-track"><div class="source-fill" style="width:100.00%"></div></div><div class="source-count">2</div></div></div><div class="chart"><h3>域名占比树图</h3><div class="treemap" role="list"><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>3.5-8w</strong><span class="treemap-count">2</span></div><div class="treemap-domain">3.5-8w</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>2.8-6w</strong><span class="treemap-count">2</span></div><div class="treemap-domain">2.8-6w</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>3.5-7w</strong><span class="treemap-count">2</span></div><div class="treemap-domain">3.5-7w</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>1.5w</strong><span class="treemap-count">2</span></div><div class="treemap-domain">1.5w</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>2.5w</strong><span class="treemap-count">2</span></div><div class="treemap-domain">2.5w</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>1.5</strong><span class="treemap-count">2</span></div><div class="treemap-domain">1.5</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>2.5</strong><span class="treemap-count">2</span></div><div class="treemap-domain">2.5</div><div class="treemap-share"><i style="width:100.00%"></i></div></div><div class="treemap-cell" role="listitem"><div class="treemap-cell-head"><strong>0.8</strong><span class="treemap-count">2</span></div><div class="treemap-domain">0.8</div><div class="treemap-share"><i style="width:100.00%"></i></div></div></div></div>
+    </div>
+  </section>
+
+
+  <section class="section" id="titles">
+    <h2><span class="lang-zh">标题特征</span><span class="lang-en">Title Patterns</span></h2>
+    <p class="section-summary lang-zh">标题特征用于观察被引用内容的表达方式，包括数字、年份、疑问句、结构符和是否包含目标或竞品实体。高频标题最多展示 10 条。</p><p class="section-summary lang-en">Title patterns show how cited content is framed, including numbers, years, questions, structural punctuation, and entity mentions. Up to 10 frequent titles are shown.</p>
+    <div class="chart-grid">
+      <div class="chart"><h3>标题功能特征</h3><div class="bar-row"><div class="bar-name">标题含数字</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 16</div></div>
+<div class="bar-row"><div class="bar-name">标题含年份</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">标题含疑问</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div>
+<div class="bar-row"><div class="bar-name">标题含结构符</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 16</div></div>
+<div class="bar-row"><div class="bar-name">标题含实体</div><div class="bar-track"><div class="bar-fill" style="width:2.00%"></div></div><div class="bar-value">0.0% · 0</div></div></div>
+      <div class="chart"><h3>标题长度</h3><div class="bar-row"><div class="bar-name">0-12</div><div class="bar-track"><div class="bar-fill" style="width:37.50%"></div></div><div class="bar-value">37.5% · 6</div></div>
+<div class="bar-row"><div class="bar-name">13-24</div><div class="bar-track"><div class="bar-fill" style="width:50.00%"></div></div><div class="bar-value">50.0% · 8</div></div>
+<div class="bar-row"><div class="bar-name">41+</div><div class="bar-track"><div class="bar-fill" style="width:12.50%"></div></div><div class="bar-value">12.5% · 2</div></div></div>
+      <div class="chart"><h3>时间新旧</h3><div class="bar-row"><div class="bar-name">未识别</div><div class="bar-track"><div class="bar-fill" style="width:100.00%"></div></div><div class="bar-value">100.0% · 16</div></div></div>
+      <div class="chart"><h3>标题意图特征分析</h3><div class="bar-row"><div class="bar-name">其他信息</div><div class="bar-track"><div class="bar-fill" style="width:87.50%"></div></div><div class="bar-value">87.5% · 14</div></div>
+<div class="bar-row"><div class="bar-name">指南攻略</div><div class="bar-track"><div class="bar-fill" style="width:12.50%"></div></div><div class="bar-value">12.5% · 2</div></div></div>
+    </div>
+    <h3>高频引用标题</h3>
+    <table class="kami-table">
+      <thead><tr><th>#</th><th>标题</th><th>来源</th><th>次数</th></tr></thead>
+      <tbody><tr><td>1</td><td>费用：3.5-8w</td><td>3.5-8w</td><td>1</td></tr><tr><td>2</td><td>费用：2.8-6w</td><td>2.8-6w</td><td>1</td></tr><tr><td>3</td><td>费用：3.5-7w</td><td>3.5-7w</td><td>1</td></tr><tr><td>4</td><td>- 费用：3.5-8w</td><td>3.5-8w</td><td>1</td></tr><tr><td>5</td><td>- 费用：2.8-6w</td><td>2.8-6w</td><td>1</td></tr><tr><td>6</td><td>- 费用：3.5-7w</td><td>3.5-7w</td><td>1</td></tr><tr><td>7</td><td>香港/新加坡授课硕：1.5w–5w</td><td>1.5w</td><td>1</td></tr><tr><td>8</td><td>澳洲/加拿大：2.5w–5w</td><td>2.5w</td><td>1</td></tr><tr><td>9</td><td>- 香港/新加坡授课硕：1.5w–5w</td><td>1.5w</td><td>1</td></tr><tr><td>10</td><td>- 澳洲/加拿大：2.5w–5w</td><td>2.5w</td><td>1</td></tr></tbody>
+    </table>
+  </section>
+
+
+  <section class="section" id="recommendations">
+    <h2><span class="lang-zh">总结建议</span><span class="lang-en">Recommendations</span></h2>
+    <div class="lang-zh">
+      <h3>总结建议与 GEO 优化措施</h3>
+      <div class="geo-action-overview">
+        <div class="chart"><h3>优化优先级</h3><div class="priority-list"><div class="priority-row"><span>官方信源</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>第三方背书</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>标题意图匹配</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>复测归因</span><div><i style="width:55%"></i></div><strong>55</strong></div><div class="priority-row"><span>推荐覆盖</span><div><i style="width:35%"></i></div><strong>35</strong></div><div class="priority-row"><span>提及强度</span><div><i style="width:35%"></i></div><strong>35</strong></div></div></div>
+        <div class="chart"><h3>核心指标趋势预估</h3><div class="trend-chart-wrap"><svg class="viz-svg trend-chart" viewBox="0 0 620 270" role="img" aria-label="基于当前缺口和优化优先级的保守预估，非真实历史数据。"><line class="trend-grid-line" x1="56" y1="222.0" x2="592" y2="222.0" /><text class="trend-tick" x="46" y="226.0" text-anchor="end">0</text><line class="trend-grid-line" x1="56" y1="173.0" x2="592" y2="173.0" /><text class="trend-tick" x="46" y="177.0" text-anchor="end">25</text><line class="trend-grid-line" x1="56" y1="124.0" x2="592" y2="124.0" /><text class="trend-tick" x="46" y="128.0" text-anchor="end">50</text><line class="trend-grid-line" x1="56" y1="75.0" x2="592" y2="75.0" /><text class="trend-tick" x="46" y="79.0" text-anchor="end">75</text><line class="trend-grid-line" x1="56" y1="26.0" x2="592" y2="26.0" /><text class="trend-tick" x="46" y="30.0" text-anchor="end">100</text><text class="trend-stage" x="56.0" y="252" text-anchor="middle">当前</text><text class="trend-stage" x="190.0" y="252" text-anchor="middle">优化后</text><text class="trend-stage" x="324.0" y="252" text-anchor="middle">1个月</text><text class="trend-stage" x="458.0" y="252" text-anchor="middle">3个月</text><text class="trend-stage" x="592.0" y="252" text-anchor="middle">6个月</text><line class="trend-axis" x1="56" y1="222" x2="592" y2="222" /><line class="trend-axis" x1="56" y1="26" x2="56" y2="222" /><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#1B365D" /><circle cx="56.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="190.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="324.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="458.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="592.0" cy="29.9" r="3.0" fill="#1B365D" /></g><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#7E8C9A" /><circle cx="56.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="190.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="324.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="458.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="592.0" cy="29.9" r="3.0" fill="#7E8C9A" /></g><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#9C8C68" /><circle cx="56.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="190.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="324.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="458.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="592.0" cy="29.9" r="3.0" fill="#9C8C68" /></g></svg><div class="chart-legend"><span><i style="background:#1B365D"></i>提及率</span><span><i style="background:#7E8C9A"></i>Top 3</span><span><i style="background:#9C8C68"></i>Top 5</span></div><p class="chart-note">基于当前缺口和优化优先级的保守预估，非真实历史数据。</p></div></div>
+      </div>
+      <div class="chart geo-method-card"><h3>具体方法与验收指标</h3><table class="kami-table geo-method-table"><thead><tr><th>维度</th><th>优先级</th><th>当前指标</th><th>具体方法</th></tr></thead><tbody><tr><td>官方信源</td><td>100</td><td>官方信源占比 0.0%</td><td>补充官网说明页、服务页、案例页、流程/价格页和 FAQ，保持 URL 稳定、摘要清晰、实体名称一致。</td></tr><tr><td>第三方背书</td><td>100</td><td>媒体信源占比 0.0%</td><td>布局行业门户、媒体测评、合作案例、榜单/排名页，统一目标实体名称、别名和引用口径。</td></tr><tr><td>标题意图匹配</td><td>100</td><td>最强标题信号 100.0%</td><td>优先使用年份、榜单、排名、对比、推荐、疑问和避坑类标题，贴近当前被 Doubao 引用的标题表达。</td></tr><tr><td>复测归因</td><td>55</td><td>跟踪 3 个关键词</td><td>每周复测同一批关键词，记录内容更新后 Top 3、Top 5、提及强度和引用域名的变化，定位有效页面。</td></tr><tr><td>推荐覆盖</td><td>35</td><td>目标 Top 3 100.0%；竞品差距 0.0pp</td><td>建设包含「新东方前途留学」的对比页、推荐页和场景页，并在标题、首段、对比表和 FAQ 中稳定出现目标实体。</td></tr><tr><td>提及强度</td><td>35</td><td>平均提及 3.00 次</td><td>让「新东方前途留学」进入首段、摘要条目、对比表、结论、图片替代文本和可被引用的短句片段。</td></tr></tbody></table></div>
+      <div class="recommendation-list"><div class="recommendation-item">补充官网说明页、服务页、案例页、流程/价格页和 FAQ，保持 URL 稳定、摘要清晰、实体名称一致。</div><div class="recommendation-item">布局行业门户、媒体测评、合作案例、榜单/排名页，统一目标实体名称、别名和引用口径。</div><div class="recommendation-item">优先使用年份、榜单、排名、对比、推荐、疑问和避坑类标题，贴近当前被 Doubao 引用的标题表达。</div><div class="recommendation-item">每周复测同一批关键词，记录内容更新后 Top 3、Top 5、提及强度和引用域名的变化，定位有效页面。</div><div class="recommendation-item">建设包含「新东方前途留学」的对比页、推荐页和场景页，并在标题、首段、对比表和 FAQ 中稳定出现目标实体。</div><div class="recommendation-item">让「新东方前途留学」进入首段、摘要条目、对比表、结论、图片替代文本和可被引用的短句片段。</div></div>
+    </div>
+    <div class="lang-en">
+      <h3>Summary and GEO Optimization Actions</h3>
+      <div class="geo-action-overview">
+        <div class="chart"><h3>Optimization Priority</h3><div class="priority-list"><div class="priority-row"><span>Official citability</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>Third-party proof</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>Title intent fit</span><div><i style="width:100%"></i></div><strong>100</strong></div><div class="priority-row"><span>Measurement loop</span><div><i style="width:55%"></i></div><strong>55</strong></div><div class="priority-row"><span>Ranking coverage</span><div><i style="width:35%"></i></div><strong>35</strong></div><div class="priority-row"><span>Mention intensity</span><div><i style="width:35%"></i></div><strong>35</strong></div></div></div>
+        <div class="chart"><h3>Core Metric Trend Projection</h3><div class="trend-chart-wrap"><svg class="viz-svg trend-chart" viewBox="0 0 620 270" role="img" aria-label="Conservative projection from current gaps and action priority; not historical data."><line class="trend-grid-line" x1="56" y1="222.0" x2="592" y2="222.0" /><text class="trend-tick" x="46" y="226.0" text-anchor="end">0</text><line class="trend-grid-line" x1="56" y1="173.0" x2="592" y2="173.0" /><text class="trend-tick" x="46" y="177.0" text-anchor="end">25</text><line class="trend-grid-line" x1="56" y1="124.0" x2="592" y2="124.0" /><text class="trend-tick" x="46" y="128.0" text-anchor="end">50</text><line class="trend-grid-line" x1="56" y1="75.0" x2="592" y2="75.0" /><text class="trend-tick" x="46" y="79.0" text-anchor="end">75</text><line class="trend-grid-line" x1="56" y1="26.0" x2="592" y2="26.0" /><text class="trend-tick" x="46" y="30.0" text-anchor="end">100</text><text class="trend-stage" x="56.0" y="252" text-anchor="middle">Now</text><text class="trend-stage" x="190.0" y="252" text-anchor="middle">After</text><text class="trend-stage" x="324.0" y="252" text-anchor="middle">1M</text><text class="trend-stage" x="458.0" y="252" text-anchor="middle">3M</text><text class="trend-stage" x="592.0" y="252" text-anchor="middle">6M</text><line class="trend-axis" x1="56" y1="222" x2="592" y2="222" /><line class="trend-axis" x1="56" y1="26" x2="56" y2="222" /><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#1B365D" /><circle cx="56.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="190.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="324.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="458.0" cy="29.9" r="3.0" fill="#1B365D" /><circle cx="592.0" cy="29.9" r="3.0" fill="#1B365D" /></g><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#7E8C9A" /><circle cx="56.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="190.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="324.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="458.0" cy="29.9" r="3.0" fill="#7E8C9A" /><circle cx="592.0" cy="29.9" r="3.0" fill="#7E8C9A" /></g><g class="trend-series"><polyline points="56.0,29.9 190.0,29.9 324.0,29.9 458.0,29.9 592.0,29.9" stroke="#9C8C68" /><circle cx="56.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="190.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="324.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="458.0" cy="29.9" r="3.0" fill="#9C8C68" /><circle cx="592.0" cy="29.9" r="3.0" fill="#9C8C68" /></g></svg><div class="chart-legend"><span><i style="background:#1B365D"></i>Mention</span><span><i style="background:#7E8C9A"></i>Top 3</span><span><i style="background:#9C8C68"></i>Top 5</span></div><p class="chart-note">Conservative projection from current gaps and action priority; not historical data.</p></div></div>
+      </div>
+      <div class="chart geo-method-card"><h3>Action Methods and Checks</h3><table class="kami-table geo-method-table"><thead><tr><th>Dimension</th><th>Priority</th><th>Current Metric</th><th>Action Method</th></tr></thead><tbody><tr><td>Official citability</td><td>100</td><td>Official source share 0.0%</td><td>Create official explainer, service, case, pricing/process, and FAQ pages with stable URLs, concise summaries, and clear entity names.</td></tr><tr><td>Third-party proof</td><td>100</td><td>Media source share 0.0%</td><td>Seed industry portals, evaluation articles, partner cases, and list/ranking pages using consistent entity aliases and citations.</td></tr><tr><td>Title intent fit</td><td>100</td><td>Strongest title signal 100.0%</td><td>Prioritize titles with year, ranking, comparison, recommendation, question, and risk-avoidance wording that matches cited-title patterns.</td></tr><tr><td>Measurement loop</td><td>55</td><td>3 keywords tracked</td><td>Repeat the same keyword set weekly after content updates, then compare Top 3, Top 5, mention intensity, and citation-domain movement.</td></tr><tr><td>Ranking coverage</td><td>35</td><td>Target Top 3 100.0%; competitor gap 0.0pp</td><td>Build comparison, recommendation, and use-case pages that explicitly name 新东方前途留学 in the title, lead, comparison table, and FAQ.</td></tr><tr><td>Mention intensity</td><td>35</td><td>Avg mentions 3.00</td><td>Place 新东方前途留学 in the first paragraph, summary bullets, comparison tables, conclusion, alt text, and reusable source snippets.</td></tr></tbody></table></div>
+      <div class="recommendation-list"><div class="recommendation-item">Create official explainer, service, case, pricing/process, and FAQ pages with stable URLs, concise summaries, and clear entity names.</div><div class="recommendation-item">Seed industry portals, evaluation articles, partner cases, and list/ranking pages using consistent entity aliases and citations.</div><div class="recommendation-item">Prioritize titles with year, ranking, comparison, recommendation, question, and risk-avoidance wording that matches cited-title patterns.</div><div class="recommendation-item">Repeat the same keyword set weekly after content updates, then compare Top 3, Top 5, mention intensity, and citation-domain movement.</div><div class="recommendation-item">Build comparison, recommendation, and use-case pages that explicitly name 新东方前途留学 in the title, lead, comparison table, and FAQ.</div><div class="recommendation-item">Place 新东方前途留学 in the first paragraph, summary bullets, comparison tables, conclusion, alt text, and reusable source snippets.</div></div>
+    </div>
+  </section>
+
+
+  <footer>
+    Generated at 2026-07-03T04:51:14.615214+00:00. Metrics are repeated-sample estimates from visible Doubao output, not external truth claims.
+  </footer>
+</main>
+<script>
+(function() {
+  const buttons = document.querySelectorAll('[data-lang]');
+  function setLanguage(lang) {
+    document.body.classList.toggle('lang-zh', lang === 'zh');
+    document.body.classList.toggle('lang-en', lang === 'en');
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+    buttons.forEach(function(button) {
+      button.classList.toggle('is-active', button.getAttribute('data-lang') === lang);
+    });
+  }
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      setLanguage(button.getAttribute('data-lang') || 'zh');
+    });
+  });
+  document.querySelectorAll('.bubble-node').forEach(function(node) {
+    function toggleNode() {
+      const svg = node.closest('svg');
+      if (svg) {
+        svg.querySelectorAll('.bubble-node.is-active').forEach(function(activeNode) {
+          if (activeNode !== node) activeNode.classList.remove('is-active');
+        });
+      }
+      node.classList.toggle('is-active');
+    }
+    node.addEventListener('click', toggleNode);
+    node.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleNode();
+      }
+    });
+  });
+}());
+</script>
+</body>
+</html>
