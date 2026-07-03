@@ -1,0 +1,37 @@
+interface:
+  display_name: "Yao Doubao Crawler"
+  short_description: "Repeat Doubao web or Android Appium AI-search collection into JSON, reports, and mobile evidence."
+  default_prompt: "Use $yao-doubao-crawler for repeated Doubao AI-search collection from web or Android Appium. Require keywords/questions, repeat count, backend, connection fields, and output dir. Ask for target entity and entity type only for target-vs-competitor diagnosis; otherwise produce exploratory output. Preserve mobile search-material evidence, screenshots/XML, and fresh-chat trace when present. Do not use for generic scraping, hidden API extraction, SEO writing, high-frequency automation, or one-off answers."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "vscode"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+    primary_commands:
+      - "node scripts/preflight.mjs --help"
+      - "node scripts/doubao_browser_crawl.mjs --help"
+      - "node scripts/doubao_batch_crawl.mjs --help"
+      - "python3 scripts/doubao_mobile_crawl.py --help"
+      - "python3 scripts/doubao_mobile_crawl.py preflight --help"
+      - "python3 scripts/doubao_mobile_crawl.py batch --help"
+      - "python3 scripts/analyze_doubao_results.py --help"
+      - "python3 scripts/test_entity_recognition.py"
+      - "python3 scripts/test_mobile_extraction.py"
+      - "bash scripts/run-tests.sh"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "metadata-adapter"
+    claude: "neutral-source-plus-adapter"
+    generic: "neutral-source"
+    vscode: "agent-skills-source-with-vscode-notes"

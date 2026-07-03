@@ -1,0 +1,297 @@
+{
+  "schema_version": "yao-doubao-crawler/v1",
+  "run": {
+    "id": "sample-mobile-doubao",
+    "started_at": "2026-07-02T00:00:00Z",
+    "finished_at": "2026-07-02T00:02:00Z",
+    "engine": "doubao",
+    "transport": "appium-uiautomator2-avd",
+    "dir": "fixtures",
+    "dry_run": false
+  },
+  "input": {
+    "question_count": 1,
+    "global_repeat": 1,
+    "timeout": 300,
+    "reference_extraction": true,
+    "target_entity": "光引GEO",
+    "target_aliases": [],
+    "entity_type": "company",
+    "delay_strategy": {
+      "mode": "fixed",
+      "delay_seconds": 1.5,
+      "delay_minutes": 0.025
+    },
+    "mobile": {
+      "device": "emulator-5554",
+      "app_package": "com.larus.nova",
+      "app_activity": null,
+      "server": "http://127.0.0.1:4723"
+    },
+    "questions": [
+      {
+        "id": "q01",
+        "index": 1,
+        "question": "GEO 服务商推荐",
+        "repeat": 1,
+        "target": "光引GEO"
+      }
+    ]
+  },
+  "plan": [
+    {
+      "sample_id": "q01-r01",
+      "question_id": "q01",
+      "question_index": 1,
+      "repeat_index": 1,
+      "repeat_total": 1,
+      "question": "GEO 服务商推荐",
+      "target": "光引GEO"
+    }
+  ],
+  "samples": [
+    {
+      "sample_id": "q01-r01",
+      "question_id": "q01",
+      "question_index": 1,
+      "repeat_index": 1,
+      "repeat_total": 1,
+      "question": "GEO 服务商推荐",
+      "target": "光引GEO",
+      "ok": true,
+      "status": "done",
+      "started_at": "2026-07-02T00:00:10Z",
+      "finished_at": "2026-07-02T00:01:20Z",
+      "duration_ms": 70000,
+      "raw_path": "raw/q01-r01.json",
+      "log_path": "logs/q01-r01.log",
+      "error": "",
+      "result": {
+        "ok": true,
+        "collected_at": "2026-07-02T00:01:20Z",
+        "engine": "doubao",
+        "transport": "appium-uiautomator2-avd",
+        "question": "GEO 服务商推荐",
+        "options": {
+          "device": "emulator-5554",
+          "server": "http://127.0.0.1:4723",
+          "app_package": "com.larus.nova",
+          "app_activity": null,
+          "timeout": 300,
+          "stable_seconds": 8,
+          "poll_seconds": 2,
+          "max_scrolls": 6,
+          "scroll_direction": "down",
+          "link_recovery": false,
+          "started_at": "2026-07-02T00:00:10Z"
+        },
+        "page": {
+          "title": "Doubao Android",
+          "package": "com.larus.nova",
+          "activity": null
+        },
+        "answer": {
+          "text": "以下是几类常见 GEO 服务商：\n1. 光引GEO：适合需要 AI 搜索可见度诊断和内容工程的企业。\n2. 源易信息：适合做企业知识库和内容资产治理。\n3. PallasAI：适合关注海外 AI 搜索可见度的品牌。"
+        },
+        "references": {
+          "requested": true,
+          "count": 2,
+          "items": [
+            {
+              "number": 1,
+              "source": "光引GEO官网",
+              "domain": "example.com",
+              "title": "光引GEO 服务介绍",
+              "date": "",
+              "url": "https://example.com/geo-service",
+              "summary": "",
+              "confidence": "high",
+              "failure_reason": ""
+            },
+            {
+              "number": 2,
+              "source": "pallasai.com",
+              "domain": "pallasai.com",
+              "title": "PallasAI GEO Platform",
+              "date": "",
+              "url": "",
+              "summary": "",
+              "confidence": "medium",
+              "failure_reason": "visible_reference_without_url"
+            }
+          ],
+          "note": ""
+        },
+        "mobile_search_materials": {
+          "requested": true,
+          "found": true,
+          "keyword_count": 2,
+          "material_count": 3,
+          "keywords": [
+            "GEO 服务商推荐",
+            "AI 搜索优化服务商"
+          ],
+          "count": 3,
+          "cited_count": 2,
+          "uncited_count": 1,
+          "total_citation_count": 2,
+          "items": [
+            {
+              "index": 1,
+              "number": 1,
+              "title": "光引GEO 服务介绍",
+              "source": "光引GEO官网",
+              "domain": "example.com",
+              "url": "https://example.com/geo-service",
+              "summary": "",
+              "visible_bounds": {
+                "index": [
+                  77,
+                  982,
+                  146,
+                  1038
+                ],
+                "title": [
+                  146,
+                  978,
+                  1003,
+                  1038
+                ]
+              },
+              "clickable": true,
+              "confidence": "high",
+              "failure_reason": "",
+              "detail_artifacts": {},
+              "cited": true,
+              "citation_count": 1,
+              "citation_evidence": [
+                {
+                  "type": "reference_url_match",
+                  "reference_number": 1,
+                  "url": "https://example.com/geo-service"
+                }
+              ]
+            },
+            {
+              "index": 2,
+              "number": 2,
+              "title": "PallasAI GEO Platform",
+              "source": "pallasai.com",
+              "domain": "pallasai.com",
+              "url": "",
+              "summary": "",
+              "visible_bounds": {
+                "index": [
+                  77,
+                  1070,
+                  146,
+                  1126
+                ],
+                "title": [
+                  146,
+                  1066,
+                  1003,
+                  1126
+                ]
+              },
+              "clickable": true,
+              "confidence": "medium",
+              "failure_reason": "visible_reference_without_url",
+              "detail_artifacts": {},
+              "cited": true,
+              "citation_count": 1,
+              "citation_evidence": [
+                {
+                  "type": "reference_domain_match",
+                  "reference_number": 2,
+                  "domain": "pallasai.com"
+                }
+              ]
+            },
+            {
+              "index": 3,
+              "number": 3,
+              "title": "未被答案采用的 GEO 资料",
+              "source": "",
+              "domain": "",
+              "url": "",
+              "summary": "",
+              "visible_bounds": {
+                "index": null,
+                "title": null
+              },
+              "clickable": true,
+              "confidence": "medium",
+              "failure_reason": "visible_material_without_url",
+              "detail_artifacts": {},
+              "cited": false,
+              "citation_count": 0,
+              "citation_evidence": []
+            }
+          ],
+          "artifacts": {
+            "screenshots": [
+              "screenshots/q01-r01/search-materials-01.png"
+            ],
+            "page_sources": [
+              "xml/q01-r01/search-materials-01.xml"
+            ]
+          },
+          "note": ""
+        },
+        "mobile": {
+          "device": "emulator-5554",
+          "app_package": "com.larus.nova",
+          "app_activity": null,
+          "server": "http://127.0.0.1:4723"
+        },
+        "artifacts": {
+          "screenshots": [
+            "screenshots/q01-r01/screen-01.png"
+          ],
+          "page_sources": [
+            "xml/q01-r01/screen-01.xml"
+          ]
+        },
+        "extraction": {
+          "char_count": 112,
+          "line_count": 4,
+          "headings": [
+            "1. 光引GEO：适合需要 AI 搜索可见度诊断和内容工程的企业。"
+          ],
+          "reference_count": 2,
+          "search_material_count": 3,
+          "cited_search_material_count": 2,
+          "uncited_search_material_count": 1,
+          "target": "光引GEO",
+          "target_mention_count": 1,
+          "confidence": "medium",
+          "failure_reason": "some_references_without_url"
+        },
+        "confidence": "medium",
+        "failure_reason": "some_references_without_url",
+        "action_trace": [
+          {
+            "at": "2026-07-02T00:00:10Z",
+            "action": "driver_session_created"
+          }
+        ],
+        "raw": {
+          "visible_text_count": 12
+        }
+      }
+    }
+  ],
+  "totals": {
+    "planned_samples": 1,
+    "completed_samples": 1,
+    "ok_samples": 1,
+    "failed_samples": 0,
+    "valid_sample_rate": 1,
+    "reference_count": 2,
+    "search_material_count": 3,
+    "cited_search_material_count": 2,
+    "search_material_citation_count": 2,
+    "answer_chars": 112
+  }
+}

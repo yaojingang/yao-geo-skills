@@ -9,7 +9,7 @@ Visual catalog:
 
 ## Current Inventory
 
-The repository currently contains `20` GEO-related skills.
+The repository currently contains `21` GEO-related skills.
 
 2026-05-21 update focus: most GEO content, page, strategy, and knowledge-asset skills now make real-data availability explicit, separate verified evidence from user-supplied or unavailable data, and standardize four-format delivery around Word, PDF, Markdown, and sticky-navigation HTML reports.
 
@@ -20,7 +20,7 @@ The repository currently contains `20` GEO-related skills.
 | `geo-page-technical` | 2 | `yao-geo-page-audit`, `yao-geo-page-blueprint` |
 | `geo-content-production` | 6 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-article-friendly`, `yao-geo-ranking-article-builder` |
 | `geo-knowledge-assets` | 2 | `yao-geo-brand-graph`, `yao-geo-knowledge-base-builder` |
-| `geo-measurement` | 4 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-chatgpt-crawler` |
+| `geo-measurement` | 5 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-doubao-crawler`, `yao-chatgpt-crawler` |
 | `geo-research` | 1 | `yao-geo-intent-miner` |
 
 ## Skill Catalog
@@ -45,6 +45,7 @@ The repository currently contains `20` GEO-related skills.
 | `yao-geo-tracking` | Measurement | Designs company-specific GEO backend tracking and attribution plans. | [Package](../skills/yao-geo-tracking) / [Guide](skills/yao-geo-tracking.md) |
 | `yao-geo-effect-monitor` | Measurement | Designs GEO signal monitoring, AI answer sampling, citation tracking, data acquisition plans, report completeness models, monthly reporting loops, and cautious attribution. | [Package](../skills/yao-geo-effect-monitor) / [Guide](skills/yao-geo-effect-monitor.md) |
 | `yao-deepseek-crawler` | Measurement | Runs repeated DeepSeek web samples through OpenCLI Browser Bridge and renders target entity probability, citation, title, sentiment, and competitor reports. | [Package](../skills/yao-deepseek-crawler) / [Guide](skills/yao-deepseek-crawler.md) |
+| `yao-doubao-crawler` | Measurement | Runs repeated Doubao web or Android/Appium samples, preserves mobile screenshots/XML and search-material evidence, and renders structured Markdown/Excel plus Kami-style GEO reports. | [Package](../skills/yao-doubao-crawler) / [Guide](skills/yao-doubao-crawler.md) |
 | `yao-chatgpt-crawler` | Measurement | Runs repeated ChatGPT Web AI Search samples through an OpenCLI Browser Bridge profile, captures visible sources, and renders semantic target-vs-competitor probability reports. | [Package](../skills/yao-chatgpt-crawler) / [Guide](skills/yao-chatgpt-crawler.md) / [Doubao example](../skills/yao-chatgpt-crawler/examples/doubao-model-products-real) |
 | `yao-geo-intent-miner` | Research | Expands seed terms and business context into AI-search question sets, intent clusters, follow-up chains, evidence gaps, content assets, knowledge-base entry plans, and monitoring prompts. | [Package](../skills/yao-geo-intent-miner) / [Guide](skills/yao-geo-intent-miner.md) |
 

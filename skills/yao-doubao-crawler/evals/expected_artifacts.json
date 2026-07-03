@@ -1,0 +1,46 @@
+{
+  "skill_id": "yao-doubao-crawler",
+  "required_artifacts": [
+    {
+      "path": "doubao-crawl.json",
+      "description": "Canonical crawl dataset compatible with yao-doubao-crawler/v1."
+    },
+    {
+      "path": "report/summary.json",
+      "description": "Machine-readable metrics, including mobile_evidence when Android/Appium data is present."
+    },
+    {
+      "path": "report/structured-data.md",
+      "description": "Structured Markdown export for review and handoff."
+    },
+    {
+      "path": "report/structured-data.xlsx",
+      "description": "Structured Excel workbook matching the Markdown tables."
+    },
+    {
+      "path": "report/report.html",
+      "description": "Kami-styled visual GEO report."
+    }
+  ],
+  "mobile_optional_artifacts": [
+    {
+      "path": "screenshots/",
+      "description": "Android screenshots for UI evidence."
+    },
+    {
+      "path": "xml/",
+      "description": "Android page_source XML snapshots."
+    },
+    {
+      "path": "raw/*.json",
+      "description": "Per-sample raw capture records."
+    },
+    {
+      "path": "logs/*.log",
+      "description": "Per-sample execution logs."
+    }
+  ],
+  "offline_verification": [
+    "bash scripts/run-tests.sh"
+  ]
+}

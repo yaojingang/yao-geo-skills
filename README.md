@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `20` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `21` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -22,7 +22,7 @@
 | `geo-page-technical` | 2 | 页面 GEO 诊断、GEO 友好页面蓝图 |
 | `geo-content-production` | 6 | 标题、科普、对比、文章 AI 友好化、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
-| `geo-measurement` | 4 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、ChatGPT AI Search 采样概率报告 |
+| `geo-measurement` | 5 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、豆包 App/Web 重复采样、ChatGPT AI Search 采样概率报告 |
 | `geo-research` | 1 | AI 搜索问题集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
@@ -136,6 +136,7 @@ git checkout main
 
 - [skills/yao-geo-tracking](skills/yao-geo-tracking)
 - [skills/yao-deepseek-crawler](skills/yao-deepseek-crawler)
+- [skills/yao-doubao-crawler](skills/yao-doubao-crawler)
 - [skills/yao-chatgpt-crawler](skills/yao-chatgpt-crawler)
 - [skills/yao-geo-effect-monitor](skills/yao-geo-effect-monitor)
 - [skills/yao-geo-panorama-audit](skills/yao-geo-panorama-audit)
@@ -449,6 +450,19 @@ git checkout main
   </tr>
   <tr>
     <td valign="top" width="100%">
+      <strong><code>yao-doubao-crawler</code></strong><br>
+      作用：通过豆包网页端或 Android Studio AVD + Appium UiAutomator2 的豆包手机 App 做关键词重复采样，输出原始 JSON、结构化 Markdown/Excel、移动端截图/XML 证据和 Kami 风格可视化报告。<br><br>
+      适合：评估目标实体在豆包 AI 搜索里的提及率、Top 1 / Top 3 / Top 5 概率、同类型竞品对比、信源结构、引用资料卡片和移动端已引用/未引用资料统计。<br><br>
+      验证入口：<a href="skills/yao-doubao-crawler/fixtures/sample-doubao-crawl.json">网页 fixture</a> ·
+      <a href="skills/yao-doubao-crawler/fixtures/sample-doubao-mobile-crawl.json">移动端 fixture</a> ·
+      <a href="skills/yao-doubao-crawler/scripts/run-tests.sh">离线测试脚本</a><br><br>
+      相关入口：<br>
+      <a href="docs/skills/yao-doubao-crawler.md">说明页</a> ·
+      <a href="skills/yao-doubao-crawler">Skill 包</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
       <strong><code>yao-chatgpt-crawler</code></strong><br>
       作用：通过 OpenCLI Browser Bridge 连接已登录的 ChatGPT web profile，对 AI Search 问题做多次采样，抓取答案、可见来源和来源入口，生成目标实体与同类型竞品的概率分析报告。<br><br>
       适合：ChatGPT Web Search 真实采样、实体/竞品语义审计、Top 1/Top 3/Top 5 概率、引用来源分析、标题意图分析和 HTML 报告交付。<br><br>
@@ -490,6 +504,7 @@ git checkout main
 
 - `yao-geo-tracking`：海外公开公司示例 HubSpot、国内公开合成示例岭序商机云
 - `yao-deepseek-crawler`：蔚来新能源汽车 DeepSeek 网页端真实采样示例
+- `yao-doubao-crawler`：豆包网页端与 Android/Appium 移动端 fixture，用于离线报告验证
 - `yao-chatgpt-crawler`：豆包模型产品 ChatGPT Web Search 真实采样脱敏示例
 - `yao-geo-panorama-audit`：岭序商机云 GEO 全景诊断合成示例、HubSpot 国内 AI 平台测试示例
 - `yao-geo-page-audit`：示例云服页面 GEO 诊断合成示例、HubSpot 页面诊断示例

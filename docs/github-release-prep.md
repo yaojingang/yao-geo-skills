@@ -4,9 +4,9 @@
 
 ## 当前盘点
 
-- `skills/` 下共有 `17` 个 GEO 相关目录。
-- `registry/skills.json` 中登记 `17` 个 skill，目录与 registry ID 一一对应。
-- `17` 个目录均包含 `SKILL.md`，可按 skill 包继续核验。
+- `skills/` 下共有 `21` 个 GEO 相关目录。
+- `registry/skills.json` 中登记 `21` 个 skill，目录与 registry ID 一一对应。
+- `21` 个目录均包含 `SKILL.md`，可按 skill 包继续核验。
 - 当前仓库结构校验已通过。
 
 按类型统计：
@@ -16,18 +16,18 @@
 | `geo-operations` | 3 | `yao-geoflow-cli`, `yao-geoflow-template`, `yao-geoflow-design` |
 | `geo-strategy` | 2 | `yao-geo-panorama-audit`, `yao-geo-execution-roadmap` |
 | `geo-page-technical` | 2 | `yao-geo-page-audit`, `yao-geo-page-blueprint` |
-| `geo-content-production` | 5 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-ranking-article-builder` |
+| `geo-content-production` | 6 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-article-friendly`, `yao-geo-ranking-article-builder` |
 | `geo-knowledge-assets` | 2 | `yao-geo-brand-graph`, `yao-geo-knowledge-base-builder` |
-| `geo-measurement` | 2 | `yao-geo-tracking`, `yao-geo-effect-monitor` |
+| `geo-measurement` | 5 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-doubao-crawler`, `yao-chatgpt-crawler` |
 | `geo-research` | 1 | `yao-geo-intent-miner` |
 
 按状态统计：
 
 | 维度 | 统计 |
 |---|---|
-| 发布阶段 | `published: 16`, `incubating: 1` |
-| 成熟度 | `stable: 1`, `beta: 15`, `draft: 1` |
-| 需要联网 | `true: 11`, `false: 6` |
+| 发布阶段 | `published: 20`, `incubating: 1` |
+| 成熟度 | `stable: 1`, `beta: 18`, `draft: 1`, `scaffold: 1` |
+| 需要联网 | `true: 15`, `false: 6` |
 
 ## 现有待梳理项
 

@@ -162,6 +162,44 @@
       "last_updated": "2026-06-20"
     },
     {
+      "id": "yao-doubao-crawler",
+      "family": "geo-measurement",
+      "maturity": "beta",
+      "tags": [
+        "geo",
+        "doubao",
+        "ai-search",
+        "repeated-sampling",
+        "crawler",
+        "android-appium",
+        "uiautomator2",
+        "opencli",
+        "entity-probability",
+        "citation-analysis",
+        "mobile-evidence",
+        "html-report",
+        "structured-excel",
+        "raw-evidence"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "doubao-crawl-json",
+        "raw-json-and-log-evidence",
+        "summary-json",
+        "structured-markdown",
+        "structured-excel",
+        "kami-html-report",
+        "mobile-screenshots-and-xml"
+      ],
+      "status": "active",
+      "owner": "Yao Team",
+      "stage": "published",
+      "path": "skills/yao-doubao-crawler",
+      "summary": "Use Doubao web automation or Android Studio AVD + Appium UiAutomator2 to run repeated AI-search sampling, preserve raw JSON, screenshots/XML and mobile search-material evidence, then generate structured Markdown/Excel exports and a Kami-styled GEO probability report with target, competitor, citation, title, and mobile evidence analysis.",
+      "public_repo_path": "skills/yao-doubao-crawler",
+      "last_updated": "2026-07-03"
+    },
+    {
       "id": "yao-chatgpt-crawler",
       "family": "geo-measurement",
       "maturity": "beta",

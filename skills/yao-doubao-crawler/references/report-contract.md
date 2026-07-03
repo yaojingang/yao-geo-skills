@@ -1,0 +1,255 @@
+# Report Contract
+
+## Canonical Dataset
+
+Stage 1 writes `doubao-crawl.json`:
+
+```json
+{
+  "schema_version": "yao-doubao-crawler/v1",
+  "run": {"id": "...", "started_at": "...", "finished_at": "..."},
+  "input": {
+    "question_count": 10,
+    "global_repeat": 5,
+    "target_entity": "新东方",
+    "target_aliases": ["新东方前途出国", "前途出国"],
+    "entity_type": "company",
+    "delay_strategy": {},
+    "questions": []
+  },
+  "plan": [],
+  "samples": [],
+  "totals": {}
+}
+```
+
+Each sample keeps:
+
+- `sample_id`, `question_id`, `question`, `repeat_index`
+- `ok`, `status`, `started_at`, `finished_at`, `duration_ms`
+- `raw_path`, `log_path`, `error`
+- `result`, the normalized Doubao crawler JSON
+
+The analyzer also accepts compatible aggregate JSON with top-level `results[]` when each row contains question, answer, and references.
+
+## Android/Appium Compatible Records
+
+The mobile backend writes the same top-level `yao-doubao-crawler/v1` aggregate dataset. It sets:
+
+- `run.transport = "appium-uiautomator2-avd"`
+- `result.transport = "appium-uiautomator2-avd"`
+- `result.answer.text` as the analyzer-facing answer text
+- `result.references.items[]` using the same reference row fields: `number`, `source`, `domain`, `title`, `date`, `url`, and `summary`
+
+Mobile records may also include audit-only fields ignored by the analyzer:
+
+- `result.mobile`: device, app package, app activity, and Appium server
+- `result.artifacts`: screenshot and page-source XML paths
+- `result.action_trace`: timestamped Appium/collection events
+- `result.confidence` and `result.failure_reason`: extraction confidence and URL recovery limits
+- `result.mobile_search_materials`: Android-only expanded search-material evidence from the visible `搜索 N 个关键词，参考 M 篇资料` block
+
+Visible URLs are high-confidence references. Visible domain-like citation text without a URL is preserved as a compatible reference with empty `url`, medium or low confidence, and a `failure_reason` such as `visible_reference_without_url`. This keeps source evidence auditable without claiming hidden links were recovered.
+
+`mobile_search_materials` is separate from analyzer-facing `references.items[]`. It records all search material rows exposed by the Android UI and then annotates whether each row appears to be used by the final answer:
+
+- `keyword_count` and `material_count`: counts parsed from the visible search summary.
+- `keywords[]`: visible search keywords when exposed by the app.
+- `items[]`: material `index`, `title`, optional `source/domain/url`, clickability, confidence, detail artifacts, and failure reason.
+- `cited`, `citation_count`, and `citation_evidence[]`: conservative matching against final answer text and `references.items[]` using URL, domain, title similarity, or explicit bracket citation markers.
+- `cited_count`, `uncited_count`, and `total_citation_count`: per-sample material citation summary.
+
+When the app says 15 materials but UiAutomator2 exposes fewer visible rows, the backend keeps the collected rows, adds `missing_indices`, and writes XML/screenshot evidence instead of fabricating records.
+
+When the crawler is run with `--fresh-chat`, `result.action_trace[]` must include `fresh_chat_opened` with `ok=true` for samples where a fresh app conversation was opened. If `--require-fresh-chat` is set and the fresh-chat control cannot be found, the sample should fail rather than silently continue inside an existing conversation.
+
+## Analysis Outputs
+
+Stage 2 writes these analysis artifacts in the selected report directory:
+
+- `summary.json`: machine-readable metric summary used by all downstream artifacts.
+- `structured-data.md`: Markdown export of cleaned fields and data tables.
+- `structured-data.xlsx`: Excel workbook with the same structured tables as the Markdown export.
+- `report.html`: Kami-styled visual diagnosis and analysis report.
+
+The structured Markdown and Excel workbook must be generated from the same summary object as the HTML report. They should include output file paths, overview fields, question coverage, target metrics, same-type entity comparison, question-by-entity metrics, entity recognition candidates, source/channel tables, frequent domains/sources/URLs/titles, title-feature buckets, and other cleaned fields that feed the visible report. The raw crawl JSON remains the audit source of truth; the structured exports are analysis-stage derivatives.
+
+For Android/Appium datasets, `summary.json` also includes `mobile_evidence`:
+
+- `transport` and `delay_strategy`
+- `sample_count`, `fresh_chat_ok_samples`, and `samples_with_materials`
+- `reported_material_count`, `collected_material_rows`, `cited_material_rows`, `uncited_material_rows`, and `total_citation_count`
+- `by_question[]`: mobile material and fresh-chat counts by keyword
+- `by_sample[]`: mobile material and fresh-chat counts by sample
+- `materials[]`: flattened search-material rows with title, source/domain/url, cited flag, citation count, confidence, and failure reason
+
+The Markdown and Excel exports must include corresponding `移动端证据概览`, `移动端资料按问题`, `移动端资料按样本`, and `移动端资料明细` tables. The HTML report must include a `移动端证据` section when mobile evidence exists.
+
+## Metric Definitions
+
+- `planned_samples`: question count x repeat count.
+- `completed_samples`: samples that finished with a raw result or a captured failure.
+- `valid_samples`: completed samples with `ok=true` and non-empty answer text.
+- `failed_samples`: completed samples with `ok=false` or empty answer text.
+- `pending_samples`: planned samples that do not yet have a sample record, usually from an interrupted run.
+- `completion_rate = completed_samples / planned_samples`.
+- `valid_rate = valid_samples / planned_samples`.
+- `answer_chars`: sum of answer text length across valid samples.
+- `reference_count`: total number of visible URLs or compatible references extracted from Doubao output.
+- `unique_urls`: unique cited URLs.
+- `unique_domains`: unique cited domains.
+- `mobile_search_material_count`: total collected mobile search-material rows.
+- `mobile_cited_search_material_count`: collected mobile search-material rows conservatively matched as cited by the final answer.
+- `mobile_uncited_search_material_count`: collected mobile search-material rows not matched as cited.
+- `fresh_chat_ok_samples`: mobile samples whose action trace confirms a fresh app conversation before prompt entry.
+
+## Target Entity Recognition
+
+Standard diagnosis mode: user supplies four inputs:
+
+- `keywords/questions`: one or more Doubao questions.
+- `repeat`: how many times each keyword should be queried.
+- `target_entity`: the target entity to diagnose.
+- `entity_type`: one of `person`, `company`, or `product`.
+
+The target entity uses contains matching plus aliases. For example, `target_entity = 新东方` can merge `新东方前途出国` and `前途出国` into the target row when those aliases are supplied or extracted from the answers.
+Short Latin aliases such as `AI` or `GEO` only match standalone tokens, not substrings inside longer names such as `PallasAI` or `GEOFlow`.
+
+Preferred mode: user supplies a canonical target row and same-type competitor rows with aliases. The same `brands.txt` format is reused for companies, people, or products.
+
+Fallback mode: infer same-type competitor entities from answer headings, list rows, person-role context, organization/product suffixes, and cited source titles. The analyzer classifies each candidate as:
+
+- `person`
+- `company`
+- `product`
+- `concept`
+- `noise`
+
+Entity recognition uses a local hybrid NER gate:
+
+1. Generate candidate spans from answer headings, role patterns, organization/product suffixes, English brand-like tokens, and source titles.
+2. Normalize context fragments before scoring. For example, `那么启德教育` becomes `启德教育`, and `在像指南者留学这类机构` becomes `指南者留学`.
+3. Reject attributes, categories, qualification phrases, title-intent fragments, and generic descriptors before metric calculation.
+4. Score entity surface quality separately from evidence quality. Strong legal/organization suffixes score higher than weak suffixes such as `教育` or `留学`; weak suffixes require a clean brand-like prefix.
+5. Inferred competitors must pass type consistency, minimum repeated-sample count, answer-body evidence, surface score, and evidence score gates. Source-title-only names remain in source/title analysis but do not create competitor rows.
+6. Keep regression examples for both false positives and false negatives in `scripts/test_entity_recognition.py`.
+
+Standard target type is controlled by `--entity-type`:
+
+- `person` / `人`: only people enter target-vs-competitor metrics.
+- `company` / `公司`: only companies, brands, institutions, and organizations enter target-vs-competitor metrics.
+- `product` / `产品`: only products, tools, platforms, software, apps, and models enter target-vs-competitor metrics.
+
+Legacy exploratory mode may use `--target-kind auto/person/company/product/mixed`, but final reports should provide `--target-entity` and `--entity-type`.
+
+Collection-only or exploratory mode may omit `target_entity`. In that case the report must clearly state that no target entity was supplied, avoid claiming target-vs-competitor diagnostics, and label inferred same-type candidates as heuristic exploration.
+
+The report must show the classification table so excluded concepts or noise can be audited.
+
+## Entity Ranking
+
+Preferred mode: user supplies a target entity, target aliases, and same-type competitor aliases.
+
+Fallback mode: infer same-type competitor entities and label metrics as lower-confidence candidates.
+
+For each valid sample:
+
+1. Find the target entity and each same-type competitor's earliest alias position in the answer.
+2. Sort mentioned entities by earliest position.
+3. Assign ranks from 1.
+
+Global entity metrics:
+
+- `mention_rate = mentioned_samples / valid_samples`
+- `mention_total`: number of alias mentions across valid samples where the entity appears.
+- `avg_mentions_per_sample = mention_total / valid_samples`.
+- `avg_mentions_per_mentioned_sample = mention_total / mentioned_samples`.
+- `top1_rate = top1_samples / valid_samples`
+- `top3_rate = top3_samples / valid_samples`
+- `top5_rate = top5_samples / valid_samples`
+- `average_rank = average(rank) among mentioned samples`
+- `dominant_sentiment`: `positive`, `neutral`, or `negative`, inferred from local text around entity mentions.
+- `negative_rate = negative entity mention contexts / sentiment_total`.
+
+Missing entities count as not mentioned, not as infinite rank. Show mention rate next to rank so absence is visible.
+Sentiment is heuristic and should be treated as a directional signal, not a human-reviewed judgment.
+
+Target-vs-competitor comparison:
+
+- Always put the target entity first when it has metrics.
+- Compare only competitors with the same `entity_type`.
+- Competitors must be named entities, not attributes, categories, policy/qualification descriptions, title-intent fragments, or generic descriptors. Exclude phrases such as `教育部首批认证机构`, `首批认证机构`, `上市公司`, `A股上市集团`, `头部留学机构`, `大型教育集团`, `国有企业`, `海外留学`, `2026留学中介机构`, `对留学`, or `本地服务商` from the entity pool unless the user explicitly provides them as aliases for a real named entity.
+- Inferred competitors should come from answer-body evidence, not source-title-only mentions. Source titles remain part of source and title-feature analysis, but they should not create target-vs-competitor rows unless the same entity is also present in the answer text or explicitly provided by the user.
+- Show `mention_rate`, `avg_mentions_per_sample`, `top1_rate`, `top3_rate`, `top5_rate`, `average_rank`, `reference_mentions`, `gap_vs_target_top3`, and `gap_vs_target_top5`.
+- Use a benchmark radar for target entity plus the Top 3 competitors. Convert each radar axis to a 0-100 score where the best value among same-type benchmark entities is 100.
+- Use a bubble benchmark where x-axis is Top 5 probability, y-axis is mention rate, bubble size is average mentions, and the target entity is visually highlighted. Render bubbles as solid filled circles without visible outline strokes. Use a compact same-family palette so each shown entity has a legend swatch below the chart. Do not show entity labels by default; reveal a compact label only on click or keyboard focus, with native tooltip fallback.
+- Default detail cap is 10 rows: target plus up to 9 competitors.
+
+## Source And Channel Analysis
+
+Flatten every `references.items[]` row. Preserve `number`, `source`, `domain`, `title`, `date`, `url`, and `summary`.
+
+Channel classifier is heuristic:
+
+- `official`: government, school, organization, official company domains
+- `academic`: arXiv, DOI, ACM, journal, university research pages
+- `media`: news and portal media
+- `community`: Zhihu, Xiaohongshu, forums, social posts
+- `commerce`: ecommerce, marketplace, local services
+- `encyclopedia`: Baike, Wikipedia, wiki-like pages
+- `developer`: developer docs, cloud community, technical blogs
+- `other`: unclassified
+
+The report should show top domains, top source names, channel share, repeated URLs/titles, source-position distribution, and a compact domain-share treemap.
+Domain rows should include a readable Simplified Chinese display name when it can be inferred from the Doubao source label or a maintained domain-name mapping.
+High-frequency URLs and repeated titles must preserve their URLs and render as clickable links in the HTML report.
+High-frequency domain charts should use a compact source-row layout: primary readable name, secondary domain, bar, and count-only numeric column. High-frequency URL charts should show each URL only once as the clickable primary label, then the bar and count; do not repeat the same URL as a secondary line. Compact URL labels should retain enough path tail to distinguish same-domain/same-directory pages, while the full URL remains the link target and hover title. Long domains and URLs must ellipsize inside the label area, not expand the numeric column.
+The `信源结构` chart order is fixed: first row `渠道分布`, `来源编号位置`, `高频来源名`; second row `高频域名`, `域名占比树图`, `高频 URL`.
+The domain-share treemap should use small domain text, stable compact cards, ellipsis for long domains, and a count/mini-bar so it does not compete with body typography.
+
+## Title Features
+
+For every cited title, compute:
+
+- length bucket
+- has number
+- has date or year
+- has question punctuation
+- has bracket or colon
+- contains a supplied or inferred target/competitor alias
+- title intent buckets such as ranking/list, comparison/evaluation, recommendation/choice, risk avoidance, guide/how-to, trend/news, profile/introduction, and research/paper
+
+Use these as patterns, not proof of quality.
+Do not duplicate the high-frequency cited-title table with another repeated-title chart. Use the second title chart slot for title intent analysis instead.
+
+## Kami Report Rules
+
+The HTML report is a high-trust analysis artifact:
+
+- start with `报告概览`, including a numeric overview paragraph, directory links, and metric explanations
+- default to Simplified Chinese, with a top-right language toggle for English overview, key findings, metric notes, and GEO recommendations
+- each large module should have a short summary paragraph before charts/tables
+- detail lists and tables should show no more than 10 rows by default unless the user asks for more
+- include a fixed top navigation bar with a text logo/title and anchor links
+- label the target-vs-competitor nav item as `竞品分析`, and include a separate `总结建议` nav anchor
+- include sentiment analysis, average mention count, and Top 5 probability alongside the original mention, rank, Top 1, Top 3, and source metrics
+- render the target sentiment mix as a compact donut chart because it has three part-whole categories: positive, neutral, and negative; keep the donut centered, place the category percentages and counts below the chart, and never let numeric columns overflow into adjacent cards
+- render compact part-whole source modules, especially channel distribution and citation-position buckets, as centered donut charts with the category percentages and counts below the chart instead of right-side number columns
+- source module bucket labels should stay readable in Simplified Chinese where possible, including `unknown` source-position buckets as `未识别`
+- use multiple chart types where they help comparison: bars, stacked bars, normalized radar, benchmark bubble, lollipop, heatmap/matrix, and treemap
+- do not show the old target ranking funnel card under `目标实体概率`
+- do not show the old neutral-or-better visible primary metric; show dominant sentiment and negative share instead
+- render time-recency buckets in Simplified Chinese labels, such as `本年`, `近一年`, `更早`, and `未识别`
+- add a `总结建议与 GEO 优化措施` block after high-frequency cited titles, including an optimization-priority chart, a conservative before/after/monthly trend projection for core metrics, a method/check table, and six concise recommendation cards so the desktop 3-column grid completes cleanly
+- show the hero `实体口径` note on a new line so the target/competitor recognition rule is scannable
+- keep radar and bubble chart strokes light enough that overlapping series remain readable
+- warm parchment background `#f5f4ed`
+- ink-blue accent `#1B365D`
+- warm grays only
+- serif-led hierarchy
+- solid tag backgrounds, no rgba
+- compact metrics and tables
+- charts must be readable without JavaScript
+- every conclusion must trace back to a visible metric or table
+
+Do not include absolute local filesystem paths in the HTML body. Put local file paths in the final assistant response, not inside the report artifact.

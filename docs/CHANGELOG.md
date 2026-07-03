@@ -2,6 +2,16 @@
 
 该文档记录公开 skill 仓库的发布更新。后续每次向 GitHub 推送新 skill 或调整仓库入口时，同步更新本文件和英文版 `CHANGELOG.en.md`。
 
+## 2026-07-03
+
+### `yao-doubao-crawler` 首次发布
+
+- 新增监测归因类 skill：`skills/yao-doubao-crawler`。
+- 支持豆包网页端 OpenCLI 采样，以及 Android Studio AVD + Appium UiAutomator2 的豆包手机 App 可见 UI 采集。
+- 输出 `yao-doubao-crawler/v1` 兼容 JSON、结构化 Markdown、Excel、Kami 风格 HTML 报告，以及移动端截图/XML 和搜索资料引用证据。
+- 新增 `fresh-chat` 独立会话采集、移动端引用资料已引用/未引用标记、引用次数和 `mobile_evidence` 汇总。
+- 更新 `registry/skills.json`、仓库首页、英文 README、可视化导航页和说明页：`docs/skills/yao-doubao-crawler.md`。
+
 ## 2026-05-21
 
 ### GEO skill 批量能力同步

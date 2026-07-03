@@ -2,6 +2,16 @@
 
 This document tracks public repository releases for the skill catalog. Update this file together with the Chinese version in `CHANGELOG.md` whenever a new skill or a significant repository-level change is pushed.
 
+## 2026-07-03
+
+### `yao-doubao-crawler` Initial Release
+
+- Added the measurement skill package: `skills/yao-doubao-crawler`.
+- Supports Doubao web sampling through OpenCLI and Doubao Android App visible-UI collection through Android Studio AVD + Appium UiAutomator2.
+- Outputs `yao-doubao-crawler/v1` compatible JSON, structured Markdown, Excel, Kami-style HTML reports, mobile screenshots/XML, and search-material citation evidence.
+- Added fresh-chat isolation, mobile cited/uncited material flags, citation counts, and `mobile_evidence` summaries.
+- Updated `registry/skills.json`, repository navigation, English README, visual catalog, and the guide at `docs/skills/yao-doubao-crawler.md`.
+
 ## 2026-05-21
 
 ### GEO Skill Batch Update

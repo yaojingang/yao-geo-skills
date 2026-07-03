@@ -1,0 +1,73 @@
+{
+  "name": "yao-doubao-crawler",
+  "version": "0.1.0",
+  "owner": "Yao Team",
+  "updated_at": "2026-07-03",
+  "status": "active",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "context_budget_tier": "production",
+  "review_cadence": "monthly",
+  "skill_archetype": "production",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "factory_components": [
+    "references",
+    "scripts",
+    "fixtures",
+    "evals",
+    "templates",
+    "examples"
+  ],
+  "input_files": [
+    "questions.txt or questions.json",
+    "required collection inputs: keywords/questions and repeat count",
+    "required diagnosis inputs: target entity and entity type",
+    "optional brands.txt/entities.txt alias and competitor file",
+    "optional existing doubao-crawl.json",
+    "optional Android/Appium backend fields: device, app package, app activity, Appium server, fresh-chat controls"
+  ],
+  "output_contract": [
+    "doubao-crawl.json canonical evidence dataset",
+    "summary.json analysis metrics with target entity recognition, same-type competitor comparison, and mobile_evidence when present",
+    "structured-data.md Markdown export of cleaned structured fields and analysis tables",
+    "structured-data.xlsx Excel workbook with the same structured sheets as the Markdown export",
+    "report.html Kami-styled visual report with overview, directory, metric explanations, entity classification, probability tables, target-vs-competitor module, visible source/title analysis, clickable citations with unique compact URL labels when URLs are exposed, GEO trend projections, and capped detail lists",
+    "raw/*.json and logs/*.log per-sample evidence",
+    "result.mobile_search_materials Android audit evidence for visible search-material rows, cited/uncited flags, citation counts, and detail artifacts",
+    "analysis-stage mobile_evidence tables for fresh-chat counts, search-material rows, cited/uncited material rows, and per-sample evidence",
+    "mobile screenshots/* and xml/* per-screen evidence when Android/Appium backend is used"
+  ],
+  "rollback_boundary": "The skill writes local artifacts only to the selected run output directory. Fresh web crawling creates Doubao web conversations in the connected browser session. Fresh mobile crawling sends prompts in the selected logged-in Android app session and writes screenshots/XML locally. It does not modify external source projects, bypass login, or use hidden APIs.",
+  "local_dependencies": [
+    "Node.js 18+",
+    "Python 3.10+",
+    "OpenCLI CLI 1.8.4+",
+    "OpenCLI Browser Bridge connected profile",
+    "Doubao web session that can send messages",
+    "Bundled scripts/doubao_browser_crawl.mjs using the OpenCLI doubao adapter",
+    "Optional Android SDK Platform-Tools adb for mobile backend",
+    "Optional Appium 3 with UiAutomator2 driver for mobile backend",
+    "Optional Appium-Python-Client from requirements-mobile.txt for mobile backend",
+    "Optional logged-in Doubao Android app session for mobile backend"
+  ],
+  "verification": [
+    "bash scripts/run-tests.sh"
+  ],
+  "package_excludes": [
+    ".venv*/",
+    "venv/",
+    "node_modules/",
+    "__pycache__/",
+    "*.pyc",
+    ".DS_Store",
+    "runs/",
+    "tmp/",
+    "reports/"
+  ]
+}

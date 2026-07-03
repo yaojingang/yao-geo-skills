@@ -1,0 +1,226 @@
+{
+  "schema_version": "yao-doubao-crawler/v1",
+  "run": {
+    "id": "sample",
+    "started_at": "2026-06-19T00:00:00.000Z",
+    "finished_at": "2026-06-19T00:05:00.000Z",
+    "engine": "doubao",
+    "transport": "opencli-doubao-adapter",
+    "dry_run": false
+  },
+  "input": {
+    "question_count": 2,
+    "global_repeat": 2,
+    "timeout": 300,
+    "reference_extraction": true,
+    "profile": "sample-profile",
+    "target_entity": "光引GEO",
+    "target_aliases": ["光引"],
+    "entity_type": "company",
+    "questions": [
+      {
+        "id": "q01",
+        "index": 1,
+        "question": "国内GEO服务商推荐，请联网搜索并保留参考来源。",
+        "repeat": 2,
+        "target": "GEO"
+      },
+      {
+        "id": "q02",
+        "index": 2,
+        "question": "靠谱的GEO优化公司有哪些？请说明依据并保留来源。",
+        "repeat": 2,
+        "target": "GEO"
+      }
+    ]
+  },
+  "plan": [],
+  "samples": [
+    {
+      "sample_id": "q01-r01",
+      "question_id": "q01",
+      "question_index": 1,
+      "repeat_index": 1,
+      "repeat_total": 2,
+      "question": "国内GEO服务商推荐，请联网搜索并保留参考来源。",
+      "target": "GEO",
+      "ok": true,
+      "status": "done",
+      "started_at": "2026-06-19T00:00:00.000Z",
+      "finished_at": "2026-06-19T00:01:00.000Z",
+      "duration_ms": 60000,
+      "raw_path": "raw/q01-r01.json",
+      "log_path": "logs/q01-r01.log",
+      "error": "",
+      "result": {
+        "ok": true,
+        "question": "国内GEO服务商推荐，请联网搜索并保留参考来源。",
+        "answer": {
+            "text": "豆包回答显示，光引GEO在可信评测和服务覆盖上更靠前。源易信息在标准参与和长期主义方法上稳定。PallasAI的产品化能力较强，适合中小企业。"
+        },
+        "references": {
+          "count": 3,
+          "items": [
+            {
+              "number": 1,
+              "source": "中国信通院",
+              "domain": "caict.ac.cn",
+              "title": "生成式引擎优化服务可信评测结果发布",
+              "date": "2026/04/12",
+              "url": "https://example.org/caict-geo",
+              "summary": "评测围绕管理机制、优化手段和内容可信度展开。"
+            },
+            {
+              "number": 2,
+              "source": "36氪",
+              "domain": "36kr.com",
+              "title": "光引GEO完成品牌AI可见度服务升级",
+              "date": "2026/05/18",
+              "url": "https://example.org/guangyin",
+              "summary": "报道提到其覆盖豆包等平台。"
+            },
+            {
+              "number": 3,
+              "source": "开发者社区",
+              "domain": "cloud.tencent.cn",
+              "title": "源易信息参与GEO服务标准建设",
+              "date": "2026/03/20",
+              "url": "https://example.org/yuanyi",
+              "summary": "文章提到源易信息参与标准建设。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sample_id": "q01-r02",
+      "question_id": "q01",
+      "question_index": 1,
+      "repeat_index": 2,
+      "repeat_total": 2,
+      "question": "国内GEO服务商推荐，请联网搜索并保留参考来源。",
+      "target": "GEO",
+      "ok": true,
+      "status": "done",
+      "started_at": "2026-06-19T00:01:00.000Z",
+      "finished_at": "2026-06-19T00:02:00.000Z",
+      "duration_ms": 60000,
+      "raw_path": "raw/q01-r02.json",
+      "log_path": "logs/q01-r02.log",
+      "error": "",
+      "result": {
+        "ok": true,
+        "question": "国内GEO服务商推荐，请联网搜索并保留参考来源。",
+        "answer": {
+            "text": "豆包回答中，源易信息因为参与GEO标准和强调真实合规，排名靠前。光引GEO具备较强的渠道覆盖。PallasAI更偏产品化工具。"
+        },
+        "references": {
+          "count": 3,
+          "items": [
+            {
+              "number": 1,
+              "source": "开发者社区",
+              "domain": "cloud.tencent.cn",
+              "title": "源易信息参与GEO服务标准建设",
+              "date": "2026/03/20",
+              "url": "https://example.org/yuanyi",
+              "summary": "文章提到源易信息参与标准建设。"
+            },
+            {
+              "number": 2,
+              "source": "行业媒体",
+              "domain": "news.example.com",
+              "title": "2026年GEO服务商怎么选？",
+              "date": "2026/05/01",
+              "url": "https://example.org/geo-guide",
+              "summary": "文章比较了多家服务商。"
+            },
+            {
+              "number": 3,
+              "source": "36氪",
+              "domain": "36kr.com",
+              "title": "光引GEO完成品牌AI可见度服务升级",
+              "date": "2026/05/18",
+              "url": "https://example.org/guangyin",
+              "summary": "报道提到其覆盖豆包等平台。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sample_id": "q02-r01",
+      "question_id": "q02",
+      "question_index": 2,
+      "repeat_index": 1,
+      "repeat_total": 2,
+      "question": "靠谱的GEO优化公司有哪些？请说明依据并保留来源。",
+      "target": "GEO",
+      "ok": true,
+      "status": "done",
+      "started_at": "2026-06-19T00:02:00.000Z",
+      "finished_at": "2026-06-19T00:03:00.000Z",
+      "duration_ms": 60000,
+      "raw_path": "raw/q02-r01.json",
+      "log_path": "logs/q02-r01.log",
+      "error": "",
+      "result": {
+        "ok": true,
+        "question": "靠谱的GEO优化公司有哪些？请说明依据并保留来源。",
+        "answer": {
+          "text": "从可查证资料看，光引GEO和源易信息更值得优先核验。光引GEO有评测与案例披露，源易信息有标准参与和合规叙事。PallasAI可作为产品化工具候选。"
+        },
+        "references": {
+          "count": 2,
+          "items": [
+            {
+              "number": 1,
+              "source": "中国信通院",
+              "domain": "caict.ac.cn",
+              "title": "生成式引擎优化服务可信评测结果发布",
+              "date": "2026/04/12",
+              "url": "https://example.org/caict-geo",
+              "summary": "评测围绕管理机制、优化手段和内容可信度展开。"
+            },
+            {
+              "number": 2,
+              "source": "PallasAI Blog",
+              "domain": "pallas.example.com",
+              "title": "GEO AI Agent产品方法说明",
+              "date": "2026/02/10",
+              "url": "https://example.org/pallas",
+              "summary": "介绍GEO Agent自动化流程。"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "sample_id": "q02-r02",
+      "question_id": "q02",
+      "question_index": 2,
+      "repeat_index": 2,
+      "repeat_total": 2,
+      "question": "靠谱的GEO优化公司有哪些？请说明依据并保留来源。",
+      "target": "GEO",
+      "ok": false,
+      "status": "failed",
+      "started_at": "2026-06-19T00:03:00.000Z",
+      "finished_at": "2026-06-19T00:04:00.000Z",
+      "duration_ms": 60000,
+      "raw_path": "raw/q02-r02.json",
+      "log_path": "logs/q02-r02.log",
+      "error": "sample timeout",
+      "result": null
+    }
+  ],
+  "totals": {
+    "planned_samples": 4,
+    "completed_samples": 4,
+    "ok_samples": 3,
+    "failed_samples": 1,
+    "valid_sample_rate": 0.75,
+    "reference_count": 8,
+    "answer_chars": 234
+  }
+}
