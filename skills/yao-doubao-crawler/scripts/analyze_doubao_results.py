@@ -105,6 +105,7 @@ ENTITY_FRAGMENT_PATTERNS = [
 ]
 
 ENTITY_ATTRIBUTE_PATTERNS = [
+    r"^(?:自费|公费|准备|申请|计划|打算|想要|海外|国内)?出国$",
     r"^(?:20\d{2}(?:年)?)?(?:出国|海外|美国|英国|加拿大|澳洲|香港|新加坡|上海|北京|广州|深圳|国内|国际|自费|公费|主流|专业|靠谱|正规|本地|当地|高端|老牌|头部|综合|一站式|全链条|专业靠谱的)*留学(?:申请|服务|咨询|中介|机构|公司){0,2}$",
     r"^(?:20\d{2}(?:年)?)?(?:美国|英国|加拿大|澳洲|香港|新加坡|海外|出国)?留学(?:中介|机构|公司|服务机构|申请机构)$",
     r"^(?:A股|港股|美股|H股|主板|创业板|科创板|纳斯达克|纽交所|港交所)?上市(?:公司|企业|集团|机构|平台|服务商)$",
@@ -147,11 +148,11 @@ PERSON_ROLE_WORDS = (
 )
 
 ORG_SUFFIX_WORDS = (
-    "公司|科技|集团|研究院|研究所|实验室|大学|学院|中心|平台|服务商|机构|传媒|教育|留学|智能|数据|AI"
+    "公司|科技|集团|研究院|研究所|实验室|大学|学院|中心|平台|服务商|机构|传媒|教育|留学|出国|智能|数据|AI"
 )
 
 COMPANY_SUFFIX_WORDS = (
-    "公司|科技|集团|研究院|研究所|实验室|大学|学院|中心|服务商|机构|传媒|教育|留学"
+    "公司|科技|集团|研究院|研究所|实验室|大学|学院|中心|服务商|机构|传媒|教育|留学|出国"
 )
 
 PRODUCT_SUFFIX_WORDS = (
@@ -922,14 +923,14 @@ def looks_like_chinese_person_name(value: str) -> bool:
 
 
 def weak_org_prefix_is_clean(name: str) -> bool:
-    if not re.search(r"(?:教育|留学)$", name):
+    if not re.search(r"(?:教育|留学|出国)$", name):
         return True
-    prefix = re.sub(r"(?:教育|留学)$", "", name)
+    prefix = re.sub(r"(?:教育|留学|出国)$", "", name)
     if len(prefix) < 2 or len(prefix) > 8:
         return False
     return not bool(
         re.search(
-            r"\d|[与和及]|(?:专业|靠谱|主流|海外|出国|这份|纠结|看重|信赖|品牌|语培|申请|服务|咨询|中介|机构|公司|集团|可以|那么|特别|对|且|你|我|在像|像)",
+            r"\d|[与和及]|(?:专业|靠谱|主流|海外|国内|自费|公费|准备|计划|打算|想要|出国|这份|纠结|看重|信赖|品牌|语培|申请|服务|咨询|中介|机构|公司|集团|可以|那么|特别|对|且|你|我|在像|像)",
             prefix,
         )
     )
@@ -948,7 +949,7 @@ def entity_surface_score(value: str, target_kind: str) -> tuple[int, list[str]]:
         elif re.search(r"(?:机构|平台|服务商)$", name) and not looks_like_entity_fragment(name):
             score = max(score, 3)
             reasons.append("组织类后缀")
-        elif re.search(r"(?:教育|留学)$", name) and weak_org_prefix_is_clean(name):
+        elif re.search(r"(?:教育|留学|出国)$", name) and weak_org_prefix_is_clean(name):
             score = max(score, 3)
             reasons.append("品牌化弱后缀")
     if target_kind in {"product", "mixed"} and re.search(f"(?:{PRODUCT_SUFFIX_WORDS})$", name):
@@ -967,7 +968,7 @@ def looks_like_org_entity(value: str) -> bool:
     name = normalize_entity_name(value)
     if looks_like_stop_entity(name):
         return False
-    if re.search(r"(?:教育|留学)$", name):
+    if re.search(r"(?:教育|留学|出国)$", name):
         if not weak_org_prefix_is_clean(name):
             return False
     return bool(re.search(f"(?:{COMPANY_SUFFIX_WORDS})$", name))

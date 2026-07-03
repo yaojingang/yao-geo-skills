@@ -60,6 +60,7 @@ def main() -> None:
         "深入咨询",
         "线下咨询",
         "砍掉多余营销",
+        "自费出国",
     ]
     for value in non_entities:
         assert analyzer.looks_like_stop_entity(value), f"should reject non-entity: {value}"
@@ -72,6 +73,7 @@ def main() -> None:
         "指南者留学",
         "新通教育",
         "金吉列留学",
+        "新东方前途出国",
         "多次元教育",
         "致学博教育",
         "威久留学",
@@ -125,6 +127,15 @@ def main() -> None:
     source_only = analyzer.classify_entity(source_only_rows["平安留学"], "company")
     assert not source_only["is_target"], source_only
     assert not analyzer.candidate_is_valid_competitor(source_only, "company", 2), source_only
+
+    mobile_rows = {}
+    analyzer.add_entity_candidate(mobile_rows, "新东方前途出国", "s01", "org_suffix")
+    analyzer.add_entity_candidate(mobile_rows, "新东方前途出国", "s02", "answer_heading")
+    analyzer.add_entity_candidate(mobile_rows, "自费出国", "s01", "org_suffix")
+    assert "新东方前途出国" in mobile_rows
+    assert "自费出国" not in mobile_rows
+    mobile_candidate = analyzer.classify_entity(mobile_rows["新东方前途出国"], "company")
+    assert analyzer.candidate_is_valid_competitor(mobile_candidate, "company", 2), mobile_candidate
 
     title_fragment_rows = {}
     analyzer.add_entity_candidate(title_fragment_rows, "光引GEO完成品牌AI", "s01", "source_title_org")
