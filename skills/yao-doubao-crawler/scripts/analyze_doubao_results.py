@@ -3281,7 +3281,7 @@ def render_recommendations(items: list[str]) -> str:
     return '<div class="recommendation-list">' + "".join(f'<div class="recommendation-item">{esc(item)}</div>' for item in items) + '</div>'
 
 
-def report_toc_html() -> str:
+def report_toc_html(enabled_ids: set[str] | None = None) -> str:
     items = [
         ("overview", "报告概览", "Overview"),
         ("insights", "核心结论", "Key Findings"),
@@ -3295,6 +3295,8 @@ def report_toc_html() -> str:
         ("titles", "标题特征", "Titles"),
         ("recommendations", "总结建议", "Recommendations"),
     ]
+    if enabled_ids is not None:
+        items = [item for item in items if item[0] in enabled_ids]
     return "".join(
         f'<a href="#{anchor}"><span class="lang-zh">{esc(zh)}</span><span class="lang-en">{esc(en)}</span></a>'
         for anchor, zh, en in items
@@ -3507,6 +3509,194 @@ def render_report(title: str, input_name: str, summary: dict) -> str:
         for row in (mobile.get("materials") or [])[:item_limit]
     )
 
+    has_target = bool(target.get("has_target") and target_metrics)
+
+    def chart_card(title_html: str, body_html: str, extra_class: str = "") -> str:
+        class_attr = f"chart {extra_class}".strip()
+        return f'<div class="{class_attr}"><h3>{title_html}</h3>{body_html}</div>'
+
+    if has_target:
+        target_metric_block = f"""
+      <h3><span class="lang-zh">目标实体指标数据</span><span class="lang-en">Target Entity Metrics</span></h3>
+      <div class="kpi-strip lang-zh">{metric_card_row(target_metrics, 'zh')}</div>
+      <div class="kpi-strip lang-en">{metric_card_row(target_metrics, 'en')}</div>
+"""
+        cover_lede_zh = "基于重复采样的 Doubao AI 搜索结果，识别真正的目标人物或品牌/机构，再衡量提及、平均提及、Top 1 / Top 3 / Top 5 概率、情感倾向、信源结构和移动端 UI 证据。"
+        cover_lede_en = "Based on repeated Doubao AI search samples, this report identifies the real target person, brand, or organization, then measures mentions, average mentions, Top 1 / Top 3 / Top 5 probability, sentiment, citations, title patterns, and mobile UI evidence."
+        insights_summary_zh = f"基于目标实体、同类型竞品、有效样本和引用信源生成最多 {item_limit} 条高优先级结论，优先呈现目标实体相对竞品的排序与概率差距。"
+        insights_summary_en = f"Up to {item_limit} priority findings are generated from the target entity, same-type competitors, valid samples, and cited sources, with emphasis on relative ranking and probability gaps."
+    else:
+        target_metric_block = """
+      <h3><span class="lang-zh">探索模式说明</span><span class="lang-en">Exploratory Mode</span></h3>
+      <p class="overview-text lang-zh">本次未指定目标实体，因此不会生成目标对标、目标情感或目标趋势类图表。报告保留采集覆盖、候选实体、信源结构、移动端证据和可复核原始数据。</p>
+      <p class="overview-text lang-en">No target entity was supplied, so target benchmark, target sentiment, and target trend charts are omitted. The report keeps coverage, candidate entities, source structure, mobile evidence, and auditable raw data.</p>
+"""
+        cover_lede_zh = "基于重复采样的 Doubao AI 搜索结果，汇总候选实体、采集覆盖、信源结构和移动端 UI 证据。本报告未指定目标实体，所有候选结论均为探索性结果。"
+        cover_lede_en = "Based on repeated Doubao AI search samples, this report summarizes candidate entities, coverage, source structure, and mobile UI evidence. No target entity was supplied, so candidate findings are exploratory."
+        insights_summary_zh = f"本次未指定目标实体，核心结论聚焦采集覆盖、候选实体、引用结构和移动端证据；候选项为启发式识别，最多展示 {item_limit} 条。"
+        insights_summary_en = f"No target entity was supplied. Key findings focus on coverage, candidate entities, citation structure, and mobile evidence; candidates are heuristic and capped at {item_limit} items."
+
+    comparison_section = ""
+    if has_target and comparison_rows:
+        comparison_section = f"""
+  <section class="section" id="comparison">
+    <h2><span class="lang-zh">竞品分析</span><span class="lang-en">Competitor Analysis</span></h2>
+    {bilingual_summary(
+        f"本模块只比较与目标实体类型一致的实体，目标实体「{target.get('entity') or '未指定'}」作为基准，最多展示 1 个目标实体和 {max(item_limit - 1, 0)} 个同类型竞品。",
+        f"This section compares only same-type entities. The target entity \"{target.get('entity') or 'not specified'}\" is the baseline, with up to {max(item_limit - 1, 0)} competitors shown.",
+    )}
+    <div class="chart-grid">
+      {chart_card('<span class="lang-zh">目标与最佳 3 个竞品 100 分制雷达</span><span class="lang-en">Target vs Best 3 Competitors Radar</span>', render_benchmark_radar(radar_rows, metric_rows))}
+      {chart_card('<span class="lang-zh">Top 5 概率 x 提及率气泡对标</span><span class="lang-en">Top 5 Probability x Mention Rate Bubble Benchmark</span>', render_benchmark_bubble_chart(metric_rows, target.get("entity") or "", item_limit))}
+    </div>
+    <h3><span class="lang-zh">同类型实体多指标矩阵</span><span class="lang-en">Same-Type Entity Metric Matrix</span></h3>
+    {render_metric_matrix(metric_rows, item_limit)}
+    <table class="kami-table">
+      <thead><tr><th>角色</th><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>信源命中</th><th>Top 3 差距</th><th>Top 5 差距</th></tr></thead>
+      <tbody>{comparison_table}</tbody>
+    </table>
+  </section>
+"""
+
+    sentiment_cards: list[str] = []
+    if has_target and sentiment_total:
+        sentiment_cards.append(
+            chart_card(
+                '<span class="lang-zh">目标实体情感分布</span><span class="lang-en">Target Sentiment Mix</span>',
+                render_sentiment_donut(sentiment_segments, sentiment_total),
+            )
+        )
+    if avg_mention_metric_rows:
+        sentiment_cards.append(
+            chart_card(
+                '<span class="lang-zh">平均提及次数</span><span class="lang-en">Average Mentions</span>',
+                render_lollipop_chart(avg_mention_metric_rows, item_limit),
+            )
+        )
+    if negative_rows:
+        sentiment_cards.append(
+            chart_card(
+                '<span class="lang-zh">负向占比</span><span class="lang-en">Negative Share</span>',
+                bar_rows(negative_rows, 1),
+            )
+        )
+    sentiment_section = ""
+    if sentiment_cards:
+        sentiment_section = f"""
+  <section class="section" id="sentiment">
+    <h2><span class="lang-zh">情感与提及强度</span><span class="lang-en">Sentiment and Mention Strength</span></h2>
+    {bilingual_summary(
+        f"情感分析基于实体附近文本的启发式词表判断，平均提及次数统计每条有效回答里同一实体被重复提到的强度；图表默认展示前 {item_limit} 个实体。",
+        f"Sentiment is inferred from text near entity mentions, while average mentions measure how often the same entity appears in each valid answer. Charts show up to {item_limit} entities.",
+    )}
+    <div class="chart-grid three">
+      {''.join(sentiment_cards)}
+    </div>
+  </section>
+"""
+
+    probability_section = ""
+    if metric_rows:
+        probability_title_zh = "目标实体概率" if has_target else "候选实体概率"
+        probability_title_en = "Entity Probability" if has_target else "Candidate Probability"
+        probability_summary_zh = (
+            f"概率指标来自有效样本中的重复推荐位置估计，图表最多展示 {item_limit} 个实体；Top 1、Top 3、Top 5 分别观察首位推荐、核心推荐区和扩展推荐区的稳定性。"
+            if has_target
+            else f"本模块展示自动识别候选实体的重复采样指标，最多展示 {item_limit} 个候选项；无目标实体时这些数据用于探索，不用于目标对标结论。"
+        )
+        probability_summary_en = (
+            f"Probability metrics are estimated from repeated valid samples. Charts show up to {item_limit} entities across Top 1, Top 3, Top 5, mentions, and average rank."
+            if has_target
+            else f"This section shows repeated-sample metrics for heuristic candidate entities, capped at {item_limit} items. Without a target entity, these rows are exploratory and not target benchmarks."
+        )
+        probability_section = f"""
+  <section class="section" id="probability">
+    <h2><span class="lang-zh">{esc(probability_title_zh)}</span><span class="lang-en">{esc(probability_title_en)}</span></h2>
+    {bilingual_summary(probability_summary_zh, probability_summary_en)}
+    <div class="chart-grid three">
+      {chart_card('Top 1 概率', bar_rows(top1_rows, 1))}
+      {chart_card('Top 3 概率', bar_rows(top3_rows, 1))}
+      {chart_card('Top 5 概率', bar_rows(top5_rows, 1))}
+      {chart_card('提及率', bar_rows(mention_rows, 1))}
+      {chart_card('平均提及次数', bar_rows(avg_mention_rows, None))}
+      {chart_card('平均排名 · 数值越低越好', bar_rows(rank_rows, None))}
+    </div>
+    <h3>{'目标实体明细' if has_target else '候选实体明细'}</h3>
+    <table class="kami-table target-detail-table">
+      <thead><tr><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>别名</th></tr></thead>
+      <tbody>{brand_table}</tbody>
+    </table>
+    <h3>问题 x {'目标实体' if has_target else '候选实体'} Top 3 热力图</h3>
+    {render_heatmap(summary, display_question_rows, item_limit)}
+  </section>
+"""
+
+    source_cards: list[str] = []
+    if sum(value for _, value in channel_rows):
+        source_cards.append(chart_card("渠道分布", render_share_donut(channel_rows, CHANNEL_LABELS_ZH, "信源渠道分布圆环图"), "share-chart"))
+    if sum(value for _, value in position_rows):
+        source_cards.append(chart_card("来源编号位置", render_share_donut(position_rows, SOURCE_POSITION_LABELS_ZH, "来源编号位置圆环图"), "share-chart"))
+    if source_rows:
+        source_cards.append(chart_card("高频来源名", bar_rows(source_rows, None)))
+    if domain_rows:
+        source_cards.append(chart_card("高频域名", source_bar_rows(domain_rows, domain_max)))
+        source_cards.append(chart_card("域名占比树图", render_treemap(summary["sources"]["top_domains"], item_limit)))
+    if url_link_rows:
+        source_cards.append(chart_card("高频 URL", source_bar_rows(url_link_rows, None), "source-url-chart"))
+    source_section = ""
+    if source_cards:
+        source_section = f"""
+  <section class="section" id="sources">
+    <h2><span class="lang-zh">信源结构</span><span class="lang-en">Citation Sources</span></h2>
+    {bilingual_summary(
+        f"信源结构用于判断 Doubao 回答更依赖官方、媒体、社区、开发者或其他渠道；域名、URL 和来源明细只在采集到对应字段时展示。",
+        f"Source structure shows whether Doubao relies more on official, media, community, developer, or other channels. Domain and URL modules are shown only when those fields are available.",
+    )}
+    <div class="chart-grid three">
+      {''.join(source_cards)}
+    </div>
+  </section>
+"""
+
+    trend_card_zh = chart_card("核心指标趋势预估", render_geo_trend_chart(summary, geo_actions, "zh")) if target_metrics else ""
+    trend_card_en = chart_card("Core Metric Trend Projection", render_geo_trend_chart(summary, geo_actions_en, "en")) if target_metrics else ""
+    recommendations_section = f"""
+  <section class="section" id="recommendations">
+    <h2><span class="lang-zh">总结建议</span><span class="lang-en">Recommendations</span></h2>
+    <div class="lang-zh">
+      <h3>总结建议与 GEO 优化措施</h3>
+      <div class="geo-action-overview">
+        {chart_card("优化优先级", render_geo_priority_chart(geo_actions))}
+        {trend_card_zh}
+      </div>
+      <div class="chart geo-method-card"><h3>具体方法与验收指标</h3>{render_geo_method_table(geo_actions, 'zh')}</div>
+      {render_recommendations(recommendations)}
+    </div>
+    <div class="lang-en">
+      <h3>Summary and GEO Optimization Actions</h3>
+      <div class="geo-action-overview">
+        {chart_card("Optimization Priority", render_geo_priority_chart(geo_actions_en))}
+        {trend_card_en}
+      </div>
+      <div class="chart geo-method-card"><h3>Action Methods and Checks</h3>{render_geo_method_table(geo_actions_en, 'en')}</div>
+      {render_recommendations(recommendations_en)}
+    </div>
+  </section>
+"""
+
+    enabled_sections = {"overview", "insights", "entities", "coverage", "titles", "recommendations"}
+    if comparison_section:
+        enabled_sections.add("comparison")
+    if sentiment_section:
+        enabled_sections.add("sentiment")
+    if mobile.get("sample_count") or mobile.get("collected_material_rows"):
+        enabled_sections.add("mobile")
+    if probability_section:
+        enabled_sections.add("probability")
+    if source_section:
+        enabled_sections.add("sources")
+    toc_html = report_toc_html(enabled_sections)
+
     css = """
 :root {
   --parchment:#f5f4ed; --ivory:#faf9f5; --brand:#1B365D; --brand-light:#2D5A8A;
@@ -3557,9 +3747,9 @@ p { margin:0 0 12px; color:var(--olive); }
 .metric-note { margin-top:6px; color:var(--stone); font-size:12px; }
 .section { margin-top:32px; }
 .section-summary { width:100%; max-width:none; color:var(--dark-warm); background:var(--ivory); border:1px solid var(--border-soft); border-radius:6px; padding:12px 14px; margin:0 0 14px; text-wrap:pretty; }
-.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
 .chart-grid.three { grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); }
-.coverage-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr); gap:18px; align-items:stretch; }
+.coverage-layout { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr); gap:18px; align-items:start; }
 .chart-grid > *, .coverage-layout > * { min-width:0; }
 .chart { min-width:0; background:var(--ivory); border:1px solid var(--border); border-radius:8px; padding:18px; }
 .bar-row { display:grid; grid-template-columns:minmax(120px,170px) minmax(120px,1fr) minmax(118px,max-content); align-items:center; gap:12px; margin:9px 0; font-size:13px; }
@@ -3685,7 +3875,7 @@ p { margin:0 0 12px; color:var(--olive); }
 .treemap-domain { min-width:0; color:var(--stone); font-family:var(--mono); font-size:10px; line-height:1.25; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; align-self:end; }
 .treemap-share { height:5px; background:var(--border-soft); border-radius:999px; overflow:hidden; }
 .treemap-share i { display:block; height:100%; background:var(--brand); border-radius:999px; }
-.geo-action-overview { display:grid; grid-template-columns:minmax(280px,.68fr) minmax(460px,1.32fr); gap:16px; align-items:stretch; margin:10px 0 16px; }
+.geo-action-overview { display:grid; grid-template-columns:minmax(280px,.68fr) minmax(460px,1.32fr); gap:16px; align-items:start; margin:10px 0 16px; }
 .priority-list { display:grid; gap:10px; }
 .priority-row { display:grid; grid-template-columns:minmax(92px,130px) minmax(120px,1fr) 42px; align-items:center; gap:10px; color:var(--dark-warm); font-size:13px; }
 .priority-row span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -3763,7 +3953,7 @@ p { margin:0 0 12px; color:var(--olive); }
         <span class="report-brand-title"><span class="lang-zh">AI 搜索概率报告</span><span class="lang-en">AI Search Probability Report</span></span>
       </a>
       <div class="nav-actions">
-        <div class="report-nav-inner">{report_toc_html()}</div>
+        <div class="report-nav-inner">{toc_html}</div>
         <div class="language-toggle" aria-label="Language">
           <button type="button" class="is-active" data-lang="zh">中文</button>
           <button type="button" data-lang="en">EN</button>
@@ -3775,8 +3965,8 @@ p { margin:0 0 12px; color:var(--olive); }
   <section class="cover" id="top">
     <div class="eyebrow">DOUBAO GEO CRAWL REPORT</div>
     <h1>{esc(title)}</h1>
-	    <p class="lede lang-zh">基于重复采样的 Doubao AI 搜索结果，识别真正的目标人物或品牌/机构，再衡量提及、平均提及、Top 1 / Top 3 / Top 5 概率、情感倾向、信源结构和移动端 UI 证据。<br><span class="entity-scope">实体口径：<span class="tag">{esc(brand_source_note)}</span></span></p>
-	    <p class="lede lang-en">Based on repeated Doubao AI search samples, this report identifies the real target person, brand, or organization, then measures mentions, average mentions, Top 1 / Top 3 / Top 5 probability, sentiment, citations, title patterns, and mobile UI evidence.</p>
+	    <p class="lede lang-zh">{esc(cover_lede_zh)}<br><span class="entity-scope">实体口径：<span class="tag">{esc(brand_source_note)}</span></span></p>
+	    <p class="lede lang-en">{esc(cover_lede_en)}</p>
   </section>
 
   <section class="section" id="overview">
@@ -3786,13 +3976,11 @@ p { margin:0 0 12px; color:var(--olive); }
       <p class="overview-text lang-zh">{esc(report_overview_text(summary))}</p>
       <p class="overview-text lang-en">{esc(report_overview_text_en(summary))}</p>
       <h3><span class="lang-zh">目录</span><span class="lang-en">Contents</span></h3>
-      <div class="toc-links">{report_toc_html()}</div>
-      <h3><span class="lang-zh">指标说明</span><span class="lang-en">Metric Notes</span></h3>
-      <div class="definition-grid lang-zh">{metric_definition_html('zh')}</div>
-      <div class="definition-grid lang-en">{metric_definition_html('en')}</div>
-      <h3><span class="lang-zh">目标实体指标数据</span><span class="lang-en">Target Entity Metrics</span></h3>
-      <div class="kpi-strip lang-zh">{metric_card_row(target_metrics, 'zh')}</div>
-      <div class="kpi-strip lang-en">{metric_card_row(target_metrics, 'en')}</div>
+	      <div class="toc-links">{toc_html}</div>
+	      <h3><span class="lang-zh">指标说明</span><span class="lang-en">Metric Notes</span></h3>
+	      <div class="definition-grid lang-zh">{metric_definition_html('zh')}</div>
+	      <div class="definition-grid lang-en">{metric_definition_html('en')}</div>
+	      {target_metric_block}
     </div>
   </section>
 
@@ -3808,10 +3996,7 @@ p { margin:0 0 12px; color:var(--olive); }
 
 	  <section class="section" id="insights">
 	    <h2><span class="lang-zh">核心结论</span><span class="lang-en">Key Findings</span></h2>
-    {bilingual_summary(
-        f"基于目标实体、同类型竞品、有效样本和引用信源生成最多 {item_limit} 条高优先级结论，优先呈现目标实体相对竞品的排序与概率差距。",
-        f"Up to {item_limit} priority findings are generated from the target entity, same-type competitors, valid samples, and cited sources, with emphasis on relative ranking and probability gaps.",
-    )}
+    {bilingual_summary(insights_summary_zh, insights_summary_en)}
     <div class="insights lang-zh">
       {''.join(f'<div class="insight">{esc(item)}</div>' for item in insights)}
     </div>
@@ -3820,36 +4005,9 @@ p { margin:0 0 12px; color:var(--olive); }
     </div>
 	  </section>
 
-  <section class="section" id="comparison">
-    <h2><span class="lang-zh">竞品分析</span><span class="lang-en">Competitor Analysis</span></h2>
-    {bilingual_summary(
-        f"本模块只比较与目标实体类型一致的实体，目标实体「{target.get('entity') or '未指定'}」作为基准，最多展示 1 个目标实体和 {max(item_limit - 1, 0)} 个同类型竞品。",
-        f"This section compares only same-type entities. The target entity \"{target.get('entity') or 'not specified'}\" is the baseline, with up to {max(item_limit - 1, 0)} competitors shown.",
-    )}
-    <div class="chart-grid">
-      <div class="chart"><h3><span class="lang-zh">目标与最佳 3 个竞品 100 分制雷达</span><span class="lang-en">Target vs Best 3 Competitors Radar</span></h3>{render_benchmark_radar(radar_rows, metric_rows)}</div>
-      <div class="chart"><h3><span class="lang-zh">Top 5 概率 x 提及率气泡对标</span><span class="lang-en">Top 5 Probability x Mention Rate Bubble Benchmark</span></h3>{render_benchmark_bubble_chart(metric_rows, target.get("entity") or "", item_limit)}</div>
-    </div>
-    <h3><span class="lang-zh">同类型实体多指标矩阵</span><span class="lang-en">Same-Type Entity Metric Matrix</span></h3>
-    {render_metric_matrix(metric_rows, item_limit)}
-    <table class="kami-table">
-      <thead><tr><th>角色</th><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>信源命中</th><th>Top 3 差距</th><th>Top 5 差距</th></tr></thead>
-      <tbody>{comparison_table}</tbody>
-    </table>
-  </section>
+  {comparison_section}
 
-  <section class="section" id="sentiment">
-    <h2><span class="lang-zh">情感与提及强度</span><span class="lang-en">Sentiment and Mention Strength</span></h2>
-    {bilingual_summary(
-        f"情感分析基于目标实体附近文本的启发式词表判断，平均提及次数统计每条有效回答里同一实体被重复提到的强度；图表默认展示前 {item_limit} 个实体。",
-        f"Sentiment is inferred from text near entity mentions, while average mentions measure how often the same entity appears in each valid answer. Charts show up to {item_limit} entities.",
-    )}
-    <div class="chart-grid three">
-      <div class="chart"><h3><span class="lang-zh">目标实体情感分布</span><span class="lang-en">Target Sentiment Mix</span></h3>{render_sentiment_donut(sentiment_segments, sentiment_total)}</div>
-      <div class="chart"><h3><span class="lang-zh">平均提及次数</span><span class="lang-en">Average Mentions</span></h3>{render_lollipop_chart(avg_mention_metric_rows, item_limit)}</div>
-      <div class="chart"><h3><span class="lang-zh">负向占比</span><span class="lang-en">Negative Share</span></h3>{bar_rows(negative_rows, 1)}</div>
-    </div>
-  </section>
+  {sentiment_section}
 
 	  <section class="section" id="entities">
 	    <h2><span class="lang-zh">目标实体识别</span><span class="lang-en">Entity Identification</span></h2>
@@ -3905,44 +4063,9 @@ p { margin:0 0 12px; color:var(--olive); }
     </table>
   </section>
 
-  <section class="section" id="probability">
-	    <h2><span class="lang-zh">目标实体概率</span><span class="lang-en">Entity Probability</span></h2>
-    {bilingual_summary(
-        f"概率指标来自有效样本中的重复推荐位置估计，图表最多展示 {item_limit} 个实体；Top 1、Top 3、Top 5 分别观察首位推荐、核心推荐区和扩展推荐区的稳定性。",
-        f"Probability metrics are estimated from repeated valid samples. Charts show up to {item_limit} entities across Top 1, Top 3, Top 5, mentions, and average rank.",
-    )}
-    <div class="chart-grid three">
-      <div class="chart"><h3>Top 1 概率</h3>{bar_rows(top1_rows, 1)}</div>
-      <div class="chart"><h3>Top 3 概率</h3>{bar_rows(top3_rows, 1)}</div>
-      <div class="chart"><h3>Top 5 概率</h3>{bar_rows(top5_rows, 1)}</div>
-      <div class="chart"><h3>提及率</h3>{bar_rows(mention_rows, 1)}</div>
-      <div class="chart"><h3>平均提及次数</h3>{bar_rows(avg_mention_rows, None)}</div>
-      <div class="chart"><h3>平均排名 · 数值越低越好</h3>{bar_rows(rank_rows, None)}</div>
-    </div>
-	    <h3>目标实体明细</h3>
-	    <table class="kami-table target-detail-table">
-	      <thead><tr><th>实体</th><th>提及率</th><th>平均提及</th><th>Top 1</th><th>Top 3</th><th>Top 5</th><th>平均排名</th><th>别名</th></tr></thead>
-	      <tbody>{brand_table}</tbody>
-	    </table>
-	    <h3>问题 x 目标实体 Top 3 热力图</h3>
-    {render_heatmap(summary, display_question_rows, item_limit)}
-  </section>
+  {probability_section}
 
-  <section class="section" id="sources">
-    <h2><span class="lang-zh">信源结构</span><span class="lang-en">Citation Sources</span></h2>
-    {bilingual_summary(
-        f"信源结构用于判断 Doubao 回答更依赖官方、媒体、社区、开发者或其他渠道；域名和来源明细默认只展示前 {item_limit} 条。",
-        f"Source structure shows whether Doubao relies more on official, media, community, developer, or other channels. Domain and source details show up to {item_limit} rows.",
-    )}
-    <div class="chart-grid three">
-      <div class="chart share-chart"><h3>渠道分布</h3>{render_share_donut(channel_rows, CHANNEL_LABELS_ZH, "信源渠道分布圆环图")}</div>
-      <div class="chart share-chart"><h3>来源编号位置</h3>{render_share_donut(position_rows, SOURCE_POSITION_LABELS_ZH, "来源编号位置圆环图")}</div>
-      <div class="chart"><h3>高频来源名</h3>{bar_rows(source_rows, None)}</div>
-      <div class="chart"><h3>高频域名</h3>{source_bar_rows(domain_rows, domain_max)}</div>
-      <div class="chart"><h3>域名占比树图</h3>{render_treemap(summary["sources"]["top_domains"], item_limit)}</div>
-      <div class="chart source-url-chart"><h3>高频 URL</h3>{source_bar_rows(url_link_rows, None)}</div>
-    </div>
-  </section>
+  {source_section}
 
   <section class="section" id="titles">
     <h2><span class="lang-zh">标题特征</span><span class="lang-en">Title Patterns</span></h2>
@@ -3963,27 +4086,7 @@ p { margin:0 0 12px; color:var(--olive); }
     </table>
   </section>
 
-  <section class="section" id="recommendations">
-    <h2><span class="lang-zh">总结建议</span><span class="lang-en">Recommendations</span></h2>
-    <div class="lang-zh">
-      <h3>总结建议与 GEO 优化措施</h3>
-      <div class="geo-action-overview">
-        <div class="chart"><h3>优化优先级</h3>{render_geo_priority_chart(geo_actions)}</div>
-        <div class="chart"><h3>核心指标趋势预估</h3>{render_geo_trend_chart(summary, geo_actions, 'zh')}</div>
-      </div>
-      <div class="chart geo-method-card"><h3>具体方法与验收指标</h3>{render_geo_method_table(geo_actions, 'zh')}</div>
-      {render_recommendations(recommendations)}
-    </div>
-    <div class="lang-en">
-      <h3>Summary and GEO Optimization Actions</h3>
-      <div class="geo-action-overview">
-        <div class="chart"><h3>Optimization Priority</h3>{render_geo_priority_chart(geo_actions_en)}</div>
-        <div class="chart"><h3>Core Metric Trend Projection</h3>{render_geo_trend_chart(summary, geo_actions_en, 'en')}</div>
-      </div>
-      <div class="chart geo-method-card"><h3>Action Methods and Checks</h3>{render_geo_method_table(geo_actions_en, 'en')}</div>
-      {render_recommendations(recommendations_en)}
-    </div>
-  </section>
+  {recommendations_section}
 
   <footer>
     Generated at {esc(summary['generated_at'])}. Metrics are repeated-sample estimates from visible Doubao output, not external truth claims.

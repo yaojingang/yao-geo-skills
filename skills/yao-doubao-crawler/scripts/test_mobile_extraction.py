@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -233,6 +235,51 @@ class MobileExtractionTest(unittest.TestCase):
         self.assertEqual(evidence["uncited_material_rows"], 1)
         self.assertEqual(evidence["by_question"][0]["material_rows"], 3)
         self.assertEqual(len(evidence["materials"]), 3)
+
+    def test_targetless_mobile_report_omits_empty_target_charts(self) -> None:
+        fixture = SKILL_ROOT / "fixtures" / "sample-doubao-mobile-crawl.json"
+        data = json.loads(fixture.read_text(encoding="utf-8"))
+        input_meta = data.get("input") or {}
+        input_meta.pop("target_entity", None)
+        input_meta.pop("target_aliases", None)
+        for question in input_meta.get("questions", []):
+            question.pop("target", None)
+        for sample in data.get("samples", []):
+            sample.pop("target", None)
+            references = ((sample.get("result") or {}).get("references") or {}).get("items") or []
+            for reference in references:
+                reference["url"] = ""
+                reference["domain"] = ""
+            materials = (sample.get("result") or {}).get("mobile_search_materials") or {}
+            for material in materials.get("items") or []:
+                material["url"] = ""
+                material["domain"] = ""
+
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_dir = Path(tmp)
+            targetless_json = tmp_dir / "targetless-mobile.json"
+            out_dir = tmp_dir / "report"
+            targetless_json.write_text(json.dumps(data, ensure_ascii=False), encoding="utf-8")
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT_DIR / "analyze_doubao_results.py"),
+                    str(targetless_json),
+                    "--out-dir",
+                    str(out_dir),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            html = (out_dir / "report.html").read_text(encoding="utf-8")
+
+        self.assertIn("探索模式说明", html)
+        self.assertNotIn("目标与最佳 3 个竞品", html)
+        self.assertNotIn("Target vs Best 3 Competitors Radar", html)
+        self.assertNotIn("目标实体情感分布", html)
+        self.assertNotIn("高频 URL", html)
+        self.assertNotIn("核心指标趋势预估", html)
 
 
 if __name__ == "__main__":
