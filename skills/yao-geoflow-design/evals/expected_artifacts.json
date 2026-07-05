@@ -11,10 +11,17 @@
     "references/geoflow-frontend-map.md",
     "references/template-boundary.md",
     "references/homepage-composition-guide.md",
+    "references/channel-frontend-contract.md",
+    "references/distribution-target-site-map.md",
+    "references/backend-connection-workflow.md",
     "references/theme-package-contract.md",
     "references/design-optimization-playbook.md",
     "references/theme-edit-workflow.md",
     "scripts/discover_themes.py",
+    "scripts/discover_frontend_surfaces.py",
+    "scripts/compare_default_vs_channel_frontend.py",
+    "scripts/build_sync_preview_report.py",
+    "scripts/validate_homepage_design_payload.py",
     "scripts/prepare_theme_edit_session.py",
     "scripts/finalize_theme_edit_session.py",
     "templates/homepage-design-template.json"
@@ -27,11 +34,15 @@
     "homepage-composition-plan",
     "homepage-design-json",
     "homepage-style-tokens",
+    "homepage-lead-form-module-plan",
     "optimization-plan",
     "tokens-json",
     "mapping-json",
     "preview-plan",
-    "finalize-plan"
+    "finalize-plan",
+    "channel-frontend-capability-diff",
+    "channel-sync-preview-report",
+    "target-package-module-capability-gap-report"
   ],
   "quality_expectations": [
     "must begin from GEOFlow's existing frontend contract and current theme system",
@@ -39,12 +50,17 @@
     "must choose edit_theme, clone, or hybrid mode before proposing outputs",
     "must detect current homepage data signals such as homepageCarouselSlides, homepageModules, homepageStyle, showHomepageModules, hotArticles, featuredArticles, articles, cardSummaries, and public theme assets when homepage enrichment is requested",
     "must detect HomepageModuleBuilder, supported module types, style fields, presets, and homepage import routes when the current GEOFlow workspace exposes them",
+    "must support default-site lead_form modules with canonical lead_form_slug when an active lead form already exists",
+    "must detect channel frontend experience modes, remote capability cache status, sync preview routes, and GeoFlow Agent target package capabilities when channel_site or cross_channel_sync is requested",
+    "must distinguish default-site supported modules from target-package supported modules before channel sync",
     "must produce reviewed homepage-design.json with style, modules, and replace-or-append import guidance when homepage builder design is the safest path",
     "must provide data source and fallback behavior for every added homepage module",
     "must keep default homepage enrichment separate from search, category, and category-missing states unless explicitly requested",
+    "must downgrade lead_form to CTA/link or require target package upgrade when target frontend-capabilities do not support lead_form",
+    "must not create lead-form backend/admin CRUD, migrations, or API endpoints inside this design skill",
     "must preserve routing, SEO, and data-query boundaries unless explicitly expanded",
     "must prefer preview-first theme forks or preview-safe packages over direct live replacement",
     "must map reference styles or optimization goals onto GEOFlow modules instead of copying raw pages verbatim",
-    "must present finalize choices as publish_as_new_theme, replace_base_theme, or import_homepage_design_after_confirmation only after preview or payload review"
+    "must present finalize choices as publish_as_new_theme, replace_base_theme, import_homepage_design_after_confirmation, or sync_channel_frontend_after_confirmation only after preview or payload review"
   ]
 }

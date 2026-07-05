@@ -264,6 +264,53 @@ def detect_homepage_contract(workspace: Path) -> dict:
     }
 
 
+def detect_channel_frontend_contract(workspace: Path) -> dict:
+    channel_model = read_text(workspace / "app" / "Models" / "DistributionChannel.php")
+    distribution_controller = read_text(workspace / "app" / "Http" / "Controllers" / "Admin" / "DistributionController.php")
+    edit_view = read_text(workspace / "resources" / "views" / "admin" / "distribution" / "edit.blade.php")
+    target_package = read_text(workspace / "app" / "Services" / "GeoFlow" / "DistributionTargetSitePackageBuilder.php")
+    inspector = workspace / "app" / "Services" / "GeoFlow" / "FrontendExperienceInspector.php"
+    command = workspace / "app" / "Console" / "Commands" / "FrontendExperienceInspectCommand.php"
+
+    return {
+        "distribution_channel_model_present": bool(channel_model),
+        "admin_distribution_controller_present": bool(distribution_controller),
+        "frontend_experience_modes": php_const_array(channel_model, "FRONTEND_EXPERIENCE_MODES"),
+        "channel_settings_fields": {
+            "homepage_style": "homepage_style" in channel_model and "homepage_style_json" in distribution_controller,
+            "homepage_modules": "homepage_modules" in channel_model and "homepage_modules_json" in distribution_controller,
+            "home_carousel_slides": "home_carousel_slides" in channel_model and "home_carousel_slides_json" in distribution_controller,
+            "frontend_experience_mode": "frontendExperienceMode" in channel_model,
+            "article_text_ads": "article_text_ads" in channel_model,
+        },
+        "admin_ui": {
+            "frontend_experience_section": "前台体验" in edit_view or "frontend_experience_mode" in edit_view,
+            "json_import_fields": all(field in edit_view for field in [
+                "homepage_style_json",
+                "homepage_modules_json",
+                "home_carousel_slides_json",
+            ]),
+        },
+        "target_package": {
+            "homepage_renderer": "function renderHomepageModules" in target_package,
+            "capability_endpoint": "/geoflow-agent/v1/frontend-capabilities" in target_package,
+            "supports_homepage_style": "'homepage_style'" in target_package,
+            "supports_homepage_modules": "'homepage_modules'" in target_package,
+            "supports_home_carousel_slides": "'home_carousel_slides'" in target_package,
+        },
+        "capability_inventory": {
+            "service_present": inspector.is_file(),
+            "artisan_command_present": command.is_file(),
+            "command": "php artisan geoflow:frontend-experience {channel?} --json" if command.is_file() else "",
+        },
+        "notes": [
+            "GeoFlow Agent is the first-class channel frontend renderer.",
+            "WordPress REST and Generic API channels should be treated as external distribution targets.",
+            "Use channel JSON settings and signed sync instead of editing remote PHP templates.",
+        ] if channel_model else [],
+    }
+
+
 def detect_workspace(workspace: Path) -> dict:
     laravel_root = workspace / "resources" / "views" / "theme"
     legacy_root = workspace / "themes"
@@ -291,6 +338,7 @@ def detect_workspace(workspace: Path) -> dict:
             "theme_editor": detect_theme_editor(workspace),
             "homepage_module_builder": detect_homepage_module_builder(workspace),
             "homepage_contract": detect_homepage_contract(workspace),
+            "channel_frontend_contract": detect_channel_frontend_contract(workspace),
         }
 
     return {
@@ -302,6 +350,7 @@ def detect_workspace(workspace: Path) -> dict:
         "theme_editor": {},
         "homepage_module_builder": {},
         "homepage_contract": {},
+        "channel_frontend_contract": {},
     }
 
 
@@ -330,6 +379,7 @@ def main() -> None:
         "theme_editor": detected["theme_editor"],
         "homepage_module_builder": detected.get("homepage_module_builder", {}),
         "homepage_contract": detected.get("homepage_contract", {}),
+        "channel_frontend_contract": detected.get("channel_frontend_contract", {}),
         "theme_count": len(themes),
         "themes": themes,
     }

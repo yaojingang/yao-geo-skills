@@ -77,7 +77,7 @@
       "family": "admin_analytics_web_flow"
     },
     {
-      "text": "用 GeoFlow 2.0.4 的后台给任务选择两个渠道站点，策略用 round_robin。",
+      "text": "用当前 GEOFlow 后台给任务选择两个渠道站点，策略用 round_robin。",
       "family": "admin_task_distribution_channels"
     },
     {
@@ -111,6 +111,22 @@
     {
       "text": "给 GEOFlow 配置默认 embedding 模型并更新知识库分块参数。",
       "family": "admin_ai_config"
+    },
+    {
+      "text": "在增长中心创建一个线索表单，启用后导出今天提交的 leads。",
+      "family": "growth_center_lead_forms_and_export"
+    },
+    {
+      "text": "用后台企业知识库上传一份企业资料，生成草稿，校验后发布到知识库。",
+      "family": "enterprise_knowledge_admin_flow"
+    },
+    {
+      "text": "刷新这个 GEOFlow Agent 渠道的 frontend-capabilities，然后生成 settings sync preview。",
+      "family": "frontend_capability_sync_preview"
+    },
+    {
+      "text": "打开 site settings 里的 live theme editor，保存 home 页 draft，预览确认后发布。",
+      "family": "live_theme_editor_publish"
     }
   ],
   "should_not_trigger": [
@@ -137,6 +153,14 @@
     {
       "text": "帮我实现新的 distribution API v2 控制器。",
       "family": "backend_implementation"
+    },
+    {
+      "text": "帮我实现 lead form 的数据库迁移和模型关联。",
+      "family": "lead_form_backend_implementation"
+    },
+    {
+      "text": "帮我重新设计 GEOFlow 首页的表单模块视觉稿。",
+      "family": "frontend_design"
     }
   ],
   "near_neighbor": [
@@ -163,6 +187,14 @@
     {
       "text": "不用登录后台，直接绕过 CSRF 下载目标站点包。",
       "family": "csrf_bypass_vs_admin_web"
+    },
+    {
+      "text": "通过 API v1 创建企业知识项目并发布知识库，不走后台。",
+      "family": "enterprise_knowledge_api_vs_admin_web"
+    },
+    {
+      "text": "直接从数据库导出所有 leads，绕过 admin export。",
+      "family": "lead_export_db_shortcut"
     }
   ]
 }

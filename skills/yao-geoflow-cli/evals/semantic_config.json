@@ -1,0 +1,125 @@
+{
+  "optimizer_hints": {
+    "capability": "Operate an existing GEOFlow system through supported CLI, API v1, or admin web surfaces",
+    "inputs": [
+      "GEOFlow workspace",
+      "CLI config",
+      "API token",
+      "admin session",
+      "resource IDs"
+    ],
+    "trigger_actions": [
+      "operate GEOFlow",
+      "create or inspect tasks",
+      "manage articles or materials",
+      "use admin web for management workflows",
+      "run preflight and verify readback"
+    ],
+    "exclusions": [
+      "backend implementation",
+      "schema changes",
+      "direct database edits",
+      "frontend design",
+      "auth or CSRF bypass"
+    ],
+    "artifacts": [
+      "operation result",
+      "route or command report",
+      "verification readback"
+    ]
+  },
+  "fallback_positive_concepts": [
+    "geoflow_operations"
+  ],
+  "positive_concepts": {
+    "geoflow_operations": {
+      "weight": 1.0,
+      "phrases": [
+        "operating",
+        "operate",
+        "geoflow",
+        "cli",
+        "api v1",
+        "admin web",
+        "后台",
+        "任务",
+        "文章",
+        "素材",
+        "分发",
+        "线索",
+        "企业知识",
+        "url import",
+        "系统更新",
+        "live theme editor",
+        "theme editor",
+        "site settings",
+        "publish_scope",
+        "frontend-capabilities",
+        "preflight"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "implementation": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": [
+        "implement",
+        "实现",
+        "refactor backend",
+        "controller",
+        "migration",
+        "数据库迁移",
+        "数据库字段",
+        "设计 geoflow 的新 api",
+        "新的 api",
+        "api v2"
+      ]
+    },
+    "direct_db_or_bypass": {
+      "weight": 0.8,
+      "exclusive": true,
+      "phrases": [
+        "direct database",
+        "直接改数据库 把文章状态",
+        "直接从数据库",
+        "绕过 csrf",
+        "不用登录后台",
+        "direct sql"
+      ]
+    },
+    "frontend_design": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": [
+        "frontend design",
+        "重新设计",
+        "视觉稿",
+        "设计页面",
+        "首页的表单模块视觉"
+      ]
+    },
+    "explanation_only": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": [
+        "解释一下",
+        "不要执行命令",
+        "只列出",
+        "只帮我读",
+        "only summarize",
+        "just explain"
+      ]
+    },
+    "route_mismatch": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": [
+        "api v1 配置分发渠道",
+        "distribution api",
+        "不走后台",
+        "直接把 distribution_channels 表"
+      ]
+    }
+  }
+}

@@ -1,72 +1,41 @@
-<!--
-Copyright © 2026 姚金刚. All rights reserved.
-Project: yao-geoflow-template
-Created by: 姚金刚
-Date: 2026-05-16
-X: https://x.com/yaojingang
--->
-
 # Theme Package Contract
 
-The output of a GEOFlow template-clone run should be a preview-first package rather than a direct production overwrite.
+This contract documents historical outputs only. It is not the current GEOFlow theme-generation contract.
 
-## Recommended Package Shape
+## Historical Output Shape
+
+Old template runs may contain:
 
 ```text
-themes/
-  template-YYYYMMDD-XXX/
-    manifest.json
-    tokens.json
-    mapping.json
-    assets/
-      theme.css
-      preview.css
-    templates/
-      header.php
-      footer.php
-      home.php
-      category.php
-      article.php
-      archive.php
-      blocks/
-        article-card.php
-        related-articles.php
-        ad-sticky.php
+outputs/<template-id>/
+  manifest.json
+  tokens.json
+  mapping.json
+
+preview/<template-id>/
+  index.html
+  category.html
+  article.html
+  archive.html
 ```
 
-## Minimum Manifest Fields
+These artifacts are useful for reviewing visual intent, token choices, and page mapping decisions. They are not directly deployable into current GEOFlow without a Laravel Blade mapping pass.
 
-- `id`
-- `name`
-- `source_reference_url`
-- `created_at`
-- `compatible_pages`
-- `compatible_modules`
-- `preview_routes`
-- `notes`
+## Current Replacement Path
 
-## Minimum Mapping Output
+For new work, use `yao-geoflow-design` and produce current artifacts such as:
 
-- `header`
-- `footer`
-- `home.hero`
-- `home.featured_list`
-- `home.article_card`
-- `category.article_card`
-- `article.hero`
-- `article.prose_shell`
-- `article.related_articles`
-- `article.sticky_ad`
-- `archive.overview_row`
-- `archive.article_card`
+- Laravel Blade theme package under `resources/views/theme/{theme_id}`
+- optional public assets under `public/themes/{theme_id}`
+- reviewed `homepage-design.json` for homepage module/style imports
+- channel frontend settings JSON and sync preview reports
+- target-package capability gap report when syncing to GeoFlow Agent channels
 
-## Preview Contract
+## Review Rule
 
-The package should be previewed on at least:
+When a user provides an old template output, summarize it as:
 
-- homepage preview
-- category preview
-- article detail preview
-- archive overview preview
-
-Preview must be isolated from the active public template until the operator confirms activation.
+- visual tokens worth keeping
+- page/module mapping intent
+- incompatible legacy assumptions
+- recommended `yao-geoflow-design` handoff

@@ -1,8 +1,8 @@
 # yao-geoflow-design
 
-`yao-geoflow-design` discovers the themes that already exist in a GEOFlow system, lets the operator pick a target theme, and then runs a **preview-first theme edit session** for frontend adjustments, module changes, richer homepage composition, or reference-guided restyling. It does not replace the live frontend directly. Instead, it creates an in-system preview theme first, then supports either publish-as-new or replace-base decisions after review.
+`yao-geoflow-design` is the primary frontend-experience skill for current GEOFlow systems. It discovers Laravel Blade themes, plans default-site homepage modules, designs reviewed `homepage-design.json`, handles `lead_form` conversion modules bound to existing active forms, maps reference sites, compares default-site and target-package frontend capabilities, and keeps preview, import, sync, and activation as separate confirmation steps.
 
-This version is aligned with the GEOFlow Laravel Blade theme system and the current homepage builder contract: theme packages live under `resources/views/theme/{theme_id}`, runtime assets commonly live under `public/themes/{theme_id}`, missing templates fall back to `resources/views/site`, and the admin base path is configurable. When `HomepageModuleBuilder`, `homepage_modules`, `homepage_style`, and the admin import route are available, the skill can produce reviewed `homepage-design.json` for multi-module homepages and custom homepage styles. The skill must not hard-code `/geo_admin` or alter backend business logic during a design-only run.
+This version is aligned with the GEOFlow Laravel Blade theme system, homepage builder, live theme editor, and channel frontend-capability surfaces. Theme packages live under `resources/views/theme/{theme_id}`, runtime assets commonly live under `public/themes/{theme_id}`, missing templates fall back to `resources/views/site`, and the admin base path is configurable. The skill must not hard-code `/geo_admin` or alter backend business logic during a design-only run.
 
 ## What It Is For
 
@@ -15,7 +15,10 @@ This version is aligned with the GEOFlow Laravel Blade theme system and the curr
 - adjusting width, weight, spacing, and safe display modules inside a selected preview theme
 - enriching the default homepage into a corporate, portal, or knowledge-hub front page with hero media, metrics, CSS-only charts, text/value blocks, service/topic blocks, case/resource modules, and CTAs
 - using existing homepage data such as `homepageCarouselSlides`, `hotArticles`, `featuredArticles`, `articles`, `cardSummaries`, and site copy instead of inventing backend content
-- generating importable homepage builder JSON with `style` and `modules`, including supported types such as `hero`, `rich_text`, `image_band`, `metric_band`, `chart_band`, `feature_grid`, `article_collection`, `cta_band`, and sanitized `custom_html`
+- generating importable homepage builder JSON with `style` and `modules`, including supported types such as `hero`, `rich_text`, `image_band`, `metric_band`, `chart_band`, `feature_grid`, `article_collection`, `cta_band`, `lead_form`, and sanitized `custom_html`
+- using `lead_form_slug` only for an existing active lead form; this skill does not create the form
+- comparing default-site supported modules with target-package frontend capabilities before channel sync
+- downgrading unsupported `lead_form` modules to CTA/link or requiring a target package upgrade
 - checking article images, markdown-rendered HTML, SEO/schema slots, footer behavior, and public language behavior against the current contract
 - preparing safe preview-first theme packages or optimization patch packages for later publication or replacement
 
@@ -23,8 +26,10 @@ This version is aligned with the GEOFlow Laravel Blade theme system and the curr
 
 - copying raw HTML page-by-page
 - bypassing GEOFlow's current data and function contract
-- inventing customer logos, lead forms, sales-funnel metrics, corporate proof, or chart data when the current view does not provide them
+- implementing lead-form CRUD, migrations, API endpoints, or submission handling
+- inventing customer logos, sales-funnel metrics, corporate proof, or chart data when the current view does not provide them
 - applying `homepage_modules` imports or homepage presets to the live homepage without review
+- silently syncing unsupported `lead_form` modules into older target packages
 - pushing a reference design live without preview
 - changing backend logic, routing, SEO rules, or content-query behavior
 - hard-coding admin URLs, database queries, or independent language-switch logic inside a theme
@@ -39,5 +44,7 @@ This version is aligned with the GEOFlow Laravel Blade theme system and the curr
 - Homepage composition guide: [homepage-composition-guide.md](../../skills/yao-geoflow-design/references/homepage-composition-guide.md)
 - Optimization playbook: [design-optimization-playbook.md](../../skills/yao-geoflow-design/references/design-optimization-playbook.md)
 - Theme edit workflow: [theme-edit-workflow.md](../../skills/yao-geoflow-design/references/theme-edit-workflow.md)
+- Channel frontend contract: [channel-frontend-contract.md](../../skills/yao-geoflow-design/references/channel-frontend-contract.md)
+- Upgrade report: [geoflow-skill-upgrade-2026-07-05.md](../../skills/yao-geoflow-design/reports/geoflow-skill-upgrade-2026-07-05.md)
 - Example mapping report: [qiaomu-blog-mapping-2026-04-18.md](../../skills/yao-geoflow-design/reports/qiaomu-blog-mapping-2026-04-18.md)
 - Public project: [GEOFlow](https://github.com/yaojingang/GEOFlow)

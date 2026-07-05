@@ -41,6 +41,22 @@
       "family": "homepage_builder_design_json"
     },
     {
+      "text": "Connect to the GEOFlow backend, inventory the default frontend and one channel site's frontend experience capabilities, then propose a channel template management plan.",
+      "family": "channel_site_frontend_management"
+    },
+    {
+      "text": "Compare the default site's homepage modules with a GeoFlow Agent channel target package and check whether hero, feature_grid, and article_collection are supported consistently.",
+      "family": "default_vs_channel_frontend_capability_diff"
+    },
+    {
+      "text": "Copy the default site's homepage_modules, homepage_style, and carousel slides into a channel-site snapshot, but first generate JSON and a sync plan without pushing it.",
+      "family": "sync_default_homepage_to_channel_site"
+    },
+    {
+      "text": "Check whether the channel target package exposes frontend-capabilities and list supported modules, routes, front_mode, and active_theme.",
+      "family": "remote_target_capability_inventory"
+    },
+    {
       "text": "Use the GEOFlow homepage module builder for hero, chart, metric, feature_grid, article_collection, and CTA sections with custom colors and width, while keeping review first.",
       "family": "homepage_builder_style_modules"
     },
@@ -75,6 +91,30 @@
     {
       "text": "Create a preview-first edit session for the current GEOFlow theme, then let me choose between replacing the base theme or publishing a new one after review.",
       "family": "preview_finalize_workflow"
+    },
+    {
+      "text": "Before syncing a channel site's frontend, read the cached geoflow:frontend-experience report and list risks, settings JSON, and the confirmation recommendation.",
+      "family": "channel_sync_preview_before_push"
+    },
+    {
+      "text": "The channel target package returns 404 for frontend-capabilities; tell me whether to download a new package or confirm settings sync anyway.",
+      "family": "old_target_package_upgrade_guidance"
+    },
+    {
+      "text": "The remote channel site is temporarily unavailable, but I still need to maintain site settings; generate a sync preview and explain that confirmed sync can continue.",
+      "family": "unavailable_remote_soft_confirm_sync"
+    },
+    {
+      "text": "Add a homepage lead_form conversion module that uses the existing active form slug geo-consultation, and generate homepage-design.json without importing it.",
+      "family": "homepage_lead_form_design"
+    },
+    {
+      "text": "The default site supports lead_form but the channel target package frontend-capabilities does not; downgrade it to a CTA and generate a sync preview.",
+      "family": "lead_form_target_package_capability_gap"
+    },
+    {
+      "text": "Map a reference site into GEOFlow homepage modules with hero, feature_grid, lead_form, and article_collection, then validate the homepage payload.",
+      "family": "reference_mapping_with_lead_form_payload"
     }
   ],
   "should_not_trigger": [
@@ -105,6 +145,22 @@
     {
       "text": "Edit the active theme in place and make the live site change immediately. I do not need a preview fork.",
       "family": "direct_live_edit"
+    },
+    {
+      "text": "Connect to every remote channel site and overwrite frontend templates in bulk without capability checks or preview.",
+      "family": "unsafe_cross_channel_direct_sync"
+    },
+    {
+      "text": "Open the target site's FTP and manually change public/index.php into arbitrary PHP templates.",
+      "family": "arbitrary_remote_template_edit"
+    },
+    {
+      "text": "Implement migrations, models, controllers, and admin CRUD for lead_forms and lead_submissions.",
+      "family": "lead_form_backend_crud"
+    },
+    {
+      "text": "Write an API endpoint so the channel site can submit lead_form data; this is not a design task.",
+      "family": "lead_form_api_implementation"
     }
   ],
   "near_neighbor": [
@@ -135,6 +191,10 @@
     {
       "text": "Import homepage_modules into production right now without showing me the JSON or confirming replace versus append.",
       "family": "unreviewed_homepage_builder_import"
+    },
+    {
+      "text": "The default site can render lead_form, so push the same module to every old target package without checking frontend-capabilities.",
+      "family": "default_site_lead_form_vs_remote_capability"
     }
   ]
 }

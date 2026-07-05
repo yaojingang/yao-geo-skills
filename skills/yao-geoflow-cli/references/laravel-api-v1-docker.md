@@ -8,7 +8,7 @@ X: https://x.com/yaojingang
 
 # Laravel API v1, Docker, And Admin Fallback
 
-Use this reference when the target GEOFlow workspace is the Laravel rewrite and no `bin/geoflow` wrapper is available. In the current Laravel 2.0.x public repository, `/api/v1` is the normal scriptable content-operations path. GEOFlow 2.0.4 also has many admin-only workflows under `/admin/*`; use authenticated admin web for those.
+Use this reference when the target GEOFlow workspace is a Laravel app and no `bin/geoflow` wrapper is available. `/api/v1` is the normal scriptable content-operations path. Current GEOFlow also has many admin-only workflows under `/admin/*`; use authenticated admin web for those.
 
 ## Detection
 
@@ -221,6 +221,6 @@ API v1 task responses may include `task_progress`, `queue_overview`, `schedule_e
 
 ## Admin Fallback Boundary
 
-GEOFlow 2.0.4 has admin UI capabilities including Distribution Management, target-site packages, WordPress REST channels, generic HTTP API channels, target settings sync, logs, queue retry, remote article management, Analytics, URL Import, System Updates, Theme Replication, site settings, AI configuration, API tokens, and admin users. These are not part of the current `/api/v1` operations surface.
+Current GEOFlow has admin UI capabilities including Distribution Management, target-site packages, WordPress REST channels, generic HTTP API channels, frontend-capability refresh, target settings-sync preview, logs, queue retry, remote article management, enterprise knowledge drafting/publish, growth-center lead forms/leads/export, Analytics, URL Import, System Updates, Theme Replication, Theme Editor, site settings, AI configuration, API tokens, and admin users. These are not part of the current `/api/v1` operations surface unless route inspection proves otherwise.
 
 Use API v1 only for the exposed task/article/material operations. When an operation requires an admin-only capability, switch to authenticated admin web routes if the user has provided or already has a valid admin session. Otherwise report the missing admin session/prerequisite.

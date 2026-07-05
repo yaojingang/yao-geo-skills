@@ -6,8 +6,8 @@
 
 interface:
   display_name: "Yao GEOFlow Operations"
-  short_description: "Operate an existing GEOFlow 2.0.x instance through CLI, Laravel API v1, or authenticated admin web flows"
-  default_prompt: "Use $yao-geoflow-cli to operate an existing GEOFlow 2.0.x system through the local geoflow CLI, Laravel API v1, or authenticated admin web routes: inspect catalog/material data, manage materials, tasks, jobs, drafts, reviews, published articles, distribution channels, Analytics, URL Import, System Updates, site settings, theme replication, AI configuration, API tokens, admin users, and run Docker/API/admin preflight checks."
+  short_description: "Operate an existing GEOFlow 2.1+ instance through CLI, API v1, or authenticated admin web"
+  default_prompt: "Use $yao-geoflow-cli for GEOFlow operations across CLI, API v1, and authenticated admin web: content ops, enterprise knowledge, growth-center leads, distribution, analytics, URL import, updates, theme editor, frontend-capability sync, tokens, users, and preflight. Do not implement code or invent routes."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

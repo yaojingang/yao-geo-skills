@@ -4,10 +4,11 @@
     "SKILL.md",
     "agents/interface.yaml",
     "evals/trigger_cases.json",
+    "evals/semantic_config.json",
     "evals/expected_artifacts.json",
     "templates/brief-template.md",
     "scripts/geoflow_preflight.sh",
-    "references/geoflow-2.0.4-capability-map.md"
+    "references/geoflow-current-capability-map.md"
   ],
   "primary_outputs": [
     "catalog-lookup-result",
@@ -19,12 +20,16 @@
     "analytics-inspection-result",
     "url-import-result",
     "system-update-result",
-    "theme-replication-result"
+    "theme-replication-result",
+    "enterprise-knowledge-operation-result",
+    "growth-center-lead-operation-result",
+    "frontend-capability-sync-result",
+    "theme-editor-operation-result"
   ],
   "quality_expectations": [
     "must operate through the local geoflow CLI when it exists and supports the action",
     "must use Laravel API v1 fallback when the current workspace has no bin/geoflow wrapper",
-    "must use authenticated admin web routes for GEOFlow 2.0.4 capabilities that are absent from API v1",
+    "must use authenticated admin web routes for current GEOFlow capabilities that are absent from API v1",
     "must not bypass the system with direct database writes",
     "must verify preflight before mutating operations",
     "must verify materials scope before material writes",
@@ -32,6 +37,6 @@
     "must require explicit target confirmation for destructive, credential-revealing, or system-update actions",
     "must redact secrets and full tokens in user-facing summaries",
     "must report exact CLI/API and system state changes",
-    "must not claim admin-only distribution management, analytics, URL import, system updates, theme replication, API tokens, or admin-user operations are exposed through API v1"
+    "must not claim admin-only distribution management, enterprise knowledge, growth-center lead management, analytics, URL import, system updates, theme replication/editor, frontend-capability sync, API tokens, or admin-user operations are exposed through API v1"
   ]
 }

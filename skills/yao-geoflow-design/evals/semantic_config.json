@@ -1,328 +1,160 @@
 {
   "optimizer_hints": {
-    "capability": "Discover, preview, clone, edit, and enrich GEOFlow themes safely",
+    "capability": "Discover, preview, clone, compare, and plan current GEOFlow frontend experiences safely",
     "inputs": [
+      "GEOFlow workspace",
       "reference URL",
-      "existing themes",
-      "target theme",
-      "GEOFlow frontend modules",
-      "homepage carousel slides",
-      "hot articles",
-      "homepage modules",
-      "homepage style",
-      "homepage builder",
-      "homepage design json",
-      "homepage composition goals",
-      "design tokens",
-      "optimization goals"
+      "theme id",
+      "homepage-design.json",
+      "channel frontend capabilities",
+      "target package report"
     ],
     "trigger_actions": [
-      "discover themes in a GEOFlow workspace",
-      "select a target theme and create a preview edit session",
-      "clone a GEOFlow frontend template",
-      "enrich the GEOFlow homepage with safe enterprise, portal, and content-hub modules",
-      "generate GEOFlow homepage module builder design JSON",
-      "configure custom homepage style tokens safely",
-      "optimize the current GEOFlow theme",
-      "adjust GEOFlow modules without changing backend logic",
-      "map a reference site onto GEOFlow modules",
-      "finalize a reviewed preview theme as publish-as-new or replace-base",
-      "import reviewed homepage design JSON only after confirmation"
+      "discover themes",
+      "create preview-first design plans",
+      "map references to GEOFlow frontend modules",
+      "generate homepage module/style JSON",
+      "compare default-site and channel capabilities",
+      "plan sync preview"
     ],
     "exclusions": [
-      "generic frontend redesign detached from GEOFlow",
-      "raw HTML copying",
-      "backend refactors",
-      "direct live theme mutation without preview"
+      "CLI operations",
+      "backend implementation",
+      "database changes",
+      "direct live activation",
+      "raw HTML copy"
     ],
     "artifacts": [
-      "theme-discovery.json",
-      "edit-session.json",
-      "homepage-composition-plan.md",
+      "theme-discovery",
       "homepage-design.json",
-      "tokens.json",
-      "mapping.json",
-      "design-audit.md",
-      "tokens.delta.json",
-      "mapping.delta.json",
-      "change-plan.md",
-      "preview plan",
-      "finalize plan"
+      "capability gap report",
+      "sync preview report",
+      "preview/finalize plan"
     ]
   },
   "fallback_positive_concepts": [
-    "geoflow_theme_system",
-    "theme_discovery",
-    "target_theme_edit",
-    "preview_session"
+    "geoflow_frontend_design"
   ],
   "positive_concepts": {
-    "geoflow_theme_system": {
-      "weight": 0.18,
+    "geoflow_frontend_design": {
+      "weight": 1.0,
       "phrases": [
         "geoflow",
-        "geoflow system",
-        "geoflow themes",
-        "geoflow theme",
-        "geoflow frontend",
-        "current geoflow theme",
-        "current geoflow template",
-        "geoflow-compatible",
-        "homepage category article archive",
-        "current template",
-        "current theme"
-      ]
-    },
-    "theme_discovery": {
-      "weight": 0.18,
-      "phrases": [
-        "discover",
-        "theme discovery",
-        "discover themes",
-        "existing themes",
-        "list existing themes",
-        "list the existing themes",
-        "which templates exist",
-        "identify current templates",
-        "看看有哪些模板",
-        "识别现在都有哪些模板",
-        "现有主题列表",
-        "template discovery"
-      ]
-    },
-    "target_theme_edit": {
-      "weight": 0.22,
-      "phrases": [
-        "edit geoflow themes",
-        "edit a selected theme",
-        "target theme",
-        "specified theme",
-        "selected template",
-        "selecting an existing template",
-        "target theme editing",
-        "theme editing",
-        "wider layout",
-        "bolder headings",
-        "display module",
-        "homepage enrichment",
-        "homepage builder",
-        "homepage module builder",
-        "custom homepage style",
-        "custom homepage styles",
-        "homepage-design.json",
-        "homepage_modules",
-        "homepage_style",
-        "HomepageModuleBuilder",
-        "showHomepageModules",
-        "homepageModules",
-        "homepageStyle",
-        "rich homepage",
-        "corporate homepage",
-        "enterprise homepage",
-        "portal homepage",
-        "chart module",
-        "metric module",
-        "hero carousel",
-        "hot articles",
-        "homepageCarouselSlides",
-        "hotArticles",
-        "变宽",
-        "加粗",
-        "首页丰满",
-        "企业官网",
-        "门户首页",
-        "图表模块",
-        "指标模块",
-        "首页多模块",
-        "自定义首页样式",
-        "首页模块 builder",
-        "首页设计 JSON",
-        "可导入首页 JSON",
-        "大图模块",
-        "样式调整",
-        "增加显示模块",
-        "current theme edit",
-        "template adjustment"
-      ]
-    },
-    "preview_session": {
-      "weight": 0.2,
-      "phrases": [
-        "preview",
-        "preview-first",
-        "preview theme",
-        "preview address",
-        "preview template",
-        "预览模板地址",
-        "先预览再确认",
-        "preview edit session",
-        "do not change live first"
-      ]
-    },
-    "clone_reference": {
-      "weight": 0.14,
-      "phrases": [
-        "cloning",
-        "reference url",
-        "reference site",
-        "template cloning",
-        "map a reference site",
-        "page-style replication",
-        "template plan",
-        "theme package",
-        "template package",
-        "reference-driven template"
-      ]
-    },
-    "optimize_current": {
-      "weight": 0.1,
-      "phrases": [
-        "optimization",
-        "improving the current template",
-        "current-template optimization",
-        "theme iteration",
-        "module-level ui adjustment",
-        "design-token refinement",
-        "optimize the current template",
-        "audit the current",
-        "what to optimize",
-        "incremental design adjustment",
-        "token refinement"
-      ]
-    },
-    "homepage_enrichment": {
-      "weight": 0.2,
-      "phrases": [
-        "homepage enrichment",
-        "fuller homepage",
-        "corporate website homepage",
-        "portal-style homepage",
-        "service blocks",
-        "case study blocks",
-        "text modules",
-        "large image hero",
-        "charts and metrics",
-        "homepage module builder",
-        "homepage modules import",
-        "custom homepage styles",
+        "frontend",
+        "theme",
+        "template",
+        "homepage",
         "homepage_modules",
         "homepage_style",
         "homepage-design.json",
-        "importable homepage json",
-        "首页优化",
-        "首页丰满",
-        "企业官网首页",
-        "服务模块",
-        "案例模块",
-        "文本模块",
-        "大图",
-        "图表",
-        "指标",
-        "不只是文章列表"
-      ]
-    },
-    "finalize_safely": {
-      "weight": 0.02,
-      "phrases": [
-        "publish as new theme",
-        "replace base theme",
-        "import homepage design after confirmation",
-        "reviewed homepage json",
-        "新增模板",
-        "替换当前模板",
-        "确认后导入首页设计",
-        "confirm before activation"
+        "frontend-capabilities",
+        "target package",
+        "geoflow agent",
+        "lead_form",
+        "laravel blade",
+        "主题",
+        "模板",
+        "首页",
+        "前台",
+        "渠道站",
+        "目标包",
+        "参考站",
+        "预览",
+        "模块",
+        "同步预览",
+        "可导入"
       ]
     }
   },
   "negative_concepts": {
-    "generic_frontend": {
-      "weight": 0.28,
-      "exclusive": true,
-      "phrases": [
-        "generic frontend redesign",
-        "marketing website",
-        "new website from scratch",
-        "marketing website from scratch",
-        "without geoflow module constraints"
-      ]
-    },
-    "raw_html_copy": {
-      "weight": 0.34,
-      "exclusive": true,
-      "phrases": [
-        "copy the whole site html",
-        "raw html",
-        "literal html copy",
-        "整页 html 原样搬",
-        "直接复制整个站"
-      ]
-    },
-    "backend_refactor": {
-      "weight": 0.32,
-      "exclusive": true,
-      "phrases": [
-        "implement backend support",
-        "rewrite the backend",
-        "database schema",
-        "database fields",
-        "route rewrite",
-        "seo contract change",
-        "templates can be switched",
-        "lead form backend",
-        "customer logo database",
-        "sales funnel data",
-        "新增数据库表",
-        "线索表单",
-        "客户 logo 数据库"
-      ]
-    },
     "cli_ops": {
-      "weight": 0.32,
+      "weight": 0.85,
       "exclusive": true,
       "phrases": [
         "geoflow cli",
-        "through the cli",
-        "create tasks",
-        "publish articles"
+        "用 geoflow cli",
+        "用 cli 管理",
+        "写一个 skill",
+        "创建任务并发布文章",
+        "create tasks and publish articles"
       ]
     },
     "read_only": {
-      "weight": 0.24,
+      "weight": 0.75,
       "exclusive": true,
       "phrases": [
-        "just explain the pages",
-        "summarize the repo",
-        "explain the geoflow homepage",
-        "explain homepage code structure",
-        "code structure",
-        "read-only explanation"
+        "解释一下",
+        "only explain",
+        "read only",
+        "代码结构"
       ]
     },
-    "direct_activation": {
-      "weight": 0.28,
+    "backend": {
+      "weight": 0.85,
       "exclusive": true,
       "phrases": [
+        "rewrite the backend",
+        "database schema",
+        "数据库字段",
+        "数据库表",
+        "迁移",
+        "控制器",
+        "crud",
+        "backend support",
+        "api 端点",
+        "改 geoflow 后台",
+        "网站设置里支持模板切换",
+        "发现逻辑",
+        "忽略 preview 目录",
+        "lead_forms",
+        "lead_submissions"
+      ]
+    },
+    "generic_or_unsupported": {
+      "weight": 0.75,
+      "exclusive": true,
+      "phrases": [
+        "完全新的营销官网",
+        "brand-new marketing website",
+        "without geoflow module constraints",
+        "真实客户 logo",
+        "销售漏斗数据",
+        "后端没有也先写出来"
+      ]
+    },
+    "unsafe_live": {
+      "weight": 0.9,
+      "exclusive": true,
+      "phrases": [
+        "直接上线",
+        "直接在当前活跃主题",
+        "直接在活跃模板",
+        "写死",
+        "数据字段后面再说",
+        "立刻生效",
+        "without preview",
+        "direct live",
         "direct production activation",
-        "ship it live without preview",
-        "edit the live theme directly",
-        "直接改线上模板",
-        "不用预览直接替换",
-        "without preview or confirmation",
-        "live site change immediately"
+        "批量覆盖",
+        "不用能力检查",
+        "不用预览",
+        "不用确认",
+        "直接把 homepage_modules import",
+        "直接把同样模块同步",
+        "所有旧目标包",
+        "不用看 frontend-capabilities"
       ]
     },
-    "system_implementation": {
-      "weight": 0.3,
+    "raw_html_or_remote_php": {
+      "weight": 0.85,
       "exclusive": true,
       "phrases": [
-        "implement backend support",
-        "geoflow settings",
-        "admin can switch templates",
-        "backend discovery logic",
-        "admin theme list",
-        "customer cases database",
-        "lead-form submissions"
+        "html 原样",
+        "copy the whole site html",
+        "raw html",
+        "ftp",
+        "public/index.php",
+        "任意 php 模板"
       ]
     }
   }

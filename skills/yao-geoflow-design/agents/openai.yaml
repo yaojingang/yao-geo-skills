@@ -6,5 +6,5 @@
 
 interface:
   display_name: "Yao GEOFlow Design"
-  short_description: "Discover GEOFlow themes and run preview-first theme or homepage builder edits"
-  default_prompt: "Inspect the GEOFlow Laravel Blade theme system, discover existing themes, choose edit_theme, clone, hybrid, or homepage_builder_design mode, support homepage enrichment and custom homepage style JSON for corporate/portal/content-hub front pages, and keep all frontend changes in a preview/review-first workflow without breaking SEO/schema, markdown rendering, image, footer, route, or data contracts."
+  short_description: "Discover GEOFlow themes and run preview-first theme, homepage builder, or channel frontend edits"
+  default_prompt: "Use for current GEOFlow frontend design: Laravel Blade themes, preview edit sessions, reference-site mapping, homepage-design.json, lead_form with existing slug, target-package frontend-capabilities, and sync-preview planning. Do not implement backend/CRUD or activate live changes."
