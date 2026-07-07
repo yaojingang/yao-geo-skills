@@ -37,6 +37,7 @@ Options:
   --dry-run                 Write the plan without running Doubao.
   --no-reference-extraction Skip visible URL extraction from answer text.
   --no-search               Alias for --no-reference-extraction, kept for compatibility.
+  --no-new                  Do not request a fresh Doubao conversation before each sample.
   -h, --help                Show help.
 `);
 }
@@ -55,6 +56,7 @@ function parseArgs(argv) {
     entityType: '',
     siteSession: 'persistent',
     referenceExtraction: true,
+    newConversation: true,
     delayMinMs: null,
     delayMaxMs: null,
     crawlerScript: process.env.DOUBAO_CRAWLER_SCRIPT || defaultCrawlerScript,
@@ -83,6 +85,7 @@ function parseArgs(argv) {
     else if (arg === '--resume') args.resume = true;
     else if (arg === '--dry-run') args.dryRun = true;
     else if (arg === '--no-search' || arg === '--no-reference-extraction') args.referenceExtraction = false;
+    else if (arg === '--no-new') args.newConversation = false;
     else if (arg === '-h' || arg === '--help') args.help = true;
     else throw new Error(`Unknown argument: ${arg}`);
   }
@@ -357,6 +360,7 @@ function runSample(options, run, sample) {
     if (options.profile) childArgs.push('--profile', options.profile);
     if (sample.target) childArgs.push('--target', sample.target);
     if (!options.referenceExtraction) childArgs.push('--no-reference-extraction');
+    if (!options.newConversation) childArgs.push('--no-new');
 
     fs.rmSync(logPath, { force: true });
     appendLog(logPath, `$ node ${childArgs.map((arg) => JSON.stringify(arg)).join(' ')}\n\n`);

@@ -197,7 +197,7 @@ Outputs:
 - `runs/my-doubao-run/raw/*.json`
 - `runs/my-doubao-run/logs/*.log`
 
-Each sample starts a fresh Doubao conversation by default. Keep the run single-threaded unless the replacement crawler explicitly supports concurrency.
+Each sample starts a fresh Doubao conversation by default. Keep the run single-threaded unless the replacement crawler explicitly supports concurrency. If `opencli doubao new` is unstable in the current profile but `opencli doubao ask` works, add `--no-new` for a controlled run and note that samples may share the same Doubao conversation context.
 
 For Android/Appium mobile runs, use the mobile backend after preflight passes:
 

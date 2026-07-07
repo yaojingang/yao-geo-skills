@@ -71,7 +71,7 @@ Outputs:
 - `runs/doubao-study-abroad/raw/*.json`
 - `runs/doubao-study-abroad/logs/*.log`
 
-Use `--dry-run` to verify the plan without opening Doubao; dry-run does not require the crawler script to exist. For real Doubao web runs, prefer `--safe-random-delay`, which waits a random 5-20 minutes between fresh samples. For short controlled tests, pass `--delay-min-minutes 1 --delay-max-minutes 3`.
+Use `--dry-run` to verify the plan without opening Doubao; dry-run does not require the crawler script to exist. For real Doubao web runs, prefer `--safe-random-delay`, which waits a random 5-20 minutes between fresh samples. For short controlled tests, pass `--delay-min-minutes 1 --delay-max-minutes 3`. If the OpenCLI Doubao adapter can ask/read but cannot reliably open a fresh conversation, pass `--no-new` and label the run because samples may share conversation context.
 
 Android/Appium mobile backend:
 

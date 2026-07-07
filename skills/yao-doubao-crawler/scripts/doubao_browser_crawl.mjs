@@ -159,7 +159,8 @@ function extractAssistantMessage(value) {
   const role = cleanText(value.role || value.Role || value.author || value.Author).toLowerCase();
   const userRole = /user|human|用户|我|访客/.test(role);
   const assistantRole = /assistant|bot|doubao|豆包|ai|智能体/.test(role);
-  if (assistantRole || (role && !userRole)) {
+  const systemRole = /system|系统|tool|工具/.test(role);
+  if (assistantRole && !userRole && !systemRole) {
     const text = directText(value);
     if (text) return text;
   }
@@ -274,6 +275,27 @@ function captureCurrent(options) {
   return { parsed, output };
 }
 
+function readCurrentConversation(options) {
+  const readArgs = [
+    'doubao',
+    'read',
+    '-f',
+    'json',
+    '--site-session',
+    options.siteSession,
+    '--keep-tab',
+    'true',
+    '--window',
+    'foreground',
+  ];
+  const output = runOpenCli(readArgs, {
+    profile: options.profile,
+    timeoutMs: options.timeout * 1000,
+  });
+  const parsed = parseJsonFromOpenCli(output);
+  return { parsed, output };
+}
+
 function startNewConversation(options) {
   if (!options.newConversation) return null;
   const newArgs = [
@@ -284,7 +306,9 @@ function startNewConversation(options) {
     '--site-session',
     options.siteSession,
     '--keep-tab',
-    'false',
+    'true',
+    '--window',
+    'foreground',
   ];
   const output = runOpenCli(newArgs, {
     profile: options.profile,
@@ -309,7 +333,9 @@ function askDoubao(options) {
     '--site-session',
     options.siteSession,
     '--keep-tab',
-    'false',
+    'true',
+    '--window',
+    'foreground',
   ];
 
   const output = runOpenCli(askArgs, {
@@ -318,6 +344,39 @@ function askDoubao(options) {
   });
   const parsed = parseJsonFromOpenCli(output);
   return { parsed, output, newConversationState };
+}
+
+function looksLikePageChrome(text) {
+  const source = cleanText(text);
+  if (!source) return true;
+  const uiMarkers = ['新办公任务', '历史对话', '快速帮我写作', '编程PPT', 'AI 创作', '云盘更多'];
+  const markerCount = uiMarkers.filter((marker) => source.includes(marker)).length;
+  return markerCount >= 3 && !/[。！？]\s*/.test(source.slice(0, 120));
+}
+
+function looksLikeFailureText(text) {
+  const source = cleanText(text).toLowerCase();
+  if (!source) return true;
+  return [
+    'no response within',
+    'no visible doubao messages',
+    'auth_required',
+    'region-ban',
+    'captcha',
+  ].some((marker) => source.includes(marker));
+}
+
+function chooseAnswerText(primaryText, fallbackText, target = '') {
+  const primary = multilineText(primaryText);
+  const fallback = multilineText(fallbackText);
+  if (looksLikeFailureText(primary) && !looksLikeFailureText(fallback)) return fallback;
+  if (looksLikeFailureText(fallback)) return primary;
+  if (!fallback) return primary;
+  if (!primary) return fallback;
+  if (looksLikePageChrome(primary) && !looksLikePageChrome(fallback)) return fallback;
+  if (target && !primary.includes(target) && fallback.includes(target)) return fallback;
+  if (fallback.length > primary.length * 1.4 && !looksLikePageChrome(fallback)) return fallback;
+  return primary;
 }
 
 async function main() {
@@ -330,14 +389,24 @@ async function main() {
 
   const startedAt = new Date().toISOString();
   const raw = options.captureCurrent ? captureCurrent(options) : askDoubao(options);
-  const answerText = extractAnswerText(raw.parsed);
-  const conversation = extractConversation(raw.parsed);
+  let readBack = null;
+  if (!options.captureCurrent) {
+    try {
+      readBack = readCurrentConversation(options);
+    } catch {
+      readBack = null;
+    }
+  }
+  const askAnswerText = extractAnswerText(raw.parsed);
+  const readAnswerText = readBack ? extractAnswerText(readBack.parsed) : '';
+  const answerText = chooseAnswerText(askAnswerText, readAnswerText, options.target);
+  const conversation = extractConversation(readBack?.parsed || raw.parsed);
   const references = options.referenceExtraction
     ? collectReferencesFromText(answerText)
     : { requested: false, count: 0, items: [], note: 'Reference extraction was not requested.' };
 
   const record = {
-    ok: Boolean(cleanText(answerText)),
+    ok: Boolean(cleanText(answerText)) && !looksLikeFailureText(answerText),
     collected_at: new Date().toISOString(),
     engine: 'doubao',
     transport: 'opencli-doubao-adapter',
@@ -370,6 +439,8 @@ async function main() {
     raw: {
       opencli_result: raw.parsed,
       opencli_output_excerpt: compactOutput(raw.output),
+      opencli_readback_result: readBack?.parsed || null,
+      opencli_readback_output_excerpt: readBack ? compactOutput(readBack.output) : '',
       new_conversation_state: raw.newConversationState || null,
       tool: conversation.tool || null,
     },
