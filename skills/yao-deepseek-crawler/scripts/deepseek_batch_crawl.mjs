@@ -7,10 +7,7 @@ import { spawn } from 'node:child_process';
 const __filename = fileURLToPath(import.meta.url);
 const scriptDir = path.dirname(__filename);
 const skillRoot = path.resolve(scriptDir, '..');
-const defaultCrawlerScript = path.resolve(
-  skillRoot,
-  '../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs',
-);
+const defaultCrawlerScript = path.join(scriptDir, 'geo-deepseek-browser-direct.mjs');
 const MINUTE_MS = 60 * 1000;
 const MAX_DELAY_MS = 24 * 60 * 60 * 1000;
 
@@ -27,7 +24,7 @@ Options:
   --target-aliases <text>   Optional aliases separated by comma, pipe, semicolon, or newline.
   --entity-type <type>      Required with --target-entity: person/company/product or 人/公司/产品.
   --out-dir <dir>           Run output directory. Default: runs/<timestamp>.
-  --crawler-script <file>   Existing DeepSeek crawler script. Defaults to opencli-boss-ai.
+  --crawler-script <file>   Existing DeepSeek crawler script. Defaults to scripts/geo-deepseek-browser-direct.mjs.
   --timeout <seconds>       Per-sample timeout passed to crawler. Default: 300.
   --delay-ms <ms>           Delay between samples. Default: 1500.
   --safe-random-delay       Random delay of 5-20 minutes between fresh samples.

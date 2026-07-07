@@ -43,6 +43,6 @@
     "OpenCLI CLI 1.8.4+",
     "OpenCLI Browser Bridge connected profile",
     "Logged-in DeepSeek web session",
-    "DeepSeek browser crawler script, defaulting to ../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs"
+    "DeepSeek browser crawler script, defaulting to bundled scripts/geo-deepseek-browser-direct.mjs"
   ]
 }

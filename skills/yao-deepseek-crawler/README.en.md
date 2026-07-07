@@ -21,7 +21,7 @@ It is not a generic website crawler and does not use the DeepSeek API.
 - OpenCLI CLI 1.8.4+
 - OpenCLI Browser Bridge connected to a Chrome or Edge profile
 - Logged-in DeepSeek web session
-- Local DeepSeek browser crawler script at `../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs`, or a custom path passed with `--crawler-script`
+- Local DeepSeek browser crawler script bundled at `scripts/geo-deepseek-browser-direct.mjs`, or a custom path passed with `--crawler-script`
 - Optional `OPENAI_API_KEY` for analysis-stage AI semantic review. Without it, the default mode falls back to local rules.
 
 Detailed setup guide:

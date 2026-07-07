@@ -21,7 +21,7 @@
 - OpenCLI CLI 1.8.4+
 - OpenCLI Browser Bridge 已连接 Chrome 或 Edge profile
 - DeepSeek 网页端已登录
-- 本地 DeepSeek browser crawler 脚本，默认路径为 `../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs`，也可以通过 `--crawler-script` 指定
+- 本地 DeepSeek browser crawler 脚本，默认使用本 skill 自带的 `scripts/geo-deepseek-browser-direct.mjs`，也可以通过 `--crawler-script` 指定
 - 可选：`OPENAI_API_KEY`，用于分析阶段的 AI 语义复核；没有密钥时默认自动回退到本地规则
 
 安装和使用细节见：
