@@ -4,6 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 node --check scripts/doubao_batch_crawl.mjs
+node --check scripts/doubao_browser_crawl.mjs
+node --test scripts/test_doubao_browser_crawl.mjs
 python3 -m py_compile \
   scripts/analyze_doubao_results.py \
   scripts/doubao_mobile_crawl.py \

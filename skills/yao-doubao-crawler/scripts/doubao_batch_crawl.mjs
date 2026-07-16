@@ -465,6 +465,7 @@ async function main() {
       global_repeat: options.repeat,
       timeout: options.timeout,
       reference_extraction: options.referenceExtraction,
+      new_conversation: options.newConversation,
       site_session: options.siteSession,
       profile: options.profile || null,
       target_entity: options.targetEntity || null,

@@ -2003,6 +2003,7 @@ def compute_summary(
     input_meta: dict | None = None,
     run_meta: dict | None = None,
 ) -> dict:
+    new_conversation = (input_meta or {}).get("new_conversation") is not False
     valid_samples = [sample for sample in samples if sample["ok"]]
     failed_samples = [sample for sample in samples if not sample["ok"]]
     planned_count = len(plan_entries) or len(samples)
@@ -2025,6 +2026,7 @@ def compute_summary(
         },
         "input": {
             "delay_strategy": (input_meta or {}).get("delay_strategy") or {},
+            "new_conversation": new_conversation,
         },
         "samples": {
             "planned": planned_count,
@@ -2977,6 +2979,9 @@ def report_overview_text(summary: dict) -> str:
     entity_name = target.get("entity") or "目标实体"
     entity_type = target.get("entity_type_label") or ENTITY_TYPE_LABELS.get(summary.get("entities", {}).get("target_kind"), "实体")
     mobile_note = ""
+    context_note = ""
+    if (summary.get("input") or {}).get("new_conversation") is False:
+        context_note = "本次 Web 采集未新建独立对话，样本可能共享同一对话上下文，概率指标可能受到前序消息影响。"
     if mobile.get("collected_material_rows"):
         mobile_note = (
             f"移动端补充采集搜索资料 {mobile.get('collected_material_rows', 0)} 行，"
@@ -2989,6 +2994,7 @@ def report_overview_text(summary: dict) -> str:
             f"本次未指定目标实体，因此报告以「{entity_type}」候选识别、采集覆盖、信源结构和移动端证据为探索性分析重点。"
             f"本次识别同类型候选 {summary.get('entities', {}).get('same_type_candidate_count', 0)} 个，兼容引用信源 {samples['reference_count']} 条。"
             f"{mobile_note}"
+            f"{context_note}"
         )
     return (
         f"本报告基于 {samples['question_count']} 个关键词、{samples['planned']} 次计划采样、{samples['valid']} 条有效 Doubao AI 搜索结果，"
@@ -2997,6 +3003,7 @@ def report_overview_text(summary: dict) -> str:
         f"平均提及 {fmt_num(metrics.get('avg_mentions_per_sample') or 0, 2)} 次，情感倾向为「{sentiment_label(metrics.get('dominant_sentiment') or 'neutral')}」，"
         f"本次识别同类型竞品 {target.get('competitor_count', 0)} 个，引用信源 {samples['reference_count']} 条。"
         f"{mobile_note}"
+        f"{context_note}"
     )
 
 
@@ -3007,6 +3014,9 @@ def report_overview_text_en(summary: dict) -> str:
     mobile = summary.get("mobile_evidence") or {}
     entity_name = target.get("entity") or "target entity"
     mobile_note = ""
+    context_note = ""
+    if (summary.get("input") or {}).get("new_conversation") is False:
+        context_note = " This Web run reused the current conversation. Samples may share the same conversation context, and probability estimates can be influenced by earlier messages."
     if mobile.get("collected_material_rows"):
         mobile_note = (
             f" Mobile evidence includes {mobile.get('collected_material_rows', 0)} search-material rows, "
@@ -3019,6 +3029,7 @@ def report_overview_text_en(summary: dict) -> str:
             f"and {samples['valid']} valid Doubao AI search answers. No target entity was supplied, so the report is exploratory and focuses on same-type candidates, coverage, citation structure, and mobile UI evidence. "
             f"The run identified {summary.get('entities', {}).get('same_type_candidate_count', 0)} same-type candidates and {samples['reference_count']} compatible citations."
             f"{mobile_note}"
+            f"{context_note}"
         )
     return (
         f"This report is based on {samples['question_count']} keywords, {samples['planned']} planned samples, "
@@ -3029,6 +3040,7 @@ def report_overview_text_en(summary: dict) -> str:
         f"and the dominant sentiment is {sentiment_label_en(metrics.get('dominant_sentiment') or 'neutral')}. "
         f"The run identified {target.get('competitor_count', 0)} same-type competitors and {samples['reference_count']} citations."
         f"{mobile_note}"
+        f"{context_note}"
     )
 
 

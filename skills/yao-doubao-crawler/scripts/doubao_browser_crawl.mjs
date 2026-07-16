@@ -146,6 +146,11 @@ function directText(value) {
   return '';
 }
 
+function messageRole(value) {
+  if (!value || typeof value !== 'object') return '';
+  return cleanText(value.role || value.Role || value.author || value.Author).toLowerCase();
+}
+
 function extractAssistantMessage(value) {
   if (!value) return '';
   if (Array.isArray(value)) {
@@ -156,7 +161,7 @@ function extractAssistantMessage(value) {
     return '';
   }
   if (typeof value !== 'object') return '';
-  const role = cleanText(value.role || value.Role || value.author || value.Author).toLowerCase();
+  const role = messageRole(value);
   const userRole = /user|human|用户|我|访客/.test(role);
   const assistantRole = /assistant|bot|doubao|豆包|ai|智能体/.test(role);
   const systemRole = /system|系统|tool|工具/.test(role);
@@ -177,6 +182,7 @@ function extractAnswerText(parsed) {
   const assistantMessage = extractAssistantMessage(parsed);
   if (assistantMessage) return assistantMessage;
   const record = firstRecord(parsed);
+  if (messageRole(record)) return '';
   const direct = findStringByKeys(record, ['response', 'answer', 'assistant', 'content', 'Text', 'text']);
   if (direct) return direct;
   if (typeof record === 'string') return multilineText(record);
@@ -349,33 +355,29 @@ function askDoubao(options) {
 function looksLikePageChrome(text) {
   const source = cleanText(text);
   if (!source) return true;
-  const uiMarkers = ['新办公任务', '历史对话', '快速帮我写作', '编程PPT', 'AI 创作', '云盘更多'];
-  const markerCount = uiMarkers.filter((marker) => source.includes(marker)).length;
+  const compact = source.replace(/\s+/g, '');
+  const exactNoise = new Set([
+    '快速视频生成深入研究图像生成帮我写作音乐生成更多',
+    'AI创作云盘更多历史对话',
+  ]);
+  if (exactNoise.has(compact)) return true;
+  const uiMarkers = ['新办公任务', '历史对话', '快速帮我写作', '编程PPT', 'AI创作', '云盘更多'];
+  const markerCount = uiMarkers.filter((marker) => compact.includes(marker)).length;
   return markerCount >= 3 && !/[。！？]\s*/.test(source.slice(0, 120));
-}
-
-function looksLikeFailureText(text) {
-  const source = cleanText(text).toLowerCase();
-  if (!source) return true;
-  return [
-    'no response within',
-    'no visible doubao messages',
-    'auth_required',
-    'region-ban',
-    'captcha',
-  ].some((marker) => source.includes(marker));
 }
 
 function chooseAnswerText(primaryText, fallbackText, target = '') {
   const primary = multilineText(primaryText);
   const fallback = multilineText(fallbackText);
-  if (looksLikeFailureText(primary) && !looksLikeFailureText(fallback)) return fallback;
-  if (looksLikeFailureText(fallback)) return primary;
+  const primaryIsChrome = looksLikePageChrome(primary);
+  const fallbackIsChrome = looksLikePageChrome(fallback);
+  if (primaryIsChrome && fallbackIsChrome) return '';
+  if (primaryIsChrome) return fallback;
+  if (fallbackIsChrome) return primary;
   if (!fallback) return primary;
   if (!primary) return fallback;
-  if (looksLikePageChrome(primary) && !looksLikePageChrome(fallback)) return fallback;
   if (target && !primary.includes(target) && fallback.includes(target)) return fallback;
-  if (fallback.length > primary.length * 1.4 && !looksLikePageChrome(fallback)) return fallback;
+  if (fallback.length > primary.length * 1.4) return fallback;
   return primary;
 }
 
@@ -406,7 +408,7 @@ async function main() {
     : { requested: false, count: 0, items: [], note: 'Reference extraction was not requested.' };
 
   const record = {
-    ok: Boolean(cleanText(answerText)) && !looksLikeFailureText(answerText),
+    ok: Boolean(cleanText(answerText)),
     collected_at: new Date().toISOString(),
     engine: 'doubao',
     transport: 'opencli-doubao-adapter',
