@@ -10,11 +10,11 @@ X: https://x.com/yaojingang
 
 ## Current Capability Rule
 
-Prefer `bin/geoflow` only when it exists and `--help` confirms the requested action. The current Laravel 2.0.x public repository usually exposes `/api/v1` without a `bin/geoflow` wrapper, so API fallback is expected there.
+Prefer `bin/geoflow` only when it exists and `--help` confirms the requested action. Current Laravel GEOFlow deployments may expose `/api/v1` without a `bin/geoflow` wrapper, so API fallback is expected there.
 
 Do not invent CLI subcommands for actions that only exist in API v1. When the CLI is absent, use `curl` with explicit bearer auth and `X-Idempotency-Key` for writes.
 
-For GEOFlow 2.0.4 admin-only capabilities, use authenticated admin web routes. Do not claim they are API v1 endpoints unless `php artisan route:list --path=api/v1` proves it in the target workspace.
+For GEOFlow admin-only capabilities, use authenticated admin web routes. Do not claim they are API v1 endpoints unless `php artisan route:list --path=api/v1` proves it in the target workspace.
 
 ## Preflight
 
@@ -438,7 +438,7 @@ Trash article:
 
 ## Distribution Boundary
 
-GEOFlow 2.0.4 includes Distribution Management, target-site packages, static target sites, WordPress REST channels, generic HTTP API channels, settings sync, and distribution queues. These admin operations are not exposed through the current `/api/v1` surface.
+Current GEOFlow includes Distribution Management, target-site packages, static target sites, WordPress REST channels, generic HTTP API channels, frontend-capability sync, settings-sync preview, and distribution queues. These admin operations are not exposed through the current `/api/v1` surface.
 
 API task fields can set `publish_scope`, which affects worker-driven task publishing:
 
@@ -446,7 +446,7 @@ API task fields can set `publish_scope`, which affects worker-driven task publis
 - `distribution_only`: worker publishing may mark local articles `private` while still eligible for distribution.
 - `local_only`: skip distribution.
 
-Do not claim the API can create distribution channels, rotate secrets, download target-site packages, inspect Analytics, run URL imports, manage system updates, replicate themes, or manage API tokens unless the target workspace exposes separate API routes for those actions.
+Do not claim the API can create distribution channels, rotate secrets, download target-site packages, inspect Analytics, run URL imports, manage system updates, operate enterprise knowledge or growth-center leads, edit themes, refresh frontend capabilities, replicate themes, or manage API tokens unless the target workspace exposes separate API routes for those actions.
 
 ## Admin Web Route Map
 
@@ -497,6 +497,12 @@ Use admin web for channel selection through `distribution_channel_ids[]`, task m
 - `POST /admin/distribution/{channelId}/reveal-secret`
 - `POST /admin/distribution/{channelId}/download-package`
 - `POST /admin/distribution/{channelId}/sync-settings`
+- `GET /admin/distribution/{channelId}/sync-settings/preview`
+- `POST /admin/distribution/{channelId}/frontend-capabilities/refresh`
+- `GET /admin/distribution/sync-settings-all/preview`
+- `POST /admin/distribution/sync-settings-all`
+- `POST /admin/distribution/sync-settings-selected/preview`
+- `POST /admin/distribution/sync-settings-selected`
 - `GET /admin/distribution/jobs`
 - `GET /admin/distribution/jobs/{distributionId}/edit`
 - `PUT /admin/distribution/jobs/{distributionId}`
@@ -504,6 +510,40 @@ Use admin web for channel selection through `distribution_channel_ids[]`, task m
 - `POST /admin/distribution/jobs/{distributionId}/retry`
 
 Channel types are `geoflow_agent`, `wordpress_rest`, and `generic_http_api`. Secret reveal and package download may require super-admin password confirmation.
+
+Refresh frontend capabilities before syncing homepage/theme settings to a GEOFlow Agent channel. If the target package does not expose frontend capabilities, treat it as an outdated or unsupported target package and report the mismatch.
+
+### Enterprise Knowledge
+
+- `GET /admin/enterprise-knowledge`
+- `GET /admin/enterprise-knowledge/create`
+- `POST /admin/enterprise-knowledge/create`
+- `GET /admin/enterprise-knowledge/{projectId}`
+- `POST /admin/enterprise-knowledge/{projectId}/autosave`
+- `GET /admin/enterprise-knowledge/{projectId}/status`
+- `POST /admin/enterprise-knowledge/{projectId}/validate`
+- `POST /admin/enterprise-knowledge/{projectId}/editor/images/upload`
+- `POST /admin/enterprise-knowledge/{projectId}/publish`
+- `POST /admin/enterprise-knowledge/{projectId}/revisions/{revisionId}/restore`
+- `POST /admin/enterprise-knowledge/{projectId}/delete`
+
+Use these routes for enterprise knowledge drafting, editor upload, validation, publish, and revision restore. Verify project status and resulting knowledge-base state after publish.
+
+### Growth Center
+
+- `GET /admin/lead-forms`
+- `GET /admin/lead-forms/create`
+- `POST /admin/lead-forms`
+- `GET /admin/lead-forms/{formId}/edit`
+- `PUT /admin/lead-forms/{formId}`
+- `POST /admin/lead-forms/{formId}/toggle-status`
+- `POST /admin/lead-forms/{formId}/delete`
+- `GET /admin/leads`
+- `GET /admin/leads/export`
+- `GET /admin/leads/{submissionId}`
+- `PUT /admin/leads/{submissionId}`
+
+Public lead capture routes are `GET /forms/{slug}` and `POST /forms/{slug}/submissions`. Admin exports and lead details may contain personal data; redact summaries and require an explicit export request.
 
 ### URL Import
 
@@ -594,11 +634,19 @@ Redact provider API keys and encrypted secret fields.
 - `POST /admin/site-settings/theme`
 - `POST /admin/site-settings/article-detail-ads`
 - `POST /admin/site-settings/article-detail-text-ads`
+- `POST /admin/site-settings/homepage-modules`
+- `POST /admin/site-settings/homepage-modules/preset`
+- `POST /admin/site-settings/homepage-modules/import`
 - `GET|POST /admin/site-settings/sensitive-words`
 - `POST /admin/site-settings/sensitive-words/{wordId}/delete`
+- `GET /admin/site-settings/theme-editor/{themeId}/{page}`
+- `GET /admin/site-settings/theme-editor/{themeId}/{page}/preview`
+- `POST /admin/site-settings/theme-editor/{themeId}/{page}/draft`
+- `POST /admin/site-settings/theme-editor/{themeId}/{page}/publish`
+- `POST /admin/site-settings/theme-editor/{themeId}/{page}/discard`
 - Theme replication routes under `/admin/site-settings/theme-replications`
 
-For theme replication, verify status and previews before publish. Package download does not imply publish.
+For homepage module payload design, use `yao-geoflow-design`. For theme replication or live theme editor publish, verify status and previews before publish. Package download does not imply publish.
 
 ### Super-Admin Management
 

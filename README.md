@@ -166,8 +166,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-cli</code></strong><br>
-      作用：通过本地 <code>geoflow</code> CLI 或 Laravel <code>/api/v1</code> fallback 操作已有的 GEOFlow 系统，用于目录查询、任务管理、文章上传、审核与发布。<br><br>
-      适合：已经有 GEOFlow 系统，需要通过 CLI/API 做运营动作、批量处理、Docker 部署预检或自动化编排。<br><br>
+      作用：通过受支持的 CLI、Laravel <code>/api/v1</code> 和已登录后台操作 GEOFlow 2.1+ 系统，覆盖任务、素材、文章、分发、增长中心、企业知识库、主题编辑和前端能力同步。<br><br>
+      适合：已经有 GEOFlow 系统，需要做运营动作、增长线索导出、知识库草稿流、渠道能力刷新、批量处理、Docker 部署预检或高风险操作前确认。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-cli.md">说明页</a> ·
       <a href="skills/yao-geoflow-cli">Skill 包</a> ·
@@ -177,8 +177,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-template</code></strong><br>
-      作用：把参考网址的前台视觉风格映射成 GEOFlow 兼容的主题包方案，输出模块映射、设计 token 和 preview-first 模板结构。<br><br>
-      适合：GEOFlow 前台模板复刻、参考站样式映射、主题包规划、模板预览与启用前的前置准备。<br><br>
+      作用：保留旧 GEOFlow PHP 模板包的兼容入口，用来解释历史 <code>index.php</code>、<code>article.php</code>、<code>includes/*.php</code> 输出契约，并生成交给 design skill 的迁移说明。<br><br>
+      适合：明确查看 legacy template skill、旧 PHP 模板包、历史 mapping/tokens 输出；当前 Laravel Blade 主题、参考站拆解和首页模块设计应转交 <code>yao-geoflow-design</code>。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-template.md">说明页</a> ·
       <a href="docs/skills/yao-geoflow-template.en.md">English Guide</a> ·
@@ -189,8 +189,8 @@ git checkout main
   <tr>
     <td valign="top" width="100%">
       <strong><code>yao-geoflow-design</code></strong><br>
-      作用：识别 GEOFlow 当前 Laravel Blade 主题，指定目标主题进入 preview-first 编辑会话，并完成模板复刻、现有模板优化与局部样式调整。<br><br>
-      适合：GEOFlow 当前主题迭代、指定模板改版、预览态样式优化、参考站风格映射后落地，以及在不破坏 SEO/schema、Markdown 渲染和主题 fallback 契约的前提下新增或替换模板。<br><br>
+      作用：作为当前 GEOFlow 前端体验主 skill，识别 Laravel Blade 主题、设计 homepage module/style JSON、处理 <code>lead_form</code> 转化模块、比较默认站和渠道目标包能力，并规划同步预览。<br><br>
+      适合：默认站首页设计、参考站拆解、主题预览编辑、在线主题编辑策略、渠道前端能力适配、target package 能力差异和不破坏 SEO/schema 的前端迭代。<br><br>
       相关入口：<br>
       <a href="docs/skills/yao-geoflow-design.md">说明页</a> ·
       <a href="docs/skills/yao-geoflow-design.en.md">English Guide</a> ·

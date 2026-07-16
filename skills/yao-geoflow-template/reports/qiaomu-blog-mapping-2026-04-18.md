@@ -7,7 +7,7 @@ Source date:
 - 2026-04-18
 
 Target system:
-- 一个标准 GEOFlow PHP 工作区
+- `/Users/laoyao/AI Coding/01-Projects/Active/GEO官网系统`
 
 ## 1. Purpose
 
@@ -418,3 +418,4 @@ This reference URL is a good first target for GEOFlow template cloning because:
 Best interpretation:
 - not a full-site copy
 - a GEOFlow-compatible editorial theme derived from Qiaomu Blog
+

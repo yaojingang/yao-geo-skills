@@ -3,22 +3,26 @@
   "required_files": [
     "SKILL.md",
     "agents/interface.yaml",
+    "agents/openai.yaml",
     "evals/trigger_cases.json",
+    "evals/semantic_config.json",
     "evals/expected_artifacts.json",
     "references/geoflow-frontend-map.md",
     "references/template-boundary.md",
-    "references/theme-package-contract.md"
+    "references/theme-package-contract.md",
+    "reports/geoflow-skill-upgrade-2026-07-05.md"
   ],
   "primary_outputs": [
-    "theme-package-plan",
-    "tokens-json",
-    "mapping-json",
-    "preview-plan"
+    "legacy-template-output-summary",
+    "legacy-contract-explanation",
+    "design-skill-handoff-note",
+    "route-to-yao-geoflow-design"
   ],
   "quality_expectations": [
-    "must begin from GEOFlow's existing frontend contract",
-    "must preserve routing, SEO, and data-query boundaries unless explicitly expanded",
-    "must prefer preview-first template packages over direct production replacement",
-    "must map reference styles onto GEOFlow modules instead of copying raw pages verbatim"
+    "must trigger only for explicit legacy GEOFlow template skill or old PHP template package requests",
+    "must route current Laravel Blade theme, homepage module, lead_form, channel frontend, and reference-site cloning work to yao-geoflow-design",
+    "must label index.php/article.php/category.php/archive.php/includes/*.php as legacy assumptions",
+    "must not recommend direct deployment of legacy PHP templates into current Laravel GEOFlow",
+    "must not perform backend implementation, database changes, or direct production activation"
   ]
 }

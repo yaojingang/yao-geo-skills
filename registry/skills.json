@@ -43,22 +43,28 @@
         "geoflow",
         "cli",
         "operations",
-        "task-management",
-        "article-publish"
+        "api-v1",
+        "admin-web",
+        "growth-center",
+        "enterprise-knowledge",
+        "distribution",
+        "frontend-capabilities"
       ],
       "requires_web": false,
       "primary_outputs": [
         "catalog-lookup-result",
         "task-operation-result",
-        "article-publish-result"
+        "article-publish-result",
+        "lead-export-plan",
+        "frontend-capability-sync-report"
       ],
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-cli",
-      "summary": "Operate an existing GEOFlow system through the local geoflow CLI or Laravel API v1 fallback for catalog lookup, task execution, article upload, review, publish flows, and Docker preflight diagnostics.",
+      "summary": "Operate an existing GEOFlow 2.1+ system through supported CLI, API v1, or authenticated admin web flows for tasks, materials, articles, analytics, distribution, enterprise knowledge, growth-center leads, URL import, theme editor, frontend-capability sync, and high-risk preflight.",
       "public_repo_path": "skills/yao-geoflow-cli",
-      "last_updated": "2026-04-26"
+      "last_updated": "2026-07-05"
     },
     {
       "id": "yao-geo-tracking",
@@ -760,26 +766,25 @@
       "maturity": "beta",
       "tags": [
         "geoflow",
-        "frontend",
-        "theme",
-        "template-clone",
-        "preview",
-        "design-tokens"
+        "legacy",
+        "template-router",
+        "php-template",
+        "design-handoff",
+        "compatibility"
       ],
       "requires_web": true,
       "primary_outputs": [
-        "theme-package-plan",
-        "tokens-json",
-        "mapping-json",
-        "preview-plan"
+        "legacy-contract-note",
+        "legacy-output-review",
+        "design-handoff-note"
       ],
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-template",
-      "summary": "Map a reference URL onto GEOFlow's frontend contract and generate a preview-first theme package plan with tokens, module mappings, and activation-ready structure.",
+      "summary": "Compatibility router for historical GEOFlow PHP template-package outputs and old index.php/article.php/includes contracts. Current Laravel Blade themes, homepage modules, lead_form, channel frontend adaptation, and reference-site design work should route to yao-geoflow-design.",
       "public_repo_path": "skills/yao-geoflow-template",
-      "last_updated": "2026-04-20"
+      "last_updated": "2026-07-05"
     },
     {
       "id": "yao-geoflow-design",
@@ -789,36 +794,31 @@
         "geoflow",
         "frontend",
         "theme",
-        "template-optimization",
-        "design-system",
-        "preview",
-        "theme-edit",
-        "homepage-enrichment",
-        "corporate-homepage",
+        "laravel-blade",
         "homepage-builder",
-        "custom-homepage-style"
+        "lead-form",
+        "frontend-capabilities",
+        "channel-sync",
+        "theme-editor",
+        "reference-mapping"
       ],
       "requires_web": true,
       "primary_outputs": [
         "theme-discovery",
-        "preview-theme-session",
-        "design-audit",
-        "homepage-composition-plan",
+        "frontend-surface-inventory",
         "homepage-design-json",
-        "homepage-style-tokens",
-        "theme-package-plan",
-        "optimization-plan",
-        "mapping-json",
-        "preview-plan",
-        "finalize-plan"
+        "lead-form-module-plan",
+        "target-package-capability-gap",
+        "sync-preview-plan",
+        "preview-theme-session"
       ],
       "status": "active",
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-design",
-      "summary": "Discover current GEOFlow Laravel Blade themes, preview-edit a selected template safely, enrich the homepage with corporate or portal-style modules from existing GEOFlow data, generate reviewed homepage module/style JSON when the builder exists, and then clone, optimize, publish as new, replace the base theme, or import homepage design after review without breaking rendering contracts.",
+      "summary": "Primary frontend experience skill for current GEOFlow: discover Laravel Blade themes, map reference sites, design homepage module/style JSON including lead_form by existing slug, compare default-site and target-package frontend capabilities, plan channel sync previews, and keep activation separate from design review.",
       "public_repo_path": "skills/yao-geoflow-design",
-      "last_updated": "2026-06-23"
+      "last_updated": "2026-07-05"
     }
   ],
   "planned_families": [

@@ -1,0 +1,115 @@
+{
+  "optimizer_hints": {
+    "capability": "Route explicit legacy GEOFlow template-package questions and hand current frontend work to yao-geoflow-design",
+    "inputs": [
+      "legacy template output",
+      "old PHP template package",
+      "historical mapping.json",
+      "historical tokens.json"
+    ],
+    "trigger_actions": [
+      "explain legacy PHP template contract",
+      "review old template outputs",
+      "prepare handoff notes for yao-geoflow-design"
+    ],
+    "exclusions": [
+      "current Laravel Blade theme design",
+      "homepage module builder",
+      "lead_form",
+      "channel frontend sync",
+      "backend implementation"
+    ],
+    "artifacts": [
+      "legacy-template-output-summary",
+      "legacy-contract-explanation",
+      "design-skill-handoff-note"
+    ]
+  },
+  "fallback_positive_concepts": [
+    "legacy_template"
+  ],
+  "positive_concepts": {
+    "legacy_template": {
+      "weight": 0.55,
+      "phrases": [
+        "legacy geoflow template",
+        "legacy template skill",
+        "旧 php 模板",
+        "旧模板包",
+        "旧 geoflow template",
+        "历史模板输出",
+        "historical template output"
+      ]
+    },
+    "legacy_files": {
+      "weight": 0.25,
+      "phrases": [
+        "index.php",
+        "article.php",
+        "category.php",
+        "archive.php",
+        "includes/header.php",
+        "includes/functions.php"
+      ]
+    },
+    "legacy_outputs": {
+      "weight": 0.25,
+      "phrases": [
+        "outputs/",
+        "mapping.json",
+        "tokens.json",
+        "old template package",
+        "旧模板包契约"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "current_design": {
+      "weight": 0.45,
+      "exclusive": true,
+      "phrases": [
+        "current geoflow",
+        "当前 geoflow",
+        "当前 laravel geoflow",
+        "laravel blade",
+        "resources/views/theme",
+        "reference site clone",
+        "参考网站",
+        "复刻成可预览模板"
+      ]
+    },
+    "homepage_builder": {
+      "weight": 0.45,
+      "exclusive": true,
+      "phrases": [
+        "homepage module builder",
+        "homepage modules",
+        "首页模块 builder",
+        "lead_form",
+        "channel frontend",
+        "frontend-capabilities",
+        "target package"
+      ]
+    },
+    "backend": {
+      "weight": 0.45,
+      "exclusive": true,
+      "phrases": [
+        "backend implementation",
+        "database migration",
+        "数据库迁移",
+        "后端 crud"
+      ]
+    },
+    "direct_deploy": {
+      "weight": 0.55,
+      "exclusive": true,
+      "phrases": [
+        "直接部署",
+        "deploy directly",
+        "当前 laravel geoflow",
+        "current laravel geoflow"
+      ]
+    }
+  }
+}

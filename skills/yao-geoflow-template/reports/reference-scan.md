@@ -1,6 +1,6 @@
 # Reference Scan
 
-## Local Reference 1: `yao-geoflow-cli`
+## Local Reference 1: `geoflow-cli-ops`
 
 Why inspected:
 - to match local skill packaging conventions

@@ -38,6 +38,8 @@ Do not change these public routes during a design-only run:
 - `/category/{slug}`
 - `/archive`
 - `/archive/{year}/{month}`
+- `/forms/{slug}`
+- `/forms/{slug}/submissions`
 
 Admin route base may be customized through `config/geoflow.php`; never hard-code `/geo_admin` in theme output.
 Themes should not add admin links unless the current application passes such links explicitly.
@@ -117,6 +119,7 @@ Stable built-in views:
 - `resources/views/site/partials/header.blade.php`
 - `resources/views/site/partials/footer.blade.php`
 - `resources/views/site/partials/article-card.blade.php`
+- `resources/views/site/partials/lead-form.blade.php`
 
 ## 6. Shared Layout Modules
 
@@ -176,6 +179,7 @@ Stable modules:
 - `home.builder.feature_grid`
 - `home.builder.article_collection`
 - `home.builder.cta_band`
+- `home.builder.lead_form`
 - `home.builder.custom_html`
 - `home.visual_band`
 - `home.cta_band`
@@ -189,6 +193,7 @@ Typical data:
 - homepage carousel slides
 - homepage module records
 - homepage style tokens
+- active lead forms keyed by slug
 - featured articles
 - hot articles
 - paginated latest articles
@@ -200,6 +205,7 @@ Current upgrade signals:
 - `homepageCarouselSlides`: up to three enabled slides from site settings; fields are `image_url`, `title`, and `link_url`.
 - `homepageModules`: enabled homepage module records normalized from `site_settings.homepage_modules`.
 - `homepageStyle`: normalized global homepage style tokens from `site_settings.homepage_style`.
+- `leadFormsBySlug`: active lead forms available to default-site homepage modules when the growth-center tables exist.
 - `showHomepageModules`: true only for the default first homepage state: no search, no category, no missing category, and page 1.
 - `hotArticles`: published articles marked hot, normally available only on the default first homepage.
 - `featuredArticles`: published featured articles, normally available only on the default first homepage.
@@ -225,6 +231,7 @@ Module fields:
 - `id`, `type`, `layout`, `data_source`, `enabled`, `sort_order`
 - `title`, `subtitle`, `body`, `image_url`, `link_text`, `link_url`, `limit`
 - `custom_html`
+- `lead_form_slug`
 - `accent_color`, `surface_color`, `text_color`, `muted_color`, `alignment`
 
 Supported module types:
@@ -237,9 +244,16 @@ Supported module types:
 - `feature_grid`
 - `article_collection`
 - `cta_band`
+- `lead_form`
 - `custom_html`
 
 Supported layouts are `single`, `split`, `grid`, and `compact`. Supported article sources are `featured`, `hot`, and `latest`. Supported alignments are `left` and `center`. Current validation caps modules at `HomepageModuleBuilder::MAX_MODULES`, normally `30`, and caps article collection limits at `12`.
+
+`lead_form` is a default-site homepage module type. It renders `resources/views/site/partials/lead-form.blade.php` and requires a canonical top-level `lead_form_slug` that points to an existing active lead form. Imported design drafts may use aliases such as `form_slug`, `lead_form`, `form`, or `conversion_form`, but skill-authored payloads should output `lead_form_slug` explicitly.
+
+Do not create lead forms from this design skill. If no active form slug is available, use a `cta_band` that links to the intended public form URL or hand off lead-form creation to `yao-geoflow-cli` through admin web operations.
+
+Default-site supported modules and remote target-package supported modules are separate contracts. The current default site can support `lead_form`; the current managed GeoFlow Agent target package may not expose `lead_form` in `/geoflow-agent/v1/frontend-capabilities`. When remote support is missing, downgrade the channel payload to CTA/link or require target package upgrade before sync.
 
 Built-in presets, when present:
 
@@ -269,6 +283,15 @@ Agent output can be imported as JSON through `homepage-modules/import`. Preferre
       "body": "Use homepage modules to present value, proof, resources, and next actions.",
       "link_text": "View resources",
       "link_url": "/archive"
+    },
+    {
+      "type": "lead_form",
+      "layout": "single",
+      "enabled": true,
+      "sort_order": 60,
+      "title": "Request a GEO consultation",
+      "body": "Use an existing active lead form; this payload only references the slug.",
+      "lead_form_slug": "geo-consultation"
     }
   ]
 }

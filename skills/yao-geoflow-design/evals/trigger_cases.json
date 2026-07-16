@@ -41,6 +41,26 @@
       "family": "homepage_builder_design_json"
     },
     {
+      "text": "连接 GEOFlow 后台，先盘点默认前台和某个渠道站的前台体验能力，再给出渠道站模板管理方案。",
+      "family": "channel_site_frontend_management"
+    },
+    {
+      "text": "比较默认站首页模块和 GeoFlow Agent 渠道站远端目标包支持能力，看看 hero、feature_grid、article_collection 是否一致。",
+      "family": "default_vs_channel_frontend_capability_diff"
+    },
+    {
+      "text": "把默认站的 homepage_modules、homepage_style 和轮播复制成渠道站快照，先生成 JSON 和同步计划，不要直接推送。",
+      "family": "sync_default_homepage_to_channel_site"
+    },
+    {
+      "text": "检查渠道站目标包有没有 frontend-capabilities 接口，列出支持的模块、路由、front_mode 和 active_theme。",
+      "family": "remote_target_capability_inventory"
+    },
+    {
+      "text": "给某个 GeoFlow Agent 渠道站生成可保存的前台体验 JSON，包含 frontend_experience_mode、样式、模块和轮播。",
+      "family": "channel_homepage_settings_json"
+    },
+    {
       "text": "用 GEOFlow 首页模块 builder 做 hero、图表、指标、feature_grid、article_collection 和 CTA，自定义颜色和宽度，但要保留预览确认。",
       "family": "homepage_builder_style_modules"
     },
@@ -83,6 +103,30 @@
     {
       "text": "优化 GEOFlow 主题，但不能硬编码 geo_admin，因为后台地址现在可以自定义。",
       "family": "admin_base_path_safe_theme_edit"
+    },
+    {
+      "text": "同步渠道站前台前，先读取 geoflow:frontend-experience 的缓存报告，列出风险、settings JSON 和确认建议。",
+      "family": "channel_sync_preview_before_push"
+    },
+    {
+      "text": "渠道站目标包 frontend-capabilities 是旧包 404，帮我判断是该下载新包还是确认继续同步设置。",
+      "family": "old_target_package_upgrade_guidance"
+    },
+    {
+      "text": "远端渠道站暂时不可达，但我还想维护站点设置，先生成同步预览并说明确认后仍可继续。",
+      "family": "unavailable_remote_soft_confirm_sync"
+    },
+    {
+      "text": "首页增加一个已有 active 表单的 lead_form 转化模块，slug 是 geo-consultation，先生成 homepage-design.json 不要导入。",
+      "family": "homepage_lead_form_design"
+    },
+    {
+      "text": "默认站支持 lead_form，但渠道站 frontend-capabilities 没有这个模块，帮我改成 CTA 降级方案再生成同步预览。",
+      "family": "lead_form_target_package_capability_gap"
+    },
+    {
+      "text": "参考站拆解后给 GEOFlow 首页做 hero、feature_grid、lead_form 和 article_collection，并通过 homepage payload 校验。",
+      "family": "reference_mapping_with_lead_form_payload"
     }
   ],
   "should_not_trigger": [
@@ -113,6 +157,22 @@
     {
       "text": "直接在当前活跃主题里原地改 CSS 并立刻生效，不需要预览态。",
       "family": "direct_live_edit"
+    },
+    {
+      "text": "直接连到所有渠道站远端，批量覆盖前台模板，不需要能力检查也不用预览。",
+      "family": "unsafe_cross_channel_direct_sync"
+    },
+    {
+      "text": "打开目标站 FTP，把远端 public/index.php 手工改成任意 PHP 模板。",
+      "family": "arbitrary_remote_template_edit"
+    },
+    {
+      "text": "帮我实现 lead_forms 和 lead_submissions 的迁移、模型、控制器和后台 CRUD。",
+      "family": "lead_form_backend_crud"
+    },
+    {
+      "text": "写一个 API 端点让渠道站直接提交 lead_form，不需要页面设计。",
+      "family": "lead_form_api_implementation"
     }
   ],
   "near_neighbor": [
@@ -143,6 +203,10 @@
     {
       "text": "直接把 homepage_modules import 到线上，不用给我看 JSON，也不用确认 replace 还是 append。",
       "family": "unreviewed_homepage_builder_import"
+    },
+    {
+      "text": "默认站可以渲染 lead_form，所以直接把同样模块同步到所有旧目标包，不用看 frontend-capabilities。",
+      "family": "default_site_lead_form_vs_remote_capability"
     }
   ]
 }

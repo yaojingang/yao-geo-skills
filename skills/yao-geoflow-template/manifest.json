@@ -1,8 +1,8 @@
 {
   "name": "yao-geoflow-template",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": "Yao Team",
-  "updated_at": "2026-04-20",
+  "updated_at": "2026-07-05",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "active",
@@ -17,6 +17,10 @@
   ],
   "factory_components": [
     "references",
-    "reports"
+    "reports",
+    "evals",
+    "scripts",
+    "templates",
+    "outputs"
   ]
 }

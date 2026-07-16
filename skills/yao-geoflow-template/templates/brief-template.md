@@ -1,11 +1,3 @@
-<!--
-Copyright © 2026 姚金刚. All rights reserved.
-Project: yao-geoflow-template
-Created by: 姚金刚
-Date: 2026-05-16
-X: https://x.com/yaojingang
--->
-
 # Yao GEOFlow Template Brief
 
 - `skill_id`: `yao-geoflow-template`

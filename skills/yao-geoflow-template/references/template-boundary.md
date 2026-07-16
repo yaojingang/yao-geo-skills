@@ -1,53 +1,44 @@
-<!--
-Copyright © 2026 姚金刚. All rights reserved.
-Project: yao-geoflow-template
-Created by: 姚金刚
-Date: 2026-05-16
-X: https://x.com/yaojingang
--->
-
 # Template Boundary
 
-This skill is for GEOFlow frontend template cloning and packaging, not for replacing GEOFlow's rendering contract with arbitrary copied pages.
+This package is now a legacy compatibility router. It must not be used as the primary guide for current GEOFlow frontend work.
 
-## Allowed Actions
+## Legacy Context
 
-- inventory existing frontend page modules
-- inventory variables and helper functions used by the frontend pages
-- inspect a reference URL for design tokens and layout direction
-- design a GEOFlow-compatible theme package
-- generate a preview-first integration plan
-- suggest how the admin should later expose template selection
+Older notes in this package referenced a root-level PHP frontend with files such as:
 
-## Disallowed Actions
+- `index.php`
+- `article.php`
+- `category.php`
+- `archive.php`
+- `includes/header.php`
+- `includes/footer.php`
+- `includes/functions.php`
 
-- rewriting GEOFlow business logic just to imitate a reference site
-- replacing existing PHP data queries with hard-coded mock content
-- changing routing rules such as `/article/{slug}`, `/category/{slug}`, or `/archive/...`
-- removing SEO or structured-data generation
-- direct production activation without preview and confirmation
-- copying an external site's full HTML as the runtime template contract
+Those files are legacy assumptions. They are not required for current GEOFlow.
 
-## Non-Negotiable GEOFlow Contracts
+## Current Routing
 
-- homepage remains data-driven by published articles, featured articles, categories, search state, and pagination
-- article detail remains data-driven by article, related articles, tags, SEO blocks, and the article detail ad slot
-- category page remains driven by category metadata and paginated article lists
-- archive page remains driven by archive overview or month-specific archive data
-- frontend continues to use GEOFlow routing, helpers, and data fields
+Use `yao-geoflow-design` for:
 
-## Safe Replacement Surface
+- Laravel Blade themes under `resources/views/theme/{theme_id}`
+- default site homepage module builder work
+- `lead_form` homepage conversion modules
+- live theme editor review
+- reference-site cloning into current GEOFlow frontend contracts
+- GeoFlow Agent target package capability checks
+- default-vs-channel frontend sync planning
 
-- HTML structure inside module containers
-- CSS tokens, spacing, shadows, borders, and colors
-- iconography and button styles
-- layout composition of existing modules
-- ad-block visual presentation
-- header / footer presentation
+Stay in this skill only when the user explicitly asks about old PHP template packages or historical outputs.
 
-## Unsafe Replacement Surface
+## Safe Legacy Actions
 
-- removing required placeholders for article title, content, category, author, tags, slug, or ad CTA fields
-- inventing modules that require backend data GEOFlow does not provide yet
-- replacing canonical URLs or schema data contracts
-- changing article content rendering away from the markdown-rendered article body unless the system is explicitly updated
+- Read old `outputs/<template-id>/manifest.json`, `tokens.json`, and `mapping.json`.
+- Explain why old PHP paths do not apply to current Laravel GEOFlow.
+- Convert a legacy finding into a handoff note for `yao-geoflow-design`.
+
+## Unsafe Actions
+
+- Generating new current GEOFlow themes from the legacy PHP contract.
+- Recommending Tailwind CDN or `includes/*.php` as current runtime requirements.
+- Treating legacy previews as proof of current Laravel compatibility.
+- Editing production frontend files or activating themes.

@@ -74,6 +74,28 @@
       "alignment": "left"
     },
     {
+      "id": "home-lead-form",
+      "type": "lead_form",
+      "layout": "single",
+      "data_source": "latest",
+      "enabled": true,
+      "sort_order": 35,
+      "title": "Request a GEO consultation",
+      "subtitle": "Growth conversion",
+      "body": "Use an existing active lead form. This design payload only references the form slug.",
+      "image_url": "",
+      "link_text": "",
+      "link_url": "",
+      "lead_form_slug": "geo-consultation",
+      "limit": 4,
+      "custom_html": "",
+      "accent_color": "",
+      "surface_color": "",
+      "text_color": "",
+      "muted_color": "",
+      "alignment": "left"
+    },
+    {
       "id": "home-cta",
       "type": "cta_band",
       "layout": "single",
