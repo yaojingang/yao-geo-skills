@@ -70,12 +70,13 @@ Standard user inputs:
 
 The wrapper records `target_entity`, `target_aliases`, `entity_type`, and delay strategy in `doubao-crawl.json > input`.
 
-The wrapper calls `opencli doubao new` before each sample through `scripts/doubao_browser_crawl.mjs`. It writes per-sample raw JSON and logs, then writes `doubao-crawl.json`.
+The wrapper calls `opencli doubao new` before each sample through `scripts/doubao_browser_crawl.mjs` by default. It writes per-sample raw JSON and logs, then writes `doubao-crawl.json`. If the OpenCLI Doubao adapter's new-conversation flow only reloads `/chat` or repeatedly returns no visible messages, use `--no-new` for controlled web runs; this keeps the current Doubao site session and asks sequentially while still preserving raw logs and answer evidence.
 
 ## Run Rules
 
 - Doubao's OpenCLI adapter does not expose model switching or a dedicated Web Search flag; source extraction is limited to visible URLs unless a replacement crawler provides richer compatible references.
 - Use `--no-reference-extraction` when URL extraction is not needed. `--no-search` is accepted as a compatibility alias for the same behavior.
+- Use `--no-new` when the web adapter can send and read answers but cannot reliably open a fresh Doubao conversation. Label runs that use this option because samples may share the same Doubao conversation context.
 - Prefer `--safe-random-delay` for real Doubao web runs. It waits a random 5-20 minutes between fresh samples.
 - Use `--delay-min-minutes <n> --delay-max-minutes <n>` when a different random interval is needed.
 - Use `--resume` to skip samples that already have valid raw JSON.
