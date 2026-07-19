@@ -459,11 +459,14 @@ def normalize_ref(ref: dict) -> dict:
     return {
         "number": ref.get("number"),
         "source": clean_text(ref.get("source")),
+        "source_origin": clean_text(ref.get("source_origin")),
         "domain": domain,
         "title": clean_text(ref.get("title")),
+        "title_origin": clean_text(ref.get("title_origin")),
         "date": clean_text(ref.get("date")),
         "url": url,
         "summary": clean_text(ref.get("summary")),
+        "summary_origin": clean_text(ref.get("summary_origin")),
     }
 
 
@@ -2227,6 +2230,12 @@ def parse_year(value: str) -> int | None:
 
 
 def title_features(refs: list[dict], brands: list[dict]) -> dict:
+    reference_total = len(refs)
+    excluded_url_derived = sum(
+        1 for ref in refs if ref.get("title") and ref.get("title_origin") == "url-derived"
+    )
+    missing_title = sum(1 for ref in refs if not ref.get("title"))
+    refs = [ref for ref in refs if ref.get("title") and ref.get("title_origin") != "url-derived"]
     total = len(refs)
     counters = Counter()
     length_buckets = Counter()
@@ -2273,6 +2282,9 @@ def title_features(refs: list[dict], brands: list[dict]) -> dict:
             year_buckets["older"] += 1
     return {
         "total": total,
+        "reference_total": reference_total,
+        "excluded_url_derived": excluded_url_derived,
+        "missing_title": missing_title,
         "feature_counts": dict(counters),
         "feature_rates": {key: rate(value, total) for key, value in counters.items()},
         "length_buckets": dict(length_buckets),
@@ -2463,6 +2475,7 @@ def top_title_rows(refs: list[dict], limit: int = REPORT_ITEM_LIMIT) -> list[dic
     urls_by_title: dict[str, Counter] = defaultdict(Counter)
     sources_by_title: dict[str, Counter] = defaultdict(Counter)
     domains_by_title: dict[str, Counter] = defaultdict(Counter)
+    origins_by_title: dict[str, Counter] = defaultdict(Counter)
     for ref in refs:
         title = ref.get("title")
         if not title:
@@ -2473,12 +2486,15 @@ def top_title_rows(refs: list[dict], limit: int = REPORT_ITEM_LIMIT) -> list[dic
             sources_by_title[title][ref["source"]] += 1
         if ref.get("domain"):
             domains_by_title[title][ref["domain"]] += 1
+        if ref.get("title_origin"):
+            origins_by_title[title][ref["title_origin"]] += 1
     rows = []
     for title, count in counts.most_common(limit):
         url = urls_by_title[title].most_common(1)[0][0] if urls_by_title[title] else ""
         source = sources_by_title[title].most_common(1)[0][0] if sources_by_title[title] else ""
         domain = domains_by_title[title].most_common(1)[0][0] if domains_by_title[title] else domain_from_url(url)
-        rows.append({"name": title, "count": count, "url": url, "source": source, "domain": domain})
+        title_origin = origins_by_title[title].most_common(1)[0][0] if origins_by_title[title] else ""
+        rows.append({"name": title, "count": count, "url": url, "source": source, "domain": domain, "title_origin": title_origin})
     return rows
 
 
@@ -2618,6 +2634,10 @@ def compute_summary(
     }
     channel_counts = Counter(ref["channel"] for ref in refs)
     source_counts = Counter(ref["source"] or ref["domain"] for ref in refs)
+    source_origin_counts = Counter(ref.get("source_origin") or "unknown" for ref in refs)
+    title_origin_counts = Counter(ref.get("title_origin") or "unknown" for ref in refs)
+    summary_origin_counts = Counter(ref.get("summary_origin") or "unknown" for ref in refs)
+    observed_title_refs = [ref for ref in refs if ref.get("title") and ref.get("title_origin") != "url-derived"]
     title_stats = title_features(refs, brands)
     target_diagnostics = build_target_diagnostics(brand_metrics, target_profile, item_limit)
     return {
@@ -2650,9 +2670,15 @@ def compute_summary(
             "channel_counts": dict(channel_counts),
             "top_domains": top_domain_rows(refs),
             "top_sources": top_counter(source_counts),
-            "top_titles": top_title_rows(refs),
+            "top_titles": top_title_rows(observed_title_refs),
             "top_urls": top_url_rows(refs),
             "position_buckets": source_position_buckets(refs),
+            "provenance_counts": {
+                "source_origin": dict(source_origin_counts),
+                "title_origin": dict(title_origin_counts),
+                "summary_origin": dict(summary_origin_counts),
+            },
+            "reference_rows": refs,
         },
         "titles": title_stats,
     }
@@ -2810,6 +2836,19 @@ def structured_export_tables(summary: dict, output_files: dict[str, str]) -> lis
             }
         )
 
+    provenance_rows = []
+    for field_name, counts in (sources.get("provenance_counts") or {}).items():
+        field_total = sum(counts.values()) or 0
+        for origin, count in counts.items():
+            provenance_rows.append(
+                {
+                    "field": field_name,
+                    "origin": origin,
+                    "count": count,
+                    "rate": rate(count, field_total) if field_total else 0,
+                }
+            )
+
     return [
         export_table("输出文件", output_rows, ["file_type", "path", "description"], "本次分析产物清单。"),
         export_table("概览字段", overview_rows, ["field", "value", "description"], "采样、实体、信源和报告级核心字段。"),
@@ -2820,10 +2859,12 @@ def structured_export_tables(summary: dict, output_files: dict[str, str]) -> lis
         export_table("实体识别候选", candidate_rows, ["name", "kind", "role", "entity_type", "is_target", "entered_competitor_matrix", "semantic_label", "semantic_is_same_type", "semantic_is_direct_competitor", "semantic_confidence", "semantic_source", "semantic_recommended_action", "semantic_reason", "confidence", "sample_count", "raw_count", "evidence_score", "surface_score", "surface_reasons", "reasons"], "实体识别、清洗、过滤、语义复核和分类候选。"),
         export_table("信源渠道分布", channel_rows, ["bucket", "raw_bucket", "count", "rate"], "DeepSeek 引用信源的渠道结构。"),
         export_table("来源编号位置", position_rows, ["bucket", "raw_bucket", "count", "rate"], "DeepSeek source panel 编号位置分布。"),
+        export_table("信源字段来源", provenance_rows, ["field", "origin", "count", "rate"], "信源名称、标题和摘要字段的观测或推导来源。"),
+        export_table("信源明细", sources.get("reference_rows", []), ["sample_id", "question_id", "question", "number", "source", "source_origin", "domain", "title", "title_origin", "date", "url", "summary", "summary_origin", "channel"], "逐条保留信源字段及其来源标记。"),
         export_table("高频域名", sources.get("top_domains", []), ["display_name", "name", "count", "url"], "高频引用域名。"),
         export_table("高频来源名", sources.get("top_sources", []), ["name", "count"], "高频引用来源名称。"),
         export_table("高频URL", sources.get("top_urls", []), ["display_name", "name", "url", "domain", "source", "count"], "高频引用 URL。"),
-        export_table("高频引用标题", sources.get("top_titles", []), ["name", "url", "source", "domain", "count"], "被重复引用的标题。"),
+        export_table("高频引用标题", sources.get("top_titles", []), ["name", "title_origin", "url", "source", "domain", "count"], "浏览器观测标题的重复引用统计。"),
         export_table("标题功能特征", title_feature_rows, ["feature", "count", "rate"], "引用标题的功能信号。"),
         export_table("标题长度", bucket_rows(titles.get("length_buckets", {})), ["bucket", "raw_bucket", "count", "rate"], "引用标题长度分布。"),
         export_table("时间新旧", bucket_rows(titles.get("recency_buckets", {}), RECENCY_LABELS), ["bucket", "raw_bucket", "count", "rate"], "引用标题或日期的新旧分布。"),

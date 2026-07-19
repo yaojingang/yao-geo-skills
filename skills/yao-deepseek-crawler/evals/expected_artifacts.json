@@ -9,6 +9,9 @@
     "templates/brief-template.md",
     "scripts/preflight.mjs",
     "scripts/deepseek_batch_crawl.mjs",
+    "scripts/geo-deepseek-browser-direct.mjs",
+    "scripts/test_geo_deepseek_browser_direct.mjs",
+    "scripts/run-tests.sh",
     "scripts/analyze_deepseek_results.py"
   ],
   "public_examples": [

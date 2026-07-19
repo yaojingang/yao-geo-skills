@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { promisify } from 'node:util';
 
 const execFileAsync = promisify(execFile);
@@ -11,7 +12,7 @@ function printHelp() {
   node scripts/geo-deepseek-browser-direct.mjs --prompt <text> --out <file> [options]
 
 Options:
-  --session <id>      Session id recorded in output metadata.
+  --session <id>      Temporary browser session id. Default: yao-ds-<pid>.
   --prompt <text>     Prompt to send to DeepSeek.
   --timeout <sec>     Timeout passed to OpenCLI. Default: 300.
   --out <file>        Raw JSON output path.
@@ -28,7 +29,7 @@ Requires:
 
 function parseArgs(argv) {
   const args = {
-    session: '',
+    session: `yao-ds-${process.pid}`,
     prompt: '',
     timeout: 300,
     out: '',
@@ -99,6 +100,14 @@ function getResponse(parsed) {
   return '';
 }
 
+function normalizeText(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function textFingerprint(value) {
+  return createHash('sha256').update(normalizeText(value), 'utf8').digest('hex');
+}
+
 function parseReferencesFromBrowserPayload(parsed) {
   if (!parsed || typeof parsed !== 'object') return [];
   const items = Array.isArray(parsed.references) ? parsed.references : [];
@@ -111,14 +120,21 @@ function normalizeReference(item) {
   if (!url) return null;
   const number = Number.parseInt(String(item.number || item.num || '').replace(/\D+/g, ''), 10) || null;
   const domain = item.domain || hostnameFromUrl(url);
+  const source = String(item.source || domain || '').trim();
+  const explicitTitle = String(item.title || '').trim();
+  const title = explicitTitle || titleFromUrl(url) || domain || url;
+  const summary = String(item.summary || item.context || '').trim();
   return {
     number,
-    source: String(item.source || domain || '').trim(),
+    source,
+    source_origin: String(item.source_origin || (item.source ? 'browser-dom' : 'url-hostname')).trim(),
     domain: String(domain || '').trim(),
-    title: String(item.title || titleFromUrl(url) || domain || url).trim(),
+    title: String(title).trim(),
+    title_origin: String(item.title_origin || (explicitTitle ? 'browser-dom-attribute' : 'url-derived')).trim(),
     date: String(item.date || '').trim(),
     url,
-    summary: String(item.summary || item.context || '').trim(),
+    summary,
+    summary_origin: String(item.summary_origin || (summary ? 'answer-context' : '')).trim(),
   };
 }
 
@@ -209,29 +225,105 @@ async function runOpenCli(args) {
   }
 }
 
-async function collectBrowserReferences(args) {
-  if (!args.search) return { items: [], note: 'Search was disabled.' };
-  const browserSession = args.session || 'yao-ds';
+async function collectBrowserReferences(args, expectedAnswerText) {
+  if (!args.search) return { items: [], verified: false, note: 'Search was disabled.' };
+  const browserSession = args.session;
   const bindArgs = [];
   if (args.profile) bindArgs.push('--profile', args.profile);
   bindArgs.push('browser', browserSession, 'bind', '--window', 'foreground');
-  try {
-    await execFileAsync('opencli', bindArgs, {
-      timeout: 15 * 1000,
-      maxBuffer: 5 * 1024 * 1024,
-      env: process.env,
-    });
-  } catch {
-    // Continue: eval may still work if the session is already bound.
-  }
+  const unbindArgs = [];
+  if (args.profile) unbindArgs.push('--profile', args.profile);
+  unbindArgs.push('browser', browserSession, 'unbind');
+  let outcome = {
+    items: [],
+    verified: false,
+    note: 'Browser reference extraction did not run.',
+  };
 
-  const js = `(() => {
-    const messages = Array.from(document.querySelectorAll('.ds-message'));
-    const candidates = messages.length ? messages : [document.body];
-    const last = [...candidates].reverse().find((node) => {
-      const text = (node.innerText || node.textContent || '').trim();
-      return text.includes('已阅读') || node.querySelector('a[href^="http"]');
-    }) || document.body;
+  const expectedPromptJson = JSON.stringify(args.prompt);
+  const expectedAnswerFingerprint = textFingerprint(expectedAnswerText);
+  const expectedAnswerFingerprintJson = JSON.stringify(expectedAnswerFingerprint);
+  const js = `(async () => {
+    const expectedPrompt = ${expectedPromptJson};
+    const expectedAnswerFingerprint = ${expectedAnswerFingerprintJson};
+    const clean = (value) => String(value || '').replace(/\\s+/g, ' ').trim();
+    const fingerprint = async (value) => {
+      const bytes = new TextEncoder().encode(clean(value));
+      const digest = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
+    };
+    const roleOf = (node) => {
+      const explicit = clean(
+        node.getAttribute('data-role')
+        || node.getAttribute('data-message-role')
+        || node.getAttribute('data-author')
+        || node.getAttribute('aria-label')
+      ).toLowerCase();
+      if (/user|human|用户|我|访客/.test(explicit)) return 'user';
+      if (/assistant|deepseek|ai|助手/.test(explicit)) return 'assistant';
+      return node.classList.length > 2 ? 'user' : 'assistant';
+    };
+    if (location.origin !== 'https://chat.deepseek.com') {
+      return {
+        href: location.href,
+        title: document.title,
+        prompt_matched: false,
+        answer_matched: false,
+        matched_prompt: '',
+        conversation_id: '',
+        references: []
+      };
+    }
+    const conversationMatch = location.pathname.match(/^\/a\/chat\/s\/([a-f0-9-]+)(?:\/|$)/i);
+    const conversationId = conversationMatch ? conversationMatch[1].toLowerCase() : '';
+    if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(conversationId)) {
+      return {
+        href: location.href,
+        title: document.title,
+        prompt_matched: false,
+        answer_matched: false,
+        matched_prompt: '',
+        conversation_id: '',
+        references: []
+      };
+    }
+    const messages = Array.from(document.querySelectorAll('.ds-message'))
+      .map((node) => ({ node, role: roleOf(node), text: clean(node.innerText || node.textContent) }))
+      .filter((message) => message.text);
+    const expected = clean(expectedPrompt);
+    const userMessage = [...messages].reverse().find((message) => message.role === 'user');
+    if (!userMessage || userMessage.text !== expected) {
+      return {
+        href: location.href,
+        title: document.title,
+        prompt_matched: false,
+        answer_matched: false,
+        matched_prompt: '',
+        conversation_id: conversationId,
+        references: []
+      };
+    }
+    const userMessageIndex = messages.indexOf(userMessage);
+    const afterUser = messages.slice(userMessageIndex + 1);
+    const nextUserOffset = afterUser.findIndex((message) => message.role === 'user');
+    const answerScope = nextUserOffset >= 0 ? afterUser.slice(0, nextUserOffset) : afterUser;
+    const assistantMessage = [...answerScope].reverse().find((message) => message.role === 'assistant');
+    const answerFingerprint = assistantMessage ? await fingerprint(assistantMessage.text) : '';
+    const answerMatched = Boolean(assistantMessage && answerFingerprint === expectedAnswerFingerprint);
+    if (!assistantMessage || !answerMatched) {
+      return {
+        href: location.href,
+        title: document.title,
+        prompt_matched: true,
+        answer_matched: false,
+        matched_prompt: userMessage.text,
+        conversation_id: conversationId,
+        answer_fingerprint: answerFingerprint,
+        read_count: 0,
+        references: []
+      };
+    }
+    const last = assistantMessage.node;
     const anchors = Array.from(last.querySelectorAll('a[href^="http"]'));
     const seen = new Set();
     const references = [];
@@ -247,19 +339,28 @@ async function collectBrowserReferences(args) {
       try { domain = new URL(url).hostname.replace(/^www\\./, ''); } catch {}
       const contextNode = a.closest('tr,p,li,td,div') || a.parentElement;
       const context = (contextNode?.innerText || '').trim().slice(0, 500);
+      const title = a.title || a.getAttribute('aria-label') || '';
       references.push({
         number,
         url,
         domain,
         source: domain,
-        title: a.title || a.getAttribute('aria-label') || '',
-        summary: context
+        source_origin: 'url-hostname',
+        title,
+        title_origin: title ? 'browser-dom-attribute' : '',
+        summary: context,
+        summary_origin: context ? 'answer-context' : ''
       });
     }
     const readMatch = (last.innerText || '').match(/已阅读\\s*(\\d+)\\s*个网页|^(\\d+)\\s*个网页$/m);
     return {
       href: location.href,
       title: document.title,
+      prompt_matched: true,
+      answer_matched: true,
+      matched_prompt: userMessage.text,
+      conversation_id: conversationId,
+      answer_fingerprint: answerFingerprint,
       read_count: readMatch ? Number(readMatch[1] || readMatch[2]) : null,
       references
     };
@@ -268,28 +369,88 @@ async function collectBrowserReferences(args) {
   if (args.profile) evalArgs.push('--profile', args.profile);
   evalArgs.push('browser', browserSession, 'eval', js);
   try {
-    const result = await execFileAsync('opencli', evalArgs, {
-      timeout: 30 * 1000,
-      maxBuffer: 20 * 1024 * 1024,
+    await execFileAsync('opencli', bindArgs, {
+      timeout: 15 * 1000,
+      maxBuffer: 5 * 1024 * 1024,
       env: process.env,
     });
-    const parsed = extractJson(`${result.stdout || ''}${result.stderr || ''}`);
-    const items = parseReferencesFromBrowserPayload(parsed);
-    return {
-      count_observed: parsed?.read_count || items.length,
-      items,
-      page_url: parsed?.href || '',
-      page_title: parsed?.title || '',
-      note: items.length
-        ? 'References were extracted from the DeepSeek browser DOM citation links. DeepSeek did not expose a separate source-panel object through the public OpenCLI adapter.'
-        : 'No citation links were found in the DeepSeek browser DOM.',
-    };
+    try {
+      const result = await execFileAsync('opencli', evalArgs, {
+        timeout: 30 * 1000,
+        maxBuffer: 20 * 1024 * 1024,
+        env: process.env,
+      });
+      const parsed = extractJson(`${result.stdout || ''}${result.stderr || ''}`);
+      const pageUrl = String(parsed?.href || '').trim();
+      const pageTitle = String(parsed?.title || '').trim();
+      let pageOrigin = '';
+      try {
+        pageOrigin = new URL(pageUrl).origin;
+      } catch {
+        pageOrigin = '';
+      }
+      const matchedPrompt = String(parsed?.matched_prompt || '').replace(/\s+/g, ' ').trim();
+      const expectedPrompt = String(args.prompt || '').replace(/\s+/g, ' ').trim();
+      const conversationId = String(parsed?.conversation_id || '').trim().toLowerCase();
+      const validConversationId = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(conversationId);
+      const answerFingerprint = String(parsed?.answer_fingerprint || '').trim().toLowerCase();
+      if (
+        pageOrigin !== 'https://chat.deepseek.com'
+        || !validConversationId
+        || parsed?.prompt_matched !== true
+        || parsed?.answer_matched !== true
+        || matchedPrompt !== expectedPrompt
+        || answerFingerprint !== expectedAnswerFingerprint
+      ) {
+        outcome = {
+          items: [],
+          verified: false,
+          page_url: pageUrl,
+          page_title: pageTitle,
+          note: 'Browser reference extraction rejected a page that did not match the submitted DeepSeek prompt and returned answer.',
+        };
+      } else {
+        const items = parseReferencesFromBrowserPayload(parsed);
+        outcome = {
+          count_observed: Number.isInteger(parsed?.read_count) ? parsed.read_count : items.length,
+          items,
+          verified: true,
+          page_url: pageUrl,
+          page_title: pageTitle,
+          conversation_id: conversationId,
+          answer_matched: true,
+          answer_fingerprint: answerFingerprint,
+          note: items.length
+            ? 'References were extracted from citation links scoped to the submitted DeepSeek prompt. DeepSeek did not expose a separate source-panel object through the public OpenCLI adapter.'
+            : 'The submitted DeepSeek prompt was verified, but no citation links were found in its answer.',
+        };
+      }
+    } catch (error) {
+      outcome = {
+        items: [],
+        verified: false,
+        note: `Browser reference extraction failed: ${error.message}`,
+      };
+    }
   } catch (error) {
-    return {
+    outcome = {
       items: [],
-      note: `Browser reference extraction failed: ${error.message}`,
+      verified: false,
+      note: `Browser session bind failed: ${error.message}`,
     };
+  } finally {
+    try {
+      await execFileAsync('opencli', unbindArgs, {
+        timeout: 15 * 1000,
+        maxBuffer: 5 * 1024 * 1024,
+        env: process.env,
+      });
+    } catch (error) {
+      outcome.cleanup_error = `Browser session unbind failed: ${error.message}`;
+      outcome.note = `${outcome.note} ${outcome.cleanup_error}`.trim();
+    }
   }
+  return outcome;
 }
 
 async function main() {
@@ -301,7 +462,7 @@ async function main() {
   validate(args);
 
   const run = await runOpenCli(args);
-  const browserReferences = await collectBrowserReferences(args);
+  const browserReferences = await collectBrowserReferences(args, run.answerText);
   const referenceItems = browserReferences.items || [];
   const raw = {
     schema_version: 'yao-deepseek-raw/opencli-plugin-v1',
@@ -320,11 +481,16 @@ async function main() {
     },
     references: {
       count: referenceItems.length,
-      observed_count: browserReferences.count_observed || referenceItems.length,
+      observed_count: browserReferences.count_observed ?? referenceItems.length,
       items: referenceItems,
+      verified: Boolean(browserReferences.verified),
       note: browserReferences.note,
       page_url: browserReferences.page_url || '',
       page_title: browserReferences.page_title || '',
+      conversation_id: browserReferences.conversation_id || '',
+      answer_matched: Boolean(browserReferences.answer_matched),
+      answer_fingerprint: browserReferences.answer_fingerprint || '',
+      cleanup_error: browserReferences.cleanup_error || '',
     },
     opencli: {
       exit_code: run.code,

@@ -423,6 +423,14 @@ function summarize(samples, planned) {
   };
 }
 
+function updateSampleTransports(dataset) {
+  dataset.run.sample_transports = [...new Set(
+    dataset.samples
+      .map((sample) => String(sample.result?.transport || '').trim())
+      .filter(Boolean),
+  )].sort();
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
@@ -441,7 +449,8 @@ async function main() {
     started_at: new Date().toISOString(),
     finished_at: null,
     engine: 'deepseek',
-    transport: 'opencli-browser-direct',
+    transport: 'batch-orchestrator',
+    sample_transports: [],
     crawler_script: options.crawlerScript,
     dir: outDir,
     dry_run: options.dryRun,
@@ -483,6 +492,7 @@ async function main() {
     console.error(`[${i + 1}/${plan.length}] ${sample.sample_id}`);
     const record = await runSample(options, run, sample);
     dataset.samples.push(record);
+    updateSampleTransports(dataset);
     dataset.totals = summarize(dataset.samples, plan);
     writeJson(path.join(outDir, 'deepseek-crawl.json'), dataset);
     if (i < plan.length - 1 && !record.reused) {
