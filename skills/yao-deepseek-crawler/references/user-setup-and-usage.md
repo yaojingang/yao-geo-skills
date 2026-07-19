@@ -13,7 +13,7 @@ Required for fresh crawls:
 - OpenCLI CLI 1.8.4+ available as `opencli`.
 - OpenCLI Browser Bridge extension connected to a Chrome or Edge profile.
 - A logged-in DeepSeek web session in that connected profile.
-- A DeepSeek browser crawler script. By default this skill looks for `../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs`; if your crawler is elsewhere, pass `--crawler-script <file>` or set `DEEPSEEK_CRAWLER_SCRIPT`.
+- A DeepSeek browser crawler script. This skill bundles `scripts/geo-deepseek-browser-direct.mjs` by default; if your crawler is elsewhere, pass `--crawler-script <file>` or set `DEEPSEEK_CRAWLER_SCRIPT`.
 
 Required for analysis-only usage:
 

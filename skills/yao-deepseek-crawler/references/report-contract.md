@@ -7,7 +7,7 @@ Stage 1 writes `deepseek-crawl.json`:
 ```json
 {
   "schema_version": "yao-deepseek-crawler/v1",
-  "run": {"id": "...", "started_at": "...", "finished_at": "..."},
+  "run": {"id": "...", "started_at": "...", "finished_at": "...", "transport": "batch-orchestrator", "sample_transports": []},
   "input": {
     "question_count": 10,
     "global_repeat": 5,
@@ -22,6 +22,8 @@ Stage 1 writes `deepseek-crawl.json`:
   "totals": {}
 }
 ```
+
+The run-level `transport` names the neutral batch wrapper. `sample_transports` lists the concrete transports observed in completed sample results.
 
 Each sample keeps:
 
@@ -174,7 +176,7 @@ Target-vs-competitor comparison:
 
 ## Source And Channel Analysis
 
-Flatten every `references.items[]` row. Preserve `number`, `source`, `domain`, `title`, `date`, `url`, and `summary`.
+Flatten every `references.items[]` row. Preserve `number`, `source`, `source_origin`, `domain`, `title`, `title_origin`, `date`, `url`, `summary`, and `summary_origin`. Origin fields distinguish browser-observed values from URL-derived labels and nearby answer context. Structured Markdown and Excel outputs must retain every reference row and these origin fields.
 
 Channel classifier is heuristic:
 
@@ -196,7 +198,7 @@ The domain-share treemap should use small domain text, stable compact cards, ell
 
 ## Title Features
 
-For every cited title, compute:
+For every browser-observed cited title, compute the following features. Exclude `title_origin = url-derived` labels from title metrics and repeated-title aggregates while retaining them in reference and URL tables.
 
 - length bucket
 - has number

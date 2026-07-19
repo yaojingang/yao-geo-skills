@@ -9,10 +9,7 @@ const execFileAsync = promisify(execFile);
 const __filename = fileURLToPath(import.meta.url);
 const scriptDir = path.dirname(__filename);
 const skillRoot = path.resolve(scriptDir, '..');
-const defaultCrawlerScript = path.resolve(
-  skillRoot,
-  '../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs',
-);
+const defaultCrawlerScript = path.join(scriptDir, 'geo-deepseek-browser-direct.mjs');
 
 function printHelp() {
   console.log(`Usage:
@@ -20,7 +17,7 @@ function printHelp() {
 
 Options:
   --profile <name>          OpenCLI Browser Bridge profile to verify.
-  --crawler-script <file>   DeepSeek browser crawler script. Defaults to the local opencli-boss-ai path.
+  --crawler-script <file>   DeepSeek browser crawler script. Defaults to scripts/geo-deepseek-browser-direct.mjs.
   --analysis-only           Check only dependencies needed to analyze an existing crawl JSON.
   --timeout <seconds>       Timeout per OpenCLI check. Default: 30.
   --json                    Print machine-readable JSON.
@@ -186,7 +183,7 @@ async function main() {
       'DeepSeek crawler script',
       fs.existsSync(crawlerScript) ? 'pass' : 'fail',
       crawlerScript,
-      'Pass --crawler-script <file>, set DEEPSEEK_CRAWLER_SCRIPT, or install the local opencli-boss-ai crawler project.',
+      'Pass --crawler-script <file>, set DEEPSEEK_CRAWLER_SCRIPT, or restore scripts/geo-deepseek-browser-direct.mjs.',
     );
 
     const opencliVersion = await run('opencli', ['--version'], options.timeout);

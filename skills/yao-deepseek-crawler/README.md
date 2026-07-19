@@ -21,7 +21,7 @@
 - OpenCLI CLI 1.8.4+
 - OpenCLI Browser Bridge 已连接 Chrome 或 Edge profile
 - DeepSeek 网页端已登录
-- 本地 DeepSeek browser crawler 脚本，默认路径为 `../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs`，也可以通过 `--crawler-script` 指定
+- 本地 DeepSeek browser crawler 脚本，默认使用本 skill 自带的 `scripts/geo-deepseek-browser-direct.mjs`，也可以通过 `--crawler-script` 指定
 - 可选：`OPENAI_API_KEY`，用于分析阶段的 AI 语义复核；没有密钥时默认自动回退到本地规则
 
 安装和使用细节见：
@@ -190,14 +190,7 @@ HTML 报告默认使用中文简体，并包含英文总结切换入口。报告
 ## 离线验证
 
 ```bash
-node --check scripts/deepseek_batch_crawl.mjs
-python3 -m py_compile scripts/analyze_deepseek_results.py scripts/test_entity_recognition.py
-python3 scripts/test_entity_recognition.py
-python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json \
-  --target-entity '光引GEO' \
-  --entity-type company \
-  --brands '光引GEO,源易信息,PallasAI' \
-  --out-dir /tmp/yao-deepseek-crawler-report
+bash scripts/run-tests.sh
 ```
 
 ## 运行边界
@@ -216,6 +209,9 @@ python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json 
 - `references/report-contract.md`：JSON 合约和指标定义
 - `scripts/preflight.mjs`：依赖和登录状态检查
 - `scripts/setup_deepseek_bridge.mjs`：DeepSeek 专用 OpenCLI Browser Bridge 连接助手
+- `scripts/geo-deepseek-browser-direct.mjs`：自带的 DeepSeek 问答与引用证据采集入口
 - `scripts/deepseek_batch_crawl.mjs`：重复采样编排
+- `scripts/test_geo_deepseek_browser_direct.mjs`：错误页面拒绝和浏览器会话清理回归测试
+- `scripts/run-tests.sh`：离线验证入口
 - `scripts/analyze_deepseek_results.py`：聚合分析与 HTML 渲染
 - `fixtures/sample-deepseek-crawl.json`：离线测试样例

@@ -7,10 +7,7 @@ import { spawn } from 'node:child_process';
 const __filename = fileURLToPath(import.meta.url);
 const scriptDir = path.dirname(__filename);
 const skillRoot = path.resolve(scriptDir, '..');
-const defaultCrawlerScript = path.resolve(
-  skillRoot,
-  '../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs',
-);
+const defaultCrawlerScript = path.join(scriptDir, 'geo-deepseek-browser-direct.mjs');
 const MINUTE_MS = 60 * 1000;
 const MAX_DELAY_MS = 24 * 60 * 60 * 1000;
 
@@ -27,7 +24,7 @@ Options:
   --target-aliases <text>   Optional aliases separated by comma, pipe, semicolon, or newline.
   --entity-type <type>      Required with --target-entity: person/company/product or 人/公司/产品.
   --out-dir <dir>           Run output directory. Default: runs/<timestamp>.
-  --crawler-script <file>   Existing DeepSeek crawler script. Defaults to opencli-boss-ai.
+  --crawler-script <file>   Existing DeepSeek crawler script. Defaults to scripts/geo-deepseek-browser-direct.mjs.
   --timeout <seconds>       Per-sample timeout passed to crawler. Default: 300.
   --delay-ms <ms>           Delay between samples. Default: 1500.
   --safe-random-delay       Random delay of 5-20 minutes between fresh samples.
@@ -426,6 +423,14 @@ function summarize(samples, planned) {
   };
 }
 
+function updateSampleTransports(dataset) {
+  dataset.run.sample_transports = [...new Set(
+    dataset.samples
+      .map((sample) => String(sample.result?.transport || '').trim())
+      .filter(Boolean),
+  )].sort();
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   if (options.help) {
@@ -444,7 +449,8 @@ async function main() {
     started_at: new Date().toISOString(),
     finished_at: null,
     engine: 'deepseek',
-    transport: 'opencli-browser-direct',
+    transport: 'batch-orchestrator',
+    sample_transports: [],
     crawler_script: options.crawlerScript,
     dir: outDir,
     dry_run: options.dryRun,
@@ -486,6 +492,7 @@ async function main() {
     console.error(`[${i + 1}/${plan.length}] ${sample.sample_id}`);
     const record = await runSample(options, run, sample);
     dataset.samples.push(record);
+    updateSampleTransports(dataset);
     dataset.totals = summarize(dataset.samples, plan);
     writeJson(path.join(outDir, 'deepseek-crawl.json'), dataset);
     if (i < plan.length - 1 && !record.reused) {

@@ -21,7 +21,7 @@ It is not a generic website crawler and does not use the DeepSeek API.
 - OpenCLI CLI 1.8.4+
 - OpenCLI Browser Bridge connected to a Chrome or Edge profile
 - Logged-in DeepSeek web session
-- Local DeepSeek browser crawler script at `../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs`, or a custom path passed with `--crawler-script`
+- Local DeepSeek browser crawler script bundled at `scripts/geo-deepseek-browser-direct.mjs`, or a custom path passed with `--crawler-script`
 - Optional `OPENAI_API_KEY` for analysis-stage AI semantic review. Without it, the default mode falls back to local rules.
 
 Detailed setup guide:
@@ -190,14 +190,7 @@ Example files:
 ## Offline Verification
 
 ```bash
-node --check scripts/deepseek_batch_crawl.mjs
-python3 -m py_compile scripts/analyze_deepseek_results.py scripts/test_entity_recognition.py
-python3 scripts/test_entity_recognition.py
-python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json \
-  --target-entity '光引GEO' \
-  --entity-type company \
-  --brands '光引GEO,源易信息,PallasAI' \
-  --out-dir /tmp/yao-deepseek-crawler-report
+bash scripts/run-tests.sh
 ```
 
 ## Boundaries
@@ -216,6 +209,9 @@ python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json 
 - `references/report-contract.md`: JSON contract and metric definitions
 - `scripts/preflight.mjs`: dependency and login-state checker
 - `scripts/setup_deepseek_bridge.mjs`: DeepSeek-specific OpenCLI Browser Bridge setup helper
+- `scripts/geo-deepseek-browser-direct.mjs`: bundled DeepSeek answer and citation-evidence collector
 - `scripts/deepseek_batch_crawl.mjs`: repeated crawl orchestrator
+- `scripts/test_geo_deepseek_browser_direct.mjs`: regression coverage for wrong-page rejection and browser-session cleanup
+- `scripts/run-tests.sh`: offline verification entrypoint
 - `scripts/analyze_deepseek_results.py`: aggregation and HTML rendering
 - `fixtures/sample-deepseek-crawl.json`: offline test fixture

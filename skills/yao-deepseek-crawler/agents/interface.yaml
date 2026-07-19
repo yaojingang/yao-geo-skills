@@ -17,8 +17,10 @@ compatibility:
     shell: "bash"
     primary_commands:
       - "node scripts/preflight.mjs --help"
+      - "node scripts/geo-deepseek-browser-direct.mjs --help"
       - "node scripts/deepseek_batch_crawl.mjs --help"
       - "python3 scripts/analyze_deepseek_results.py --help"
+      - "bash scripts/run-tests.sh"
   trust:
     source_tier: "local"
     remote_inline_execution: "forbid"

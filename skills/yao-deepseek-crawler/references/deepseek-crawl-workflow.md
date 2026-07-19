@@ -2,13 +2,13 @@
 
 ## Local Capability Source
 
-Preferred local crawler:
+Bundled local crawler:
 
 ```text
-../../SourceCode/opencli-boss-ai/scripts/geo-deepseek-browser-direct.mjs
+scripts/geo-deepseek-browser-direct.mjs
 ```
 
-This is preferred over the archived `deepseek-crawler` because it already captures the DeepSeek answer, the `X 个网页` source panel, source title, source name, domain, date, URL, summary, answer length, and target mention count. The archived Playwright service is useful as historical evidence only; it mainly captures the final answer text.
+This is preferred over the archived `deepseek-crawler` because it captures the DeepSeek answer, answer length, target mention count, and displayed citation links from the active DeepSeek browser DOM. With the public OpenCLI DeepSeek adapter, the separate source-panel object is not exposed directly, so the bundled crawler preserves source evidence from the `X 个网页` answer citations: citation number, domain/source, URL, inferred title, and nearby answer context. Each reference records provenance fields for observed and inferred values. Reference collection requires a valid DeepSeek conversation URL, the latest submitted prompt, and the latest assistant DOM text to match the answer returned by the current OpenCLI command. The temporary browser session is unbound after successful and failed extraction. The archived Playwright service is useful as historical evidence only; it mainly captures the final answer text.
 
 Override the crawler path with `--crawler-script` or `DEEPSEEK_CRAWLER_SCRIPT` when the local project moves.
 
