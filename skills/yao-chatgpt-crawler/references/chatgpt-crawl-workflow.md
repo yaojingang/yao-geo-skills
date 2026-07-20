@@ -117,6 +117,10 @@ Target matching uses contains logic plus aliases. For example, `--target-entity 
 
 If no alias/competitor file is supplied, the analyzer infers same-type competitors from answer structure and marks lower-confidence candidates in the entity recognition table.
 
+A file containing only the target entity and its aliases is a target-alias file, not a complete competitor list. The analyzer must keep fallback competitor inference enabled in this case.
+
+For formal English brand/company reports without user-supplied competitors, review repeated brand names from the captured answers into the alias file before final rendering, or run with `--semantic-review required`. Pure Latin brand names often lack legal or organization suffixes, so local suffix rules alone are an exploratory fallback.
+
 ## Failure Handling
 
 - `references.count = 0`: Web Search may be off, ChatGPT may have answered without visible links, or citations/source controls may not be exposed in the DOM or answer text.

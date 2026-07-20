@@ -56,6 +56,8 @@ STOP_ENTITIES = {
     "平台",
     "服务商",
     "品牌",
+    "用于公司",
+    "常见品牌",
     "装修",
     "装饰",
     "设计",
@@ -118,6 +120,10 @@ ENTITY_FRAGMENT_PATTERNS = [
 ]
 
 ENTITY_ATTRIBUTE_PATTERNS = [
+    r"^(?:用于|适用于|面向)(?:公司|企业|机构|品牌)$",
+    r"^(?:常见|主流|推荐|知名|高端|礼赠)(?:的)?品牌$",
+    r"^(?:包装|瓶身|玻璃瓶|极简玻璃瓶|珠宝化瓶身|水晶瓶身|标签|外观|产品|工业)(?:的)?设计$",
+    r"^(?:被定位为|以).{0,16}设计$",
     r"^(?:20\d{2}(?:年)?)?(?:出国|海外|美国|英国|加拿大|澳洲|香港|新加坡|上海|北京|广州|深圳|国内|国际|自费|公费|主流|专业|靠谱|正规|本地|当地|高端|老牌|头部|综合|一站式|全链条|专业靠谱的)*留学(?:申请|服务|咨询|中介|机构|公司){0,2}$",
     r"^(?:20\d{2}(?:年)?)?(?:美国|英国|加拿大|澳洲|香港|新加坡|海外|出国)?留学(?:中介|机构|公司|服务机构|申请机构)$",
     r"^(?:A股|港股|美股|H股|主板|创业板|科创板|纳斯达克|纽交所|港交所)?上市(?:公司|企业|集团|机构|平台|服务商)$",
@@ -1111,6 +1117,21 @@ def heuristic_semantic_review(candidate: dict, target_profile: dict, target_alia
             "heuristic",
             False,
         )
+    evidence = candidate.get("evidence") or {}
+    if evidence.get("provided_or_metric_entity") and evidence.get("answer_alias_match"):
+        return normalize_semantic_result(
+            {
+                "semantic_label": "direct_competitor",
+                "is_same_type": True,
+                "is_direct_competitor": True,
+                "confidence": 0.9,
+                "reason": "候选项来自人工实体别名表，并在正文回答中有明确命中。",
+                "recommended_action": "include_competitor",
+            },
+            candidate,
+            "heuristic",
+            False,
+        )
     surface_score = candidate.get("surface_score", 0)
     evidence_score = candidate.get("evidence_score", 0)
     if (
@@ -1390,7 +1411,8 @@ def load_brand_defs(
             for row in rows
             if row and not any(matches_target_entity(item, target_aliases) for item in row)
         ]
-        if not has_provided_rows:
+        has_provided_competitor_rows = bool(competitor_rows)
+        if not has_provided_competitor_rows:
             for candidate in entity_candidates:
                 if not candidate_is_valid_competitor(
                     candidate,
@@ -1559,6 +1581,12 @@ def split_compound_entity_names(value: str) -> list[str]:
 def looks_like_stop_entity(value: str) -> bool:
     cleaned = clean_text(value).strip("：:,.，。()（）[]【】")
     if cleaned in STOP_ENTITIES:
+        return True
+    if re.search(
+        r"^(?:If you(?:'re| are)|When you(?:'re| are)).{0,64}(?:selecting|choosing|looking for).*$",
+        cleaned,
+        flags=re.IGNORECASE,
+    ):
         return True
     if re.search(r"^(?:ChatGPT|OpenAI)(?:\s+Web\s+Search|\s+Search)?\s*(?:结果|汇总|回答|搜索|引用|来源|显示|中).*$", cleaned, flags=re.IGNORECASE):
         return True
