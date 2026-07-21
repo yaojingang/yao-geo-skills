@@ -80,6 +80,8 @@ Short Latin aliases such as `AI` or `GEO` only match standalone tokens, not subs
 
 Preferred mode: user supplies a canonical target row and same-type competitor rows with aliases. The same `brands.txt` format is reused for companies, people, or products.
 
+A `brands.txt` containing only the target row supplies target aliases only. It must not disable fallback competitor inference. For formal English company/brand reports, provide reviewed competitor rows or require semantic review because pure Latin brand names may not expose organization suffixes.
+
 Fallback mode: infer same-type competitor entities from answer headings, list rows, person-role context, organization/product suffixes, and cited source titles. The analyzer classifies each candidate as:
 
 - `person`
@@ -140,6 +142,7 @@ Standard target type is controlled by `--entity-type`:
 Legacy exploratory mode may use `--target-kind auto/person/company/product/mixed`, but final reports should provide `--target-entity` and `--entity-type`.
 
 The report must show the classification table so excluded concepts or noise can be audited.
+The classification table is an audit table, not the competitor matrix. Candidates marked as excluded must not be described as measured competitors.
 
 ## Entity Ranking
 

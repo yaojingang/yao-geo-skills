@@ -73,6 +73,15 @@ def main() -> None:
         "2026年十家综合实力突出的装修公司",
         "西安选装修公司",
         "有几家装修公司",
+        "用于公司",
+        "包装设计",
+        "极简玻璃瓶设计",
+        "珠宝化瓶身设计",
+        "瓶身设计",
+        "被定位为设计",
+        "以珠宝化瓶身设计",
+        "常见品牌",
+        "If you're selecting a co",
     ]
     for value in non_entities:
         assert analyzer.looks_like_stop_entity(value), f"should reject non-entity: {value}"
@@ -105,6 +114,71 @@ def main() -> None:
     ]
     for value in real_entities:
         assert not analyzer.looks_like_stop_entity(value), f"should keep real entity: {value}"
+
+    water_samples = [
+        {
+            "sample_id": "w01",
+            "ok": True,
+            "answer": (
+                "用于公司：可提供定制服务。包装设计：极简玻璃瓶设计。"
+                "VOSS、Evian、FIJI Water 和 CustomWater.com 是可核验的品牌或供应商。"
+                "If you're selecting a co-branded water supplier, compare minimum order quantities."
+            ),
+            "references": [],
+        }
+    ]
+    water_rows = analyzer.collect_entity_rows(water_samples)
+    for value in [
+        "用于公司",
+        "包装设计",
+        "极简玻璃瓶设计",
+        "珠宝化瓶身设计",
+        "瓶身设计",
+        "被定位为设计",
+        "以珠宝化瓶身设计",
+        "常见品牌",
+        "If you're selecting a co",
+    ]:
+        assert value not in water_rows, f"water prose fragment leaked as entity: {value}"
+
+    target_only_samples = [
+        {
+            "sample_id": f"t{index:02d}",
+            "question_id": "q01",
+            "question": "定制瓶装水公司推荐",
+            "repeat_index": index,
+            "ok": True,
+            "answer": "冰川饮品有限公司：提供企业定制瓶装水。",
+            "references": [],
+            "error": "",
+            "raw": {},
+        }
+        for index in (1, 2)
+    ]
+    with TemporaryDirectory() as temp_dir:
+        target_only_file = Path(temp_dir) / "brands.txt"
+        target_only_file.write_text("TargetCo|Target Company\n", encoding="utf-8")
+        target_only_args = Namespace(
+            brands="",
+            brands_file=str(target_only_file),
+            target_entity="TargetCo",
+            target_aliases="Target Company",
+            entity_type="company",
+            target_kind="auto",
+            min_inferred_count=2,
+            max_entity_candidates=50,
+            max_inferred_brands=24,
+            semantic_review="off",
+            semantic_confidence_threshold=0.72,
+            _semantic_review_cache_path=None,
+        )
+        target_only_brands, _, _, _, _ = analyzer.load_brand_defs(
+            target_only_args,
+            {"input": {"target_entity": "TargetCo", "entity_type": "company"}},
+            target_only_samples,
+        )
+        target_only_names = {row["name"] for row in target_only_brands}
+        assert {"TargetCo", "冰川饮品有限公司"}.issubset(target_only_names), target_only_names
 
     prefix_sensitive_entities = {
         "在行": "在行",
@@ -153,7 +227,8 @@ def main() -> None:
         ["光引GEO"],
     )
     assert reviewed_provided_brand["is_same_type"], reviewed_provided_brand
-    assert reviewed_provided_brand["semantic_label"] != "unrelated_entity", reviewed_provided_brand
+    assert reviewed_provided_brand["semantic_label"] == "direct_competitor", reviewed_provided_brand
+    assert reviewed_provided_brand["confidence"] == 0.9, reviewed_provided_brand
     merged_provided_candidates = {
         candidate["name"]: candidate
         for candidate in analyzer.build_entity_candidates(
