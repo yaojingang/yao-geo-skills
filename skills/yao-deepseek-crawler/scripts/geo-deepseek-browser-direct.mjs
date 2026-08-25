@@ -101,7 +101,16 @@ function getResponse(parsed) {
 }
 
 function normalizeText(value) {
-  return String(value || '').replace(/\s+/g, ' ').trim();
+  // Strip DeepSeek's search-status prefix ("已阅读 N 个网页") and trailing
+  // citation-count chip ("N 个网页") so the fingerprint matches the DOM answer
+  // body, which contains neither.
+  return String(value || '')
+    .replace(/^\s*已阅读\s*\d+\s*个网页\s*/, '')
+    .replace(/^\s*Read\s+\d+\s+web\s?pages?\s*/i, '')
+    .replace(/\s*\d+\s*个网页\s*$/, '')
+    .replace(/\s*\d+\s*web\s?pages?\s*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function textFingerprint(value) {
@@ -246,7 +255,10 @@ async function collectBrowserReferences(args, expectedAnswerText) {
   const js = `(async () => {
     const expectedPrompt = ${expectedPromptJson};
     const expectedAnswerFingerprint = ${expectedAnswerFingerprintJson};
-    const clean = (value) => String(value || '').replace(/\\s+/g, ' ').trim();
+    const clean = (value) => String(value || '')
+      .replace(/^\\s*已阅读\\s*\\d+\\s*个网页\\s*/, '')
+      .replace(/\\s*\\d+\\s*个网页\\s*$/, '')
+      .replace(/\\s+/g, ' ').trim();
     const fingerprint = async (value) => {
       const bytes = new TextEncoder().encode(clean(value));
       const digest = await crypto.subtle.digest('SHA-256', bytes);
@@ -274,7 +286,7 @@ async function collectBrowserReferences(args, expectedAnswerText) {
         references: []
       };
     }
-    const conversationMatch = location.pathname.match(/^\/a\/chat\/s\/([a-f0-9-]+)(?:\/|$)/i);
+    const conversationMatch = location.pathname.match(/^\\/a\\/chat\\/s\\/([a-f0-9-]+)(?:\\/|$)/i);
     const conversationId = conversationMatch ? conversationMatch[1].toLowerCase() : '';
     if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(conversationId)) {
       return {
@@ -287,11 +299,26 @@ async function collectBrowserReferences(args, expectedAnswerText) {
         references: []
       };
     }
-    const messages = Array.from(document.querySelectorAll('.ds-message'))
-      .map((node) => ({ node, role: roleOf(node), text: clean(node.innerText || node.textContent) }))
+    const messageText = (node, role) => {
+      if (role === 'assistant') {
+        const mdEl = node.querySelector('.ds-markdown.ds-assistant-message-main-content') || node.querySelector('.ds-markdown');
+        if (mdEl) return clean(mdEl.innerText || mdEl.textContent);
+      }
+      return clean(node.innerText || node.textContent);
+    };
+    const collectMessages = () => Array.from(document.querySelectorAll('.ds-message'))
+      .map((node) => { const role = roleOf(node); return { node, role, text: messageText(node, role) }; })
       .filter((message) => message.text);
+    let messages = collectMessages();
     const expected = clean(expectedPrompt);
-    const userMessage = [...messages].reverse().find((message) => message.role === 'user');
+    let userMessage = [...messages].reverse().find((message) => message.role === 'user');
+    if (!userMessage || userMessage.text !== expected) {
+      // Virtualized list may have unmounted the user bubble — scroll to top and retry.
+      const vlist = document.querySelector('.ds-virtual-list') || document.querySelector('.ds-scroll-area');
+      if (vlist) { vlist.scrollTo(0, 0); await new Promise((r) => setTimeout(r, 800)); }
+      messages = collectMessages();
+      userMessage = [...messages].reverse().find((message) => message.role === 'user');
+    }
     if (!userMessage || userMessage.text !== expected) {
       return {
         href: location.href,
@@ -371,6 +398,33 @@ async function collectBrowserReferences(args, expectedAnswerText) {
   try {
     await execFileAsync('opencli', bindArgs, {
       timeout: 15 * 1000,
+      maxBuffer: 5 * 1024 * 1024,
+      env: process.env,
+    });
+    // `browser bind` attaches to the ACTIVE tab, which is usually a blank tab
+    // rather than the DeepSeek conversation the ask ran in (page_url came back
+    // "about:blank"). Navigate the bound tab to DeepSeek home and open the most
+    // recent conversation (the one the ask just created). The prompt/fingerprint
+    // verification below still guards against landing on a wrong thread.
+    const openArgs = [];
+    if (args.profile) openArgs.push('--profile', args.profile);
+    openArgs.push('browser', browserSession, 'open', 'https://chat.deepseek.com/');
+    await execFileAsync('opencli', openArgs, {
+      timeout: 30 * 1000,
+      maxBuffer: 5 * 1024 * 1024,
+      env: process.env,
+    });
+    const navJs = `(async () => {
+      await new Promise((r) => setTimeout(r, 2000));
+      const link = document.querySelector('a[href*="/a/chat/s/"]');
+      if (link) { link.click(); await new Promise((r) => setTimeout(r, 3000)); }
+      return location.pathname;
+    })()`;
+    const navArgs = [];
+    if (args.profile) navArgs.push('--profile', args.profile);
+    navArgs.push('browser', browserSession, 'eval', navJs);
+    await execFileAsync('opencli', navArgs, {
+      timeout: 30 * 1000,
       maxBuffer: 5 * 1024 * 1024,
       env: process.env,
     });
