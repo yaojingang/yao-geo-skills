@@ -100,7 +100,7 @@ function getResponse(parsed) {
   return '';
 }
 
-function normalizeText(value) {
+function normalizeAnswerText(value) {
   // Strip DeepSeek's search-status prefix ("已阅读 N 个网页") and trailing
   // citation-count chip ("N 个网页") so the fingerprint matches the DOM answer
   // body, which contains neither.
@@ -114,7 +114,7 @@ function normalizeText(value) {
 }
 
 function textFingerprint(value) {
-  return createHash('sha256').update(normalizeText(value), 'utf8').digest('hex');
+  return createHash('sha256').update(normalizeAnswerText(value), 'utf8').digest('hex');
 }
 
 function parseReferencesFromBrowserPayload(parsed) {
@@ -237,12 +237,9 @@ async function runOpenCli(args) {
 async function collectBrowserReferences(args, expectedAnswerText) {
   if (!args.search) return { items: [], verified: false, note: 'Search was disabled.' };
   const browserSession = args.session;
-  const bindArgs = [];
-  if (args.profile) bindArgs.push('--profile', args.profile);
-  bindArgs.push('browser', browserSession, 'bind', '--window', 'foreground');
-  const unbindArgs = [];
-  if (args.profile) unbindArgs.push('--profile', args.profile);
-  unbindArgs.push('browser', browserSession, 'unbind');
+  const closeArgs = [];
+  if (args.profile) closeArgs.push('--profile', args.profile);
+  closeArgs.push('browser', browserSession, 'close');
   let outcome = {
     items: [],
     verified: false,
@@ -255,17 +252,20 @@ async function collectBrowserReferences(args, expectedAnswerText) {
   const js = `(async () => {
     const expectedPrompt = ${expectedPromptJson};
     const expectedAnswerFingerprint = ${expectedAnswerFingerprintJson};
-    const clean = (value) => String(value || '')
+    const cleanText = (value) => String(value || '').replace(/\\s+/g, ' ').trim();
+    const cleanAnswer = (value) => String(value || '')
       .replace(/^\\s*已阅读\\s*\\d+\\s*个网页\\s*/, '')
+      .replace(/^\\s*Read\\s+\\d+\\s+web\\s?pages?\\s*/i, '')
       .replace(/\\s*\\d+\\s*个网页\\s*$/, '')
+      .replace(/\\s*\\d+\\s*web\\s?pages?\\s*$/i, '')
       .replace(/\\s+/g, ' ').trim();
     const fingerprint = async (value) => {
-      const bytes = new TextEncoder().encode(clean(value));
+      const bytes = new TextEncoder().encode(cleanAnswer(value));
       const digest = await crypto.subtle.digest('SHA-256', bytes);
       return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('');
     };
     const roleOf = (node) => {
-      const explicit = clean(
+      const explicit = cleanText(
         node.getAttribute('data-role')
         || node.getAttribute('data-message-role')
         || node.getAttribute('data-author')
@@ -302,15 +302,17 @@ async function collectBrowserReferences(args, expectedAnswerText) {
     const messageText = (node, role) => {
       if (role === 'assistant') {
         const mdEl = node.querySelector('.ds-markdown.ds-assistant-message-main-content') || node.querySelector('.ds-markdown');
-        if (mdEl) return clean(mdEl.innerText || mdEl.textContent);
+        if (mdEl) return cleanAnswer(mdEl.innerText || mdEl.textContent);
       }
-      return clean(node.innerText || node.textContent);
+      return role === 'assistant'
+        ? cleanAnswer(node.innerText || node.textContent)
+        : cleanText(node.innerText || node.textContent);
     };
     const collectMessages = () => Array.from(document.querySelectorAll('.ds-message'))
       .map((node) => { const role = roleOf(node); return { node, role, text: messageText(node, role) }; })
       .filter((message) => message.text);
     let messages = collectMessages();
-    const expected = clean(expectedPrompt);
+    const expected = cleanText(expectedPrompt);
     let userMessage = [...messages].reverse().find((message) => message.role === 'user');
     if (!userMessage || userMessage.text !== expected) {
       // Virtualized list may have unmounted the user bubble — scroll to top and retry.
@@ -396,35 +398,68 @@ async function collectBrowserReferences(args, expectedAnswerText) {
   if (args.profile) evalArgs.push('--profile', args.profile);
   evalArgs.push('browser', browserSession, 'eval', js);
   try {
-    await execFileAsync('opencli', bindArgs, {
-      timeout: 15 * 1000,
-      maxBuffer: 5 * 1024 * 1024,
-      env: process.env,
-    });
-    // `browser bind` attaches to the ACTIVE tab, which is usually a blank tab
-    // rather than the DeepSeek conversation the ask ran in (page_url came back
-    // "about:blank"). Navigate the bound tab to DeepSeek home and open the most
-    // recent conversation (the one the ask just created). The prompt/fingerprint
-    // verification below still guards against landing on a wrong thread.
+    // Use an owned browser session so reference extraction never navigates the
+    // user's currently active tab. The prompt/fingerprint verification below
+    // still guards against landing on the wrong DeepSeek conversation.
     const openArgs = [];
     if (args.profile) openArgs.push('--profile', args.profile);
-    openArgs.push('browser', browserSession, 'open', 'https://chat.deepseek.com/');
+    openArgs.push('browser', browserSession, 'open', 'https://chat.deepseek.com/', '--window', 'foreground');
     await execFileAsync('opencli', openArgs, {
       timeout: 30 * 1000,
       maxBuffer: 5 * 1024 * 1024,
       env: process.env,
     });
     const navJs = `(async () => {
-      await new Promise((r) => setTimeout(r, 2000));
-      const link = document.querySelector('a[href*="/a/chat/s/"]');
-      if (link) { link.click(); await new Promise((r) => setTimeout(r, 3000)); }
-      return location.pathname;
+      const deadline = Date.now() + 10000;
+      while (Date.now() < deadline) {
+        if (/^\\/a\\/chat\\/s\\/[a-f0-9-]+(?:\\/|$)/i.test(location.pathname)) return location.href;
+        const link = document.querySelector('a[href*="/a/chat/s/"]');
+        if (link) return link.href;
+        await new Promise((r) => setTimeout(r, 250));
+      }
+      return '';
     })()`;
     const navArgs = [];
     if (args.profile) navArgs.push('--profile', args.profile);
     navArgs.push('browser', browserSession, 'eval', navJs);
-    await execFileAsync('opencli', navArgs, {
+    const navResult = await execFileAsync('opencli', navArgs, {
       timeout: 30 * 1000,
+      maxBuffer: 5 * 1024 * 1024,
+      env: process.env,
+    });
+    const navOutput = String(navResult.stdout || '').trim();
+    let conversationUrl = navOutput;
+    try {
+      const parsedNavOutput = JSON.parse(navOutput);
+      if (typeof parsedNavOutput === 'string') conversationUrl = parsedNavOutput;
+    } catch {
+      // OpenCLI prints string eval results as plain text.
+    }
+    let parsedConversationUrl;
+    try {
+      parsedConversationUrl = new URL(conversationUrl);
+    } catch {
+      parsedConversationUrl = null;
+    }
+    if (
+      parsedConversationUrl?.origin !== 'https://chat.deepseek.com'
+      || !/^\/a\/chat\/s\/[a-f0-9-]+(?:\/|$)/i.test(parsedConversationUrl.pathname)
+    ) {
+      throw new Error('No valid DeepSeek conversation link was found in the owned browser session.');
+    }
+    const conversationArgs = [];
+    if (args.profile) conversationArgs.push('--profile', args.profile);
+    conversationArgs.push('browser', browserSession, 'open', parsedConversationUrl.href);
+    await execFileAsync('opencli', conversationArgs, {
+      timeout: 30 * 1000,
+      maxBuffer: 5 * 1024 * 1024,
+      env: process.env,
+    });
+    const waitArgs = [];
+    if (args.profile) waitArgs.push('--profile', args.profile);
+    waitArgs.push('browser', browserSession, 'wait', 'selector', '.ds-message', '--timeout', '10000');
+    await execFileAsync('opencli', waitArgs, {
+      timeout: 15 * 1000,
       maxBuffer: 5 * 1024 * 1024,
       env: process.env,
     });
@@ -490,17 +525,17 @@ async function collectBrowserReferences(args, expectedAnswerText) {
     outcome = {
       items: [],
       verified: false,
-      note: `Browser session bind failed: ${error.message}`,
+      note: `Browser session navigation failed: ${error.message}`,
     };
   } finally {
     try {
-      await execFileAsync('opencli', unbindArgs, {
+      await execFileAsync('opencli', closeArgs, {
         timeout: 15 * 1000,
         maxBuffer: 5 * 1024 * 1024,
         env: process.env,
       });
     } catch (error) {
-      outcome.cleanup_error = `Browser session unbind failed: ${error.message}`;
+      outcome.cleanup_error = `Browser session close failed: ${error.message}`;
       outcome.note = `${outcome.note} ${outcome.cleanup_error}`.trim();
     }
   }
