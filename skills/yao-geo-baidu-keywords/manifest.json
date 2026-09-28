@@ -1,0 +1,17 @@
+{
+  "id": "yao-geo-baidu-keywords",
+  "name": "Yao GEO Baidu Keywords",
+  "version": "1.0.0",
+  "status": "active",
+  "owner": "yaojingang",
+  "review_cadence": "每季度检查百度页面结构及行业评分样例",
+  "summary": "通过真实浏览器逐词采集百度联想词和第一页页尾相关搜索，截图留证，按行业转化意图评分并生成 Excel 关键词表。",
+  "input_files": "file-backed fixture：可选的用户关键词文档或表格；公开留学示例仅展示脱敏后的 Excel，不含原始浏览器截图。",
+  "output_contract": "capture.json、同目录 evidence/ 截图、含关键词表/采集记录/截图索引的 Excel；F 列为 1–10 分商业价值评分。",
+  "rollback_boundary": "采集过程只读百度页面；本地输出可删除或重建，不修改第三方页面与用户原始输入。",
+  "primary_outputs": [
+    "baidu-keyword-workbook",
+    "capture-json",
+    "browser-screenshot-evidence"
+  ]
+}

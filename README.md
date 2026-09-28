@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `21` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `22` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -23,7 +23,7 @@
 | `geo-content-production` | 6 | 标题、科普、对比、文章 AI 友好化、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
 | `geo-measurement` | 5 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、豆包 App/Web 重复采样、ChatGPT AI Search 采样概率报告 |
-| `geo-research` | 1 | AI 搜索问题集、意图簇和监测 Prompt |
+| `geo-research` | 2 | AI 搜索问题集、百度相关词采集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
 
@@ -152,6 +152,7 @@ git checkout main
 - [skills/yao-geo-brand-graph](skills/yao-geo-brand-graph)
 - [skills/yao-geo-knowledge-base-builder](skills/yao-geo-knowledge-base-builder)
 - [skills/yao-geo-intent-miner](skills/yao-geo-intent-miner)
+- [skills/yao-geo-baidu-keywords](skills/yao-geo-baidu-keywords)
 - [skills/yao-geoflow-cli](skills/yao-geoflow-cli)
 - [skills/yao-geoflow-template](skills/yao-geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
@@ -481,6 +482,17 @@ git checkout main
 <table>
   <tr>
     <td valign="top" width="100%">
+      <strong><code>yao-geo-baidu-keywords</code></strong><br>
+      作用：在真实浏览器中逐词采集百度搜索框联想词和第一页页尾相关搜索，截图留证，按行业转化意图评分并生成 Excel 关键词表。<br><br>
+      适合：核心词拓展、行业关键词商业价值初筛、需要保留页面出处的 GEO 选题准备。<br><br>
+      留学服务公开案例：<a href="skills/yao-geo-baidu-keywords/examples/study-abroad/出国留学相关搜索关键词表_公开示例.xlsx">Excel</a> ·
+      <a href="skills/yao-geo-baidu-keywords/examples/study-abroad/README.md">案例说明</a><br><br>
+      相关入口：<a href="docs/skills/yao-geo-baidu-keywords.md">说明页</a> ·
+      <a href="skills/yao-geo-baidu-keywords">Skill 包</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
       <strong><code>yao-geo-intent-miner</code></strong><br>
       作用：把种子词、品牌、产品、竞品、区域、人群和业务材料扩展成 AI 搜索问题集、意图簇、追问链路、查询重写、内容选题、FAQ 题库、知识库条目计划、证据缺口和监测 Prompt 库。<br><br>
       适合：内容生产前建立问题底座，尤其是需要面向 DeepSeek、豆包、千问、Kimi、元宝适配国内平台问法，并输出 Word/PDF/HTML/Markdown 四格式交付的意图拓词场景。<br><br>
@@ -517,6 +529,7 @@ git checkout main
 - `yao-geo-brand-graph`：HubSpot 国内 AI 平台品牌图谱示例
 - `yao-geo-knowledge-base-builder`：HubSpot 品牌知识库示例
 - `yao-geo-intent-miner`：HubSpot 中文 AI 意图拓词示例
+- `yao-geo-baidu-keywords`：5 个留学服务核心词的百度相关词与行业评分 Excel 公开示例
 - 示例输出形态：`Markdown`、`HTML`、`Word`、`PDF`、`report_input.json`、`quality-report.json`、截图或预览图（视 skill 类型而定）
 
 这些示例的作用不是给出“真实经营结论”，而是展示：

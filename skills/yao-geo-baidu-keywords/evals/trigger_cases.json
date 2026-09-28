@@ -1,0 +1,19 @@
+{
+  "recommended_threshold": 0.33,
+  "should_trigger": [
+    {"text": "帮我在百度逐个搜这些词，截图下拉词和底部相关搜索，做成关键词 Excel。", "family": "browser_capture"},
+    {"text": "把这批装修词的百度联想词抓出来，并按找装修公司报价的意图评分。", "family": "industry_scoring"},
+    {"text": "用百度相关搜索扩展这些雅思培训关键词，截图留证并给出商业价值分数。", "family": "industry_scoring"},
+    {"text": "按照法律服务行业再跑一批词，保留每个词的百度下拉截图和页尾相关词。", "family": "browser_capture"}
+  ],
+  "should_not_trigger": [
+    {"text": "查一下百度指数里这个词最近一年的趋势。", "family": "index_only"},
+    {"text": "给我看今天百度热搜榜前十名。", "family": "hotlist_only"},
+    {"text": "解释一下离婚财产分割的法律规定。", "family": "legal_advice"},
+    {"text": "搜索百度后只要前五条网页链接，不需要联想词或相关搜索。", "family": "ordinary_search"}
+  ],
+  "near_neighbor": [
+    {"text": "我已经有截图了，只需要人工读图整理成表，不要打开百度。", "family": "image_transcription"},
+    {"text": "帮我估算这批词的百度广告竞价和搜索量。", "family": "marketing_metrics"}
+  ]
+}
