@@ -819,6 +819,33 @@
       "summary": "Primary frontend experience skill for current GEOFlow: discover Laravel Blade themes, map reference sites, design homepage module/style JSON including lead_form by existing slug, compare default-site and target-package frontend capabilities, plan channel sync previews, and keep activation separate from design review.",
       "public_repo_path": "skills/yao-geoflow-design",
       "last_updated": "2026-07-05"
+    },
+    {
+      "id": "yao-geo-baidu-keywords",
+      "family": "geo-research",
+      "maturity": "beta",
+      "tags": [
+        "baidu",
+        "keyword-discovery",
+        "autocomplete",
+        "related-searches",
+        "browser-capture",
+        "commercial-intent",
+        "excel"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "baidu-keyword-workbook",
+        "capture-json",
+        "browser-screenshot-evidence"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
+      "path": "skills/yao-geo-baidu-keywords",
+      "summary": "Capture Baidu autocomplete and first-page bottom related searches in a real browser, keep screenshot evidence, score commercial intent by industry, and export a traceable Excel keyword workbook.",
+      "public_repo_path": "skills/yao-geo-baidu-keywords",
+      "last_updated": "2026-09-28"
     }
   ],
   "planned_families": [

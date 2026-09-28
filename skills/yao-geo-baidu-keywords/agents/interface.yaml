@@ -1,0 +1,20 @@
+interface:
+  display_name: "百度相关搜索词采集"
+  short_description: "截图采集百度相关词，按行业商业意图评分并导出 Excel"
+  default_prompt: "用 $yao-geo-baidu-keywords 采集以下目标关键词的百度联想词和页尾相关搜索。先确定行业与转化目标，再生成带商业价值评分及截图出处的 Excel："
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+  activation:
+    mode: "manual"
+    paths: []
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "agent-skills-source-with-browser-tool"

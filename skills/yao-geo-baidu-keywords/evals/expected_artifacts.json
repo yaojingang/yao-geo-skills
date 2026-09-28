@@ -1,0 +1,20 @@
+{
+  "required_artifacts": [
+    "capture_json",
+    "keyword_workbook",
+    "autocomplete_screenshots",
+    "bottom_related_search_screenshots"
+  ],
+  "workbook_sheets": [
+    "关键词表",
+    "采集记录",
+    "截图索引"
+  ],
+  "checks": [
+    "每个目标词有两类截图或明确的缺失状态",
+    "关键词表 F 列为 1–10 的数值评分",
+    "截图链接指向与 Excel 同一运行目录内的文件",
+    "同一评分画像下相同相关词的评分一致",
+    "公开示例移除个人标识和原始浏览器截图"
+  ]
+}

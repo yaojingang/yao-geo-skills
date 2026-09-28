@@ -1,0 +1,37 @@
+{
+  "positive_concepts": {
+    "baidu_browser": {
+      "weight": 0.10,
+      "phrases": ["百度", "Baidu"]
+    },
+    "related_terms": {
+      "weight": 0.60,
+      "phrases": ["联想词", "下拉词", "下拉框", "相关搜索", "页尾相关词", "百度关键词拓展"]
+    },
+    "screenshots": {
+      "weight": 0.10,
+      "phrases": ["截图", "留证"]
+    },
+    "workbook": {
+      "weight": 0.05,
+      "phrases": ["Excel", "关键词表"]
+    },
+    "scoring": {
+      "weight": 0.15,
+      "phrases": ["商业价值", "评分", "按找装修公司报价的意图"]
+    }
+  },
+  "negative_concepts": {
+    "exclude_related_terms": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": ["不需要联想词或相关搜索", "不要联想词", "不要相关搜索"]
+    },
+    "exclude_browser": {
+      "weight": 0.7,
+      "exclusive": true,
+      "phrases": ["不要打开百度"]
+    }
+  },
+  "fallback_positive_concepts": ["related_terms"]
+}
