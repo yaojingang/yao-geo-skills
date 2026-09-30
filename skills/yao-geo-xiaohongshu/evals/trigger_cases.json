@@ -1,0 +1,17 @@
+{
+  "recommended_threshold": 0.33,
+  "should_trigger": [
+    {"text": "输入一批词根，采集小红书搜索框两层联想词，截图并做 Excel。", "family": "two_level_capture"},
+    {"text": "把留学公司的小红书下拉相关词展开两层，记录每个词的位置并按商业意图评分。", "family": "industry_scoring"},
+    {"text": "从装修公司开始逐层获取小红书搜索建议，保留每次截图和来源路径。", "family": "two_level_capture"}
+  ],
+  "should_not_trigger": [
+    {"text": "帮我找小红书上最火的十篇装修笔记。", "family": "note_search"},
+    {"text": "分析这个小红书账号的粉丝和互动。", "family": "account_analytics"},
+    {"text": "发一篇小红书笔记宣传留学机构。", "family": "content_publish"}
+  ],
+  "near_neighbor": [
+    {"text": "我已有小红书搜索截图，只需要读图整理，不必进入网站。", "family": "image_transcription"},
+    {"text": "估算这些词在小红书的搜索量和投放价格。", "family": "marketing_metrics"}
+  ]
+}

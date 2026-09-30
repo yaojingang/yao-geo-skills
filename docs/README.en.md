@@ -9,7 +9,7 @@ Visual catalog:
 
 ## Current Inventory
 
-The repository currently contains `22` GEO-related skills.
+The repository currently contains `23` GEO-related skills.
 
 2026-05-21 update focus: most GEO content, page, strategy, and knowledge-asset skills now make real-data availability explicit, separate verified evidence from user-supplied or unavailable data, and standardize four-format delivery around Word, PDF, Markdown, and sticky-navigation HTML reports.
 
@@ -21,7 +21,7 @@ The repository currently contains `22` GEO-related skills.
 | `geo-content-production` | 6 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-article-friendly`, `yao-geo-ranking-article-builder` |
 | `geo-knowledge-assets` | 2 | `yao-geo-brand-graph`, `yao-geo-knowledge-base-builder` |
 | `geo-measurement` | 5 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-doubao-crawler`, `yao-chatgpt-crawler` |
-| `geo-research` | 2 | `yao-geo-intent-miner`, `yao-geo-baidu-keywords` |
+| `geo-research` | 3 | `yao-geo-intent-miner`, `yao-geo-baidu-keywords`, `yao-geo-xiaohongshu` |
 
 ## Skill Catalog
 
@@ -49,6 +49,7 @@ The repository currently contains `22` GEO-related skills.
 | `yao-chatgpt-crawler` | Measurement | Runs repeated ChatGPT Web AI Search samples through an OpenCLI Browser Bridge profile, captures visible sources, and renders semantic target-vs-competitor probability reports. | [Package](../skills/yao-chatgpt-crawler) / [Guide](skills/yao-chatgpt-crawler.md) / [Doubao example](../skills/yao-chatgpt-crawler/examples/doubao-model-products-real) |
 | `yao-geo-intent-miner` | Research | Expands seed terms and business context into AI-search question sets, intent clusters, follow-up chains, evidence gaps, content assets, knowledge-base entry plans, and monitoring prompts. | [Package](../skills/yao-geo-intent-miner) / [Guide](skills/yao-geo-intent-miner.md) |
 | `yao-geo-baidu-keywords` | Research | Captures Baidu autocomplete and bottom related searches in a browser, preserves screenshots, scores industry-specific commercial intent, and exports an Excel keyword workbook. | [Package](../skills/yao-geo-baidu-keywords) / [Guide](skills/yao-geo-baidu-keywords.md) / [Public Excel example](../skills/yao-geo-baidu-keywords/examples/study-abroad/出国留学相关搜索关键词表_公开示例.xlsx) |
+| `yao-geo-xiaohongshu` | Research | Captures two levels of Xiaohongshu search suggestions in a browser, records screenshots and ranking positions, scores commercial intent by industry, and exports an Excel workbook. | [Package](../skills/yao-geo-xiaohongshu) / [Guide](skills/yao-geo-xiaohongshu.md) |
 
 ## Repository Contract
 

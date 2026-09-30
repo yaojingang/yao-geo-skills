@@ -1,0 +1,13 @@
+{
+  "id": "yao-geo-xiaohongshu",
+  "name": "Yao GEO Xiaohongshu Keywords",
+  "version": "1.0.0",
+  "status": "active",
+  "owner": "yaojingang",
+  "review_cadence": "每季度检查小红书页面结构、下拉列表排序和行业评分样例",
+  "summary": "在真实浏览器中对小红书搜索框做两层联想词扩展，逐次截图并记录位置和来源路径，按行业商业意图评分，输出 Excel。",
+  "input_files": "file-backed fixture：用户提供的词根列表、行业与转化目标；公开仓库不附带已登录浏览器的原始截图。",
+  "output_contract": "同目录的 capture.json、evidence/ 截图和 Excel；工作簿含关键词表、采集记录、截图索引、去重词库、待采集，F 列为 1–10 分商业价值评分。",
+  "rollback_boundary": "浏览器采集仅读取小红书搜索建议；本地采集包可删除或重建，不修改小红书内容。",
+  "primary_outputs": ["xiaohongshu-keyword-workbook", "capture-json", "browser-screenshot-evidence"]
+}

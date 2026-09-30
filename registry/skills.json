@@ -846,6 +846,33 @@
       "summary": "Capture Baidu autocomplete and first-page bottom related searches in a real browser, keep screenshot evidence, score commercial intent by industry, and export a traceable Excel keyword workbook.",
       "public_repo_path": "skills/yao-geo-baidu-keywords",
       "last_updated": "2026-09-28"
+    },
+    {
+      "id": "yao-geo-xiaohongshu",
+      "family": "geo-research",
+      "maturity": "beta",
+      "tags": [
+        "xiaohongshu",
+        "keyword-discovery",
+        "autocomplete",
+        "two-level-expansion",
+        "browser-capture",
+        "commercial-intent",
+        "excel"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "xiaohongshu-keyword-workbook",
+        "capture-json",
+        "browser-screenshot-evidence"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
+      "path": "skills/yao-geo-xiaohongshu",
+      "summary": "Capture two levels of Xiaohongshu search suggestions in a real browser, preserve screenshots and positions, score commercial intent by industry, and export a traceable Excel workbook.",
+      "public_repo_path": "skills/yao-geo-xiaohongshu",
+      "last_updated": "2026-09-30"
     }
   ],
   "planned_families": [

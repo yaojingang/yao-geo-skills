@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `22` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `23` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -23,7 +23,7 @@
 | `geo-content-production` | 6 | 标题、科普、对比、文章 AI 友好化、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
 | `geo-measurement` | 5 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、豆包 App/Web 重复采样、ChatGPT AI Search 采样概率报告 |
-| `geo-research` | 2 | AI 搜索问题集、百度相关词采集、意图簇和监测 Prompt |
+| `geo-research` | 3 | AI 搜索问题集、百度与小红书相关词采集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
 
@@ -153,6 +153,7 @@ git checkout main
 - [skills/yao-geo-knowledge-base-builder](skills/yao-geo-knowledge-base-builder)
 - [skills/yao-geo-intent-miner](skills/yao-geo-intent-miner)
 - [skills/yao-geo-baidu-keywords](skills/yao-geo-baidu-keywords)
+- [skills/yao-geo-xiaohongshu](skills/yao-geo-xiaohongshu)
 - [skills/yao-geoflow-cli](skills/yao-geoflow-cli)
 - [skills/yao-geoflow-template](skills/yao-geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
@@ -482,6 +483,15 @@ git checkout main
 <table>
   <tr>
     <td valign="top" width="100%">
+      <strong><code>yao-geo-xiaohongshu</code></strong><br>
+      作用：在小红书搜索框逐词采集两层联想词，保存截图、展示位置和来源路径，按行业商业意图评分并生成 Excel。<br><br>
+      适合：核心词拓展、两层相关词发现、行业关键词商业价值初筛。<br><br>
+      相关入口：<a href="docs/skills/yao-geo-xiaohongshu.md">说明页</a> ·
+      <a href="skills/yao-geo-xiaohongshu">Skill 包</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
       <strong><code>yao-geo-baidu-keywords</code></strong><br>
       作用：在真实浏览器中逐词采集百度搜索框联想词和第一页页尾相关搜索，截图留证，按行业转化意图评分并生成 Excel 关键词表。<br><br>
       适合：核心词拓展、行业关键词商业价值初筛、需要保留页面出处的 GEO 选题准备。<br><br>
@@ -530,6 +540,7 @@ git checkout main
 - `yao-geo-knowledge-base-builder`：HubSpot 品牌知识库示例
 - `yao-geo-intent-miner`：HubSpot 中文 AI 意图拓词示例
 - `yao-geo-baidu-keywords`：5 个留学服务核心词的百度相关词与行业评分 Excel 公开示例
+- `yao-geo-xiaohongshu`：两层搜索联想词的采集规程、行业评分与合成校验样例
 - 示例输出形态：`Markdown`、`HTML`、`Word`、`PDF`、`report_input.json`、`quality-report.json`、截图或预览图（视 skill 类型而定）
 
 这些示例的作用不是给出“真实经营结论”，而是展示：
