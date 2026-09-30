@@ -1,0 +1,3 @@
+display_name: 小红书两层相关词采集
+short_description: 截图采集小红书两层搜索联想词，行业评分并导出 Excel
+default_prompt: 请按词根采集小红书搜索框两层联想词，记录每条建议词的位置与截图，根据行业转化目标评分并生成 Excel 采集包。
