@@ -2,7 +2,7 @@
   "id": "yao-geo-douyin",
   "name": "yao-geo-douyin",
   "display_name": "抖音两层相关词采集",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "production",

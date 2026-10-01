@@ -4,6 +4,11 @@ This document tracks public repository releases for the skill catalog. Update th
 
 ## 2026-10-01
 
+### `yao-geo-douyin` Study Abroad Example
+
+- Added a real three-root example and public Excel with 200 source-path rows and 142 unique terms, preserving the confirmed empty result for “北京留学公司” and removing all raw screenshots.
+- Refined study abroad scoring for provider reputation, consultation, academic tutoring, operations and jobs, and added intermediate keyboard-value and window-focus checks for native input.
+
 ### `yao-geo-douyin` Initial Release
 
 - Added two-level Douyin autocomplete collection through Codex native computer operations, with screenshots, positions, and source paths.
