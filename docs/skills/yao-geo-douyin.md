@@ -35,7 +35,9 @@ python3 scripts/build_workbook.py --input /path/to/run/capture.json --output /pa
 
 ## 验证与公开示例
 
-macOS Chrome的“GEO公司”实测完成11次不同查询、110条路径记录、80个去重词和11张截图，循环未鼠标点击、提交搜索或刷新。已登录页面的原始截图与真实采集包保留在用户本地，公开包提供合成校验样例。
+macOS Chrome的“GEO公司”实测完成11次不同查询、110条路径记录、80个去重词和11张截图，循环未鼠标点击、提交搜索或刷新。已登录页面的原始截图与真实采集包保留在用户本地。
+
+新增 [留学机构公开案例](../../skills/yao-geo-douyin/examples/study-abroad/README.md)：测试“北京留学公司、留学机构、留学辅导机构”，21 个不同查询取得 200 条路径和 142 个去重词。“北京留学公司”确认未显示下拉词；公开 Excel 移除了截图与截图路径，保留逐词位置和留学行业评分。
 
 - [实测范围](../../skills/yao-geo-douyin/reports/live-test-2026-10-01.md)
 - [示例与隐私边界](../../skills/yao-geo-douyin/examples/README.md)

@@ -1,0 +1,44 @@
+{
+  "platform": "douyin",
+  "capture_mode": "input_only",
+  "date": "2026-10-01",
+  "roots": [
+    "北京留学公司",
+    "留学机构",
+    "留学辅导机构"
+  ],
+  "industry": "study_abroad",
+  "conversion_goal": "咨询或委托留学服务机构进行申请规划与办理",
+  "scoring_profile_version": "2026-10-01.1",
+  "distinct_queries": 21,
+  "query_status_counts": {
+    "ok": 20,
+    "empty": 1
+  },
+  "first_level_rows": 20,
+  "second_level_rows": 180,
+  "path_rows": 200,
+  "exact_unique_terms": 142,
+  "pending_queries": 0,
+  "root_path_rows": {
+    "北京留学公司": 0,
+    "留学机构": 100,
+    "留学辅导机构": 100
+  },
+  "score_counts_by_path": {
+    "2": 27,
+    "3": 13,
+    "4": 17,
+    "6": 26,
+    "8": 45,
+    "9": 7,
+    "10": 65
+  },
+  "empty_roots": [
+    "北京留学公司"
+  ],
+  "list_truncated_queries": 0,
+  "public_example": true,
+  "evidence_redacted": true,
+  "workbook_sha256": "447d82a131d465b1b6d8078b08cf9119e3c3435b3240b9b49d86acf1f013b3a2"
+}

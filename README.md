@@ -489,7 +489,8 @@ git checkout main
       适合：核心词拓展、抖音搜索意图研究和行业关键词商业价值初筛。<br><br>
       相关入口：<a href="docs/skills/yao-geo-douyin.md">说明页</a> ·
       <a href="skills/yao-geo-douyin">Skill包</a> ·
-      <a href="skills/yao-geo-douyin/reports/live-test-2026-10-01.md">实测范围</a>
+      <a href="skills/yao-geo-douyin/reports/live-test-2026-10-01.md">实测范围</a> ·
+      <a href="skills/yao-geo-douyin/examples/study-abroad/README.md">留学机构案例与 Excel</a>
     </td>
   </tr>
   <tr>
@@ -552,7 +553,7 @@ git checkout main
 - `yao-geo-intent-miner`：HubSpot 中文 AI 意图拓词示例
 - `yao-geo-baidu-keywords`：5 个留学服务核心词的百度相关词与行业评分 Excel 公开示例
 - `yao-geo-xiaohongshu`：两层搜索联想词的采集规程、行业评分与合成校验样例
-- `yao-geo-douyin`：原生电脑操作、两层下拉采集、行业评分、实测范围与合成校验样例
+- `yao-geo-douyin`：原生电脑操作、两层下拉采集、行业评分、实测范围与留学机构公开 Excel 案例
 - 示例输出形态：`Markdown`、`HTML`、`Word`、`PDF`、`report_input.json`、`quality-report.json`、截图或预览图（视 skill 类型而定）
 
 这些示例的作用不是给出“真实经营结论”，而是展示：
