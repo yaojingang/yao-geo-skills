@@ -1,0 +1,88 @@
+{
+  "schema_version": "2.0.0",
+  "name": "yao-geo-douyin",
+  "title": "抖音两层相关词采集",
+  "job_to_be_done": "通过抖音网页版搜索框采集下拉联想词，按词根→一级词→二级词扩展，逐词截图留证、记录位置与来源路径，按行业转化目标评商业价值并导出Excel采集包。用于抖音相关搜索词抓取、下拉词拓展与两层词库；视频内容、评论、账号、热榜和小红书采集另行路由。",
+  "trigger_surface": {
+    "description": "通过抖音网页版搜索框采集下拉联想词，按词根→一级词→二级词扩展，逐词截图留证、记录位置与来源路径，按行业转化目标评商业价值并导出Excel采集包。用于抖音相关搜索词抓取、下拉词拓展与两层词库；视频内容、评论、账号、热榜和小红书采集另行路由。",
+    "should_trigger": [
+      "用抖音网页版采集留学公司的两层下拉词，截图导出Excel",
+      "输入GEO公司，抓抖音的搜索联想词并按商业价值打分",
+      "用yao-geo-douyin跑词根，保持当前页只输入和截图",
+      "接着跑抖音一级词获取第二层，把截图路径保留"
+    ],
+    "should_not_trigger": [
+      "采集抖音热点榜",
+      "下载抖音视频和评论",
+      "分析抖音某账号作品播放量",
+      "只帮我解释抖音搜索原理，不创建或执行skill"
+    ],
+    "edge_cases": [
+      "继续采集小红书搜索框下拉词",
+      "截图百度结果页底部相关搜索"
+    ]
+  },
+  "workflow": {
+    "steps": [
+      "Understand the request.",
+      "Execute the main task.",
+      "Validate the result."
+    ],
+    "decision_points": [],
+    "failure_modes": []
+  },
+  "resources": {
+    "references": [
+      "references/browser-capture.md",
+      "references/data-contract.md",
+      "references/industry-profiles.json",
+      "references/scoring.md"
+    ],
+    "scripts": [
+      "scripts/build_workbook.py",
+      "scripts/check_review_regressions.py",
+      "scripts/check_scoring.py",
+      "scripts/check_workbook.py",
+      "scripts/score_keywords.py"
+    ],
+    "assets": [
+      "templates/brief-template.md"
+    ],
+    "reports": [
+      "reports/output-risk-profile.md",
+      "reports/output_quality_scorecard.md"
+    ]
+  },
+  "eval_plan": {
+    "trigger": [
+      "evals/expected_artifacts.json",
+      "evals/failure_cases.md",
+      "evals/rubric.md",
+      "evals/scoring_cases.json",
+      "evals/semantic_config.json",
+      "evals/trigger_cases.json"
+    ],
+    "output": [],
+    "adversarial": [],
+    "baseline": "without_skill"
+  },
+  "risk": {
+    "output_risk": "low",
+    "execution_risk": "medium",
+    "trust_boundary": "team"
+  },
+  "governance": {
+    "owner": "yaojingang",
+    "maturity": "production",
+    "review_cadence": "quarterly",
+    "review_due": ""
+  },
+  "targets": [
+    "openai"
+  ],
+  "source_files": [
+    "SKILL.md",
+    "manifest.json",
+    "agents/interface.yaml"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "yao-geo-douyin",
+  "name": "yao-geo-douyin",
+  "display_name": "抖音两层相关词采集",
+  "version": "1.0.0",
+  "status": "active",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "public_maturity": "beta",
+  "owner": "yaojingang",
+  "updated_at": "2026-10-01",
+  "review_cadence": "quarterly",
+  "review_scope": "每季度复核抖音输入框、下拉列表、电脑操作能力和行业评分样例；页面变化时提前复核。",
+  "target_platforms": [
+    "openai"
+  ],
+  "summary": "默认通过Codex电脑操作能力在抖音网页原生输入，两层扩展下拉联想词，逐词截图并记录位置与来源路径，按行业转化目标评分，输出Excel采集包。",
+  "input_files": "file-backed fixture：用户提供的词根列表、行业和转化目标；完整运行使用本地capture.json和真实截图。公开仓库不附带已登录浏览器的原始截图。",
+  "output_contract": "同目录的capture.json、evidence/和Excel；包含关键词表、采集记录、截图索引、去重词库、待采集，F列为1–10分商业价值评分。",
+  "rollback_boundary": "采集仅编辑当前网页搜索框并读取建议，不提交搜索或修改平台内容；保留检查点，本地Excel原子替换失败时保持原文件。已发送的联想请求无法撤回。",
+  "primary_outputs": [
+    "douyin-keyword-workbook",
+    "capture-json",
+    "browser-screenshot-evidence"
+  ],
+  "skill_ir_source": "skill-ir/skill.json"
+}

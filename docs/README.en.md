@@ -9,7 +9,7 @@ Visual catalog:
 
 ## Current Inventory
 
-The repository currently contains `23` GEO-related skills.
+The repository currently contains `24` GEO-related skills.
 
 2026-05-21 update focus: most GEO content, page, strategy, and knowledge-asset skills now make real-data availability explicit, separate verified evidence from user-supplied or unavailable data, and standardize four-format delivery around Word, PDF, Markdown, and sticky-navigation HTML reports.
 
@@ -21,7 +21,7 @@ The repository currently contains `23` GEO-related skills.
 | `geo-content-production` | 6 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-article-friendly`, `yao-geo-ranking-article-builder` |
 | `geo-knowledge-assets` | 2 | `yao-geo-brand-graph`, `yao-geo-knowledge-base-builder` |
 | `geo-measurement` | 5 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-doubao-crawler`, `yao-chatgpt-crawler` |
-| `geo-research` | 3 | `yao-geo-intent-miner`, `yao-geo-baidu-keywords`, `yao-geo-xiaohongshu` |
+| `geo-research` | 4 | `yao-geo-intent-miner`, `yao-geo-baidu-keywords`, `yao-geo-xiaohongshu`, `yao-geo-douyin` |
 
 ## Skill Catalog
 
@@ -50,6 +50,7 @@ The repository currently contains `23` GEO-related skills.
 | `yao-geo-intent-miner` | Research | Expands seed terms and business context into AI-search question sets, intent clusters, follow-up chains, evidence gaps, content assets, knowledge-base entry plans, and monitoring prompts. | [Package](../skills/yao-geo-intent-miner) / [Guide](skills/yao-geo-intent-miner.md) |
 | `yao-geo-baidu-keywords` | Research | Captures Baidu autocomplete and bottom related searches in a browser, preserves screenshots, scores industry-specific commercial intent, and exports an Excel keyword workbook. | [Package](../skills/yao-geo-baidu-keywords) / [Guide](skills/yao-geo-baidu-keywords.md) / [Public Excel example](../skills/yao-geo-baidu-keywords/examples/study-abroad/出国留学相关搜索关键词表_公开示例.xlsx) |
 | `yao-geo-xiaohongshu` | Research | Captures two levels of Xiaohongshu search suggestions in a browser, records screenshots and ranking positions, scores commercial intent by industry, and exports an Excel workbook. | [Package](../skills/yao-geo-xiaohongshu) / [Guide](skills/yao-geo-xiaohongshu.md) |
+| `yao-geo-douyin` | Research | Uses Codex native computer operations in Chrome to capture two levels of Douyin search suggestions, preserve screenshots and source paths, score commercial intent by industry, and export an Excel package. | [Package](../skills/yao-geo-douyin) / [Guide](skills/yao-geo-douyin.md) / [Live test scope](../skills/yao-geo-douyin/reports/live-test-2026-10-01.md) |
 
 ## Repository Contract
 

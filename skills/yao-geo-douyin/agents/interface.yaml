@@ -1,0 +1,18 @@
+interface:
+  display_name: 抖音两层相关词采集
+  short_description: 仅输入触发抖音下拉词，两层扩展、截图、行业评分和Excel交付
+  default_prompt: 请使用 $yao-geo-douyin，默认通过Codex电脑操作能力控制已授权的Chrome抖音窗口，以原生输入触发搜索框下拉，采集给定词根的两层联想词，记录位置与截图，按行业转化目标评分并生成Excel采集包。
+compatibility:
+  canonical_format: agent-skills
+  adapter_targets: [openai]
+  activation:
+    mode: manual
+  execution:
+    context: inline
+    shell: bash
+  trust:
+    source_tier: local
+    remote_inline_execution: forbid
+    remote_metadata_policy: allow-metadata-only
+  degradation:
+    openai: 电脑操作能力不可用或无法确认授权抖音窗口时保留检查点，仍可离线评分和导出已有数据

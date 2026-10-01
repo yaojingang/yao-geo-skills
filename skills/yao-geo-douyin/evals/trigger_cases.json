@@ -1,0 +1,49 @@
+{
+  "recommended_threshold": 0.65,
+  "should_trigger": [
+    {
+      "text": "用抖音网页版采集留学公司的两层下拉词，截图导出Excel",
+      "family": "douyin"
+    },
+    {
+      "text": "输入GEO公司，抓抖音的搜索联想词并按商业价值打分",
+      "family": "douyin"
+    },
+    {
+      "text": "用yao-geo-douyin跑词根，保持当前页只输入和截图",
+      "family": "douyin"
+    },
+    {
+      "text": "接着跑抖音一级词获取第二层，把截图路径保留",
+      "family": "douyin"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "采集抖音热点榜",
+      "family": "douyin"
+    },
+    {
+      "text": "下载抖音视频和评论",
+      "family": "douyin"
+    },
+    {
+      "text": "分析抖音某账号作品播放量",
+      "family": "douyin"
+    },
+    {
+      "text": "只帮我解释抖音搜索原理，不创建或执行skill",
+      "family": "douyin"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "继续采集小红书搜索框下拉词",
+      "family": "route_xiaohongshu"
+    },
+    {
+      "text": "截图百度结果页底部相关搜索",
+      "family": "route_baidu"
+    }
+  ]
+}

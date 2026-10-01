@@ -1,0 +1,39 @@
+{
+  "positive_concepts": {
+    "douyin": {
+      "weight": 0.5,
+      "phrases": [
+        "抖音",
+        "yao-geo-douyin",
+        "用yao-geo-douyin"
+      ]
+    },
+    "autocomplete": {
+      "weight": 0.5,
+      "phrases": [
+        "下拉",
+        "联想词",
+        "相关搜索词",
+        "一级词",
+        "词根",
+        "第二层"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "other_jobs": {
+      "weight": 1,
+      "exclusive": true,
+      "phrases": [
+        "采集抖音热点榜",
+        "下载抖音视频",
+        "分析抖音某账号",
+        "只帮我解释抖音搜索原理"
+      ]
+    }
+  },
+  "fallback_positive_concepts": [
+    "douyin",
+    "autocomplete"
+  ]
+}
