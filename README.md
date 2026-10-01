@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `23` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `24` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -23,7 +23,7 @@
 | `geo-content-production` | 6 | 标题、科普、对比、文章 AI 友好化、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
 | `geo-measurement` | 5 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、豆包 App/Web 重复采样、ChatGPT AI Search 采样概率报告 |
-| `geo-research` | 3 | AI 搜索问题集、百度与小红书相关词采集、意图簇和监测 Prompt |
+| `geo-research` | 4 | AI 搜索问题集、百度、小红书与抖音相关词采集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
 
@@ -154,6 +154,7 @@ git checkout main
 - [skills/yao-geo-intent-miner](skills/yao-geo-intent-miner)
 - [skills/yao-geo-baidu-keywords](skills/yao-geo-baidu-keywords)
 - [skills/yao-geo-xiaohongshu](skills/yao-geo-xiaohongshu)
+- [skills/yao-geo-douyin](skills/yao-geo-douyin)
 - [skills/yao-geoflow-cli](skills/yao-geoflow-cli)
 - [skills/yao-geoflow-template](skills/yao-geoflow-template)
 - [skills/yao-geoflow-design](skills/yao-geoflow-design)
@@ -483,6 +484,16 @@ git checkout main
 <table>
   <tr>
     <td valign="top" width="100%">
+      <strong><code>yao-geo-douyin</code></strong><br>
+      作用：默认通过Codex电脑操作能力在抖音搜索框原生输入，采集两层联想词，逐词截图并记录位置和来源路径，按行业转化目标评分，生成Excel采集包。<br><br>
+      适合：核心词拓展、抖音搜索意图研究和行业关键词商业价值初筛。<br><br>
+      相关入口：<a href="docs/skills/yao-geo-douyin.md">说明页</a> ·
+      <a href="skills/yao-geo-douyin">Skill包</a> ·
+      <a href="skills/yao-geo-douyin/reports/live-test-2026-10-01.md">实测范围</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
       <strong><code>yao-geo-xiaohongshu</code></strong><br>
       作用：在小红书搜索框逐词采集两层联想词，保存截图、展示位置和来源路径，按行业商业意图评分并生成 Excel。<br><br>
       适合：核心词拓展、两层相关词发现、行业关键词商业价值初筛。<br><br>
@@ -541,6 +552,7 @@ git checkout main
 - `yao-geo-intent-miner`：HubSpot 中文 AI 意图拓词示例
 - `yao-geo-baidu-keywords`：5 个留学服务核心词的百度相关词与行业评分 Excel 公开示例
 - `yao-geo-xiaohongshu`：两层搜索联想词的采集规程、行业评分与合成校验样例
+- `yao-geo-douyin`：原生电脑操作、两层下拉采集、行业评分、实测范围与合成校验样例
 - 示例输出形态：`Markdown`、`HTML`、`Word`、`PDF`、`report_input.json`、`quality-report.json`、截图或预览图（视 skill 类型而定）
 
 这些示例的作用不是给出“真实经营结论”，而是展示：

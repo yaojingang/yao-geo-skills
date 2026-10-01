@@ -2,6 +2,14 @@
 
 This document tracks public repository releases for the skill catalog. Update this file together with the Chinese version in `CHANGELOG.md` whenever a new skill or a significant repository-level change is pushed.
 
+## 2026-10-01
+
+### `yao-geo-douyin` Initial Release
+
+- Added two-level Douyin autocomplete collection through Codex native computer operations, with screenshots, positions, and source paths.
+- Added industry-specific commercial-intent scores from 1 to 10 and a five-sheet Excel package that preserves blocked and pending queries.
+- Added the input template, artifact checks, live test scope, and public guide, with synchronized Chinese and English homepages, visual catalog, and registry.
+
 ## 2026-07-03
 
 ### `yao-doubao-crawler` Initial Release

@@ -1,0 +1,440 @@
+{
+  "threshold": 0.65,
+  "threshold_explanation": "Prompts at or above the threshold are treated as trigger matches. Scores are driven primarily by semantic intent coverage: packaging intent, workflow-to-skill transformation intent, reuse/distribution intent, and eval intent. Explicit exclusions such as summary-only, translation-only, one-off, document-only, or do-not-build directives apply direct penalties and can override otherwise similar wording.",
+  "false_positives": 0,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "bucket_stats": {
+    "should_trigger": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "should_not_trigger": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "near_neighbor": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    }
+  },
+  "family_stats": {
+    "douyin": {
+      "total": 8,
+      "passed": 8,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "route_xiaohongshu": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "route_baidu": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    }
+  },
+  "misfires": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "用抖音网页版采集留学公司的两层下拉词，截图导出Excel",
+        "family": "douyin",
+        "score": 0.96,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "autocomplete",
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "autocomplete": [
+                "下拉"
+              ],
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "输入GEO公司，抓抖音的搜索联想词并按商业价值打分",
+        "family": "douyin",
+        "score": 0.96,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "autocomplete",
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "autocomplete": [
+                "联想词"
+              ],
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "用yao-geo-douyin跑词根，保持当前页只输入和截图",
+        "family": "douyin",
+        "score": 0.96,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "autocomplete",
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "autocomplete": [
+                "词根"
+              ],
+              "douyin": [
+                "用yao-geo-douyin"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "接着跑抖音一级词获取第二层，把截图路径保留",
+        "family": "douyin",
+        "score": 0.96,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "autocomplete",
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "autocomplete": [
+                "一级词",
+                "第二层"
+              ],
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "采集抖音热点榜",
+        "family": "douyin",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "other_jobs"
+          ],
+          "exclusive_negative_concepts": [
+            "other_jobs"
+          ],
+          "semantic_coverage": 0.5,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 1,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {
+              "other_jobs": [
+                "采集抖音热点榜"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "下载抖音视频和评论",
+        "family": "douyin",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "other_jobs"
+          ],
+          "exclusive_negative_concepts": [
+            "other_jobs"
+          ],
+          "semantic_coverage": 0.5,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 1,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {
+              "other_jobs": [
+                "下载抖音视频"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "分析抖音某账号作品播放量",
+        "family": "douyin",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "other_jobs"
+          ],
+          "exclusive_negative_concepts": [
+            "other_jobs"
+          ],
+          "semantic_coverage": 0.5,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 1,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {
+              "other_jobs": [
+                "分析抖音某账号"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "只帮我解释抖音搜索原理，不创建或执行skill",
+        "family": "douyin",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "douyin"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "other_jobs"
+          ],
+          "exclusive_negative_concepts": [
+            "other_jobs"
+          ],
+          "semantic_coverage": 0.5,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 1,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "douyin": [
+                "抖音"
+              ]
+            },
+            "negative": {
+              "other_jobs": [
+                "只帮我解释抖音搜索原理"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "继续采集小红书搜索框下拉词",
+        "family": "route_xiaohongshu",
+        "score": 0.46,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [
+            "autocomplete"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.5,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "autocomplete": [
+                "下拉"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "截图百度结果页底部相关搜索",
+        "family": "route_baidu",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "douyin",
+            "autocomplete"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {}
+          }
+        }
+      }
+    ]
+  }
+}

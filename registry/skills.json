@@ -873,6 +873,33 @@
       "summary": "Capture two levels of Xiaohongshu search suggestions in a real browser, preserve screenshots and positions, score commercial intent by industry, and export a traceable Excel workbook.",
       "public_repo_path": "skills/yao-geo-xiaohongshu",
       "last_updated": "2026-09-30"
+    },
+    {
+      "id": "yao-geo-douyin",
+      "family": "geo-research",
+      "maturity": "beta",
+      "tags": [
+        "douyin",
+        "keyword-discovery",
+        "autocomplete",
+        "two-level-expansion",
+        "native-computer-operation",
+        "commercial-intent",
+        "excel"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "douyin-keyword-workbook",
+        "capture-json",
+        "browser-screenshot-evidence"
+      ],
+      "status": "active",
+      "owner": "yaojingang",
+      "stage": "published",
+      "path": "skills/yao-geo-douyin",
+      "summary": "Use Codex native computer operations in Chrome to capture two levels of Douyin search suggestions, preserve screenshots and source paths, score commercial intent by industry, and export a traceable Excel package.",
+      "public_repo_path": "skills/yao-geo-douyin",
+      "last_updated": "2026-10-01"
     }
   ],
   "planned_families": [
