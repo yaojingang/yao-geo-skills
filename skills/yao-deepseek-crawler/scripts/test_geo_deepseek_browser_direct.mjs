@@ -29,21 +29,32 @@ fs.appendFileSync(process.env.FAKE_OPENCLI_LOG, JSON.stringify(args) + '\\n');
 const browserIndex = args.indexOf('browser');
 if (browserIndex >= 0) {
   const action = args[browserIndex + 2];
-  if (action === 'bind') {
-    if (process.env.FAKE_OPENCLI_CASE === 'bind-failure') {
-      process.stderr.write('mock bind failed');
+  if (action === 'open') {
+    if (process.env.FAKE_OPENCLI_CASE === 'open-failure') {
+      process.stderr.write('mock open failed');
+      process.exit(1);
+    }
+    process.stdout.write(JSON.stringify({ url: args[browserIndex + 3], page: 'owned-tab-1' }));
+    process.exit(0);
+  }
+  if (action === 'close') {
+    if (process.env.FAKE_OPENCLI_CASE === 'close-failure') {
+      process.stderr.write('mock close failed');
       process.exit(1);
     }
     process.exit(0);
   }
-  if (action === 'unbind') {
-    if (process.env.FAKE_OPENCLI_CASE === 'unbind-failure') {
-      process.stderr.write('mock unbind failed');
-      process.exit(1);
-    }
+  if (action === 'wait') {
+    process.stdout.write(JSON.stringify({ matched: true, type: 'selector', value: '.ds-message' }));
     process.exit(0);
   }
   if (action === 'eval') {
+    const evalScript = args.at(-1);
+    const isExtraction = evalScript.includes('const expectedPrompt =');
+    if (!isExtraction) {
+      process.stdout.write('https://chat.deepseek.com/a/chat/s/11111111-1111-4111-8111-111111111111');
+      process.exit(0);
+    }
     if (process.env.FAKE_OPENCLI_CASE === 'eval-failure') {
       process.stderr.write('mock eval failed');
       process.exit(1);
@@ -51,31 +62,54 @@ if (browserIndex >= 0) {
     const wrongTab = process.env.FAKE_OPENCLI_CASE === 'wrong-tab';
     const wrongPrompt = process.env.FAKE_OPENCLI_CASE === 'wrong-prompt';
     const wrongAnswer = process.env.FAKE_OPENCLI_CASE === 'wrong-answer';
-    const fingerprint = (value) => crypto.createHash('sha256').update(String(value).replace(/\\s+/g, ' ').trim(), 'utf8').digest('hex');
-    process.stdout.write(JSON.stringify({
-      href: wrongTab ? 'https://mail.example.test/inbox' : 'https://chat.deepseek.com/a/chat/s/11111111-1111-4111-8111-111111111111',
+    const href = wrongTab
+      ? 'https://mail.example.test/inbox'
+      : 'https://chat.deepseek.com/a/chat/s/11111111-1111-4111-8111-111111111111';
+    const parsedHref = new URL(href);
+    const location = { href, origin: parsedHref.origin, pathname: parsedHref.pathname };
+    const promptText = wrongPrompt ? '旧提示词' : process.env.FAKE_EXPECTED_PROMPT;
+    const answerText = wrongAnswer ? 'Different answer' : (process.env.FAKE_DOM_ANSWER || 'Mock DeepSeek answer');
+    const contextNode = { innerText: 'Answer citation context' };
+    const anchor = {
+      innerText: '1',
+      textContent: '1',
+      href: 'https://example.com/source',
+      title: 'Example source',
+      getAttribute(name) { return name === 'aria-label' ? 'Example source' : ''; },
+      closest() { return contextNode; },
+      parentElement: contextNode,
+    };
+    const markdown = { innerText: answerText, textContent: answerText };
+    const makeMessage = (role, text) => ({
+      getAttribute(name) { return name === 'data-role' ? role : ''; },
+      classList: { length: 1 },
+      innerText: role === 'assistant' ? '已阅读 1 个网页\\n' + text + '\\n1 个网页' : text,
+      textContent: role === 'assistant' ? '已阅读 1 个网页 ' + text + ' 1 个网页' : text,
+      querySelector(selector) {
+        return role === 'assistant' && selector.includes('.ds-markdown') ? markdown : null;
+      },
+      querySelectorAll(selector) {
+        return role === 'assistant' && selector === 'a[href^="http"]' ? [anchor] : [];
+      },
+    });
+    const messages = [makeMessage('user', promptText), makeMessage('assistant', answerText)];
+    const document = {
       title: wrongTab ? 'Inbox' : 'DeepSeek',
-      prompt_matched: !wrongTab && !wrongPrompt,
-      answer_matched: !wrongTab && !wrongPrompt && !wrongAnswer,
-      matched_prompt: wrongTab ? '' : (wrongPrompt ? '旧提示词' : process.env.FAKE_EXPECTED_PROMPT),
-      conversation_id: wrongTab ? '' : '11111111-1111-4111-8111-111111111111',
-      answer_fingerprint: fingerprint(wrongAnswer ? 'Different answer' : 'Mock DeepSeek answer'),
-      read_count: 1,
-      references: [{
-        number: 1,
-        url: wrongTab || wrongPrompt || wrongAnswer ? 'https://private.example.test/message' : 'https://example.com/source',
-        domain: wrongTab || wrongPrompt || wrongAnswer ? 'private.example.test' : 'example.com',
-        source: wrongTab || wrongPrompt || wrongAnswer ? 'private.example.test' : 'example.com',
-        title: wrongTab || wrongPrompt || wrongAnswer ? 'Private message' : 'Example source',
-        summary: wrongTab || wrongPrompt || wrongAnswer ? 'Private context' : 'Answer citation context'
-      }]
-    }));
-    process.exit(0);
+      querySelectorAll(selector) { return selector === '.ds-message' ? messages : []; },
+      querySelector() { return null; },
+    };
+    Promise.resolve(eval(evalScript)).then((payload) => {
+      process.stdout.write(JSON.stringify(payload));
+    }).catch((error) => {
+      process.stderr.write(error.stack || error.message);
+      process.exitCode = 1;
+    });
+    return;
   }
 }
 
 if (args.includes('deepseek') && args.includes('ask')) {
-  process.stdout.write(JSON.stringify({ response: 'Mock DeepSeek answer' }));
+  process.stdout.write(JSON.stringify({ response: process.env.FAKE_RESPONSE || 'Mock DeepSeek answer' }));
   process.exit(0);
 }
 
@@ -86,12 +120,12 @@ process.exit(2);
   return executable;
 }
 
-function runCrawler(variant) {
+function runCrawler(variant, options = {}) {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'deepseek-crawler-test-'));
   tempDirs.push(tempDir);
   const outputPath = path.join(tempDir, 'raw.json');
   const logPath = path.join(tempDir, 'opencli.log');
-  const prompt = '新能源汽车推荐';
+  const prompt = options.prompt || '新能源汽车推荐';
   makeFakeOpenCli(tempDir);
   const result = spawnSync(process.execPath, [
     crawlerScript,
@@ -107,6 +141,8 @@ function runCrawler(variant) {
     env: {
       ...process.env,
       FAKE_EXPECTED_PROMPT: prompt,
+      FAKE_RESPONSE: options.response || 'Mock DeepSeek answer',
+      FAKE_DOM_ANSWER: options.domAnswer || 'Mock DeepSeek answer',
       FAKE_OPENCLI_CASE: variant,
       FAKE_OPENCLI_LOG: logPath,
       PATH: `${tempDir}${path.delimiter}${process.env.PATH || ''}`,
@@ -133,7 +169,7 @@ test('rejects evidence from a foreground tab outside the submitted DeepSeek prom
   assert.equal(record.references.count, 0);
   assert.equal(record.references.verified, false);
   assert.match(record.references.note, /rejected/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 });
 
 test('rejects evidence from a DeepSeek page whose latest prompt does not match', () => {
@@ -142,7 +178,7 @@ test('rejects evidence from a DeepSeek page whose latest prompt does not match',
   assert.equal(record.references.count, 0);
   assert.equal(record.references.verified, false);
   assert.match(record.references.note, /rejected/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 });
 
 test('rejects evidence from a repeated prompt whose assistant answer does not match', () => {
@@ -151,10 +187,10 @@ test('rejects evidence from a repeated prompt whose assistant answer does not ma
   assert.equal(record.references.count, 0);
   assert.equal(record.references.verified, false);
   assert.match(record.references.note, /rejected/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 });
 
-test('keeps verified DeepSeek citations and unbinds after successful extraction', () => {
+test('keeps verified DeepSeek citations in an owned browser session', () => {
   const { commands, record } = runCrawler('success');
   assert.equal(record.references.count, 1);
   assert.equal(record.references.verified, true);
@@ -162,9 +198,11 @@ test('keeps verified DeepSeek citations and unbinds after successful extraction'
   assert.equal(record.references.conversation_id, '11111111-1111-4111-8111-111111111111');
   const answerFingerprint = createHash('sha256').update('Mock DeepSeek answer', 'utf8').digest('hex');
   assert.equal(record.references.answer_fingerprint, answerFingerprint);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 
-  const evalCommand = commands.find((command) => browserAction(command) === 'eval');
+  const evalCommand = commands.find((command) => (
+    browserAction(command) === 'eval' && command.at(-1).includes('const expectedPrompt =')
+  ));
   const evalScript = evalCommand.at(-1);
   assert.match(evalScript, /chat\.deepseek\.com/);
   assert.match(evalScript, /新能源汽车推荐/);
@@ -173,27 +211,43 @@ test('keeps verified DeepSeek citations and unbinds after successful extraction'
   assert.doesNotMatch(evalScript, /\[document\.body\]|\|\|\s*document\.body/);
 });
 
-test('unbinds after browser evaluation fails', () => {
+test('keeps a submitted prompt whose text ends with a web-page count', () => {
+  const { record } = runCrawler('success', { prompt: '请总结以下 10 个网页' });
+  assert.equal(record.references.count, 1);
+  assert.equal(record.references.verified, true);
+});
+
+test('matches an answer after removing DeepSeek search-status text', () => {
+  const { record } = runCrawler('success', {
+    response: '已阅读 1 个网页\nMock DeepSeek answer\n1 个网页',
+    domAnswer: 'Mock DeepSeek answer',
+  });
+  const answerFingerprint = createHash('sha256').update('Mock DeepSeek answer', 'utf8').digest('hex');
+  assert.equal(record.references.answer_fingerprint, answerFingerprint);
+  assert.equal(record.references.verified, true);
+});
+
+test('closes the owned browser session after evaluation fails', () => {
   const { commands, record } = runCrawler('eval-failure');
   assert.equal(record.references.count, 0);
   assert.equal(record.references.verified, false);
   assert.match(record.references.note, /failed/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 });
 
-test('unbinds after browser session binding fails', () => {
-  const { commands, record } = runCrawler('bind-failure');
+test('closes the owned browser session after opening it fails', () => {
+  const { commands, record } = runCrawler('open-failure');
   assert.equal(record.references.count, 0);
   assert.equal(record.references.verified, false);
-  assert.match(record.references.note, /bind failed/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'unbind']);
+  assert.match(record.references.note, /navigation failed/i);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'close']);
 });
 
-test('records an unbind failure without discarding verified citations', () => {
-  const { commands, record } = runCrawler('unbind-failure');
+test('records a close failure without discarding verified citations', () => {
+  const { commands, record } = runCrawler('close-failure');
   assert.equal(record.references.count, 1);
   assert.equal(record.references.verified, true);
-  assert.match(record.references.cleanup_error, /unbind failed/i);
-  assert.match(record.references.note, /unbind failed/i);
-  assert.deepEqual(commands.map(browserAction), ['ask', 'bind', 'eval', 'unbind']);
+  assert.match(record.references.cleanup_error, /close failed/i);
+  assert.match(record.references.note, /close failed/i);
+  assert.deepEqual(commands.map(browserAction), ['ask', 'open', 'eval', 'open', 'wait', 'eval', 'close']);
 });
